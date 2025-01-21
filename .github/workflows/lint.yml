@@ -1,0 +1,50 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main, dev ]
+    paths:
+      - '**.py'
+      - '.flake8'
+      - 'pyproject.toml'
+  pull_request:
+    branches: [ main, dev ]
+    paths:
+      - '**.py'
+      - '.flake8'
+      - 'pyproject.toml'
+
+env:
+  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_CACHE_DIR: ~/.cache/pypoetry
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+          cache: 'pip'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: poetry-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Run flake8
+        run: poetry run flake8 .
