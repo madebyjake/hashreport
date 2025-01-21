@@ -47,6 +47,7 @@ typing-extensions = "^4.12.2"
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.8.2"
 black = "^24.10.0"
+commitizen = "^4.1.0"
 flake8 = "^7.1.1"
 flake8-bugbear = "^24.12.12"
 flake8-docstrings = "^1.7.0"
@@ -57,6 +58,11 @@ pytest-cov = "^6.0.0"
 
 [tool.black]
 line-length = 88
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "poetry"
+tag_format = "v$version"
 
 [tool.coverage.run]
 branch = true
