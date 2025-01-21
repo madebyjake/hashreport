@@ -75,7 +75,7 @@ tag_format = "v$version"
 
 [tool.coverage.run]
 branch = true
-source = "hashreport"
+source = ["hashreport"]
 
 [tool.coverage.report]
 fail_under = 80
