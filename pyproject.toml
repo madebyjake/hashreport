@@ -51,12 +51,28 @@ flake8-bugbear = "^24.12.12"
 flake8-docstrings = "^1.7.0"
 flake8-isort = "^6.1.1"
 isort = "^5.13.2"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
 
 [tool.black]
 line-length = 88
 
+[tool.coverage.run]
+branch = true
+source = "hashreport"
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
 [tool.isort]
 profile = "black"
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
 
 [build-system]
 requires = ["poetry-core"]
