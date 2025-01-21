@@ -41,7 +41,9 @@ Issues = "https://github.com/madebyjake/hashreport/issues"
 hashreport = "hashreport.cli:main"
 
 [tool.poetry.dependencies]
+click = "^8.1.8"
 python = ">=3.10,<3.14"
+tomli = "^2.2.1"
 typing-extensions = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
