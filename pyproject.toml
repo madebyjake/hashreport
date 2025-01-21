@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "hashreport"
+version = "0.1.0"
+description = "hashreport"
+license = "AGPL-3.0"
+authors = ["Jake Wells <jake@example.com>"]
+keywords = [
+  "checksum",
+  "file",
+  "hash",
+  "hashing",
+  "integrity",
+  "report",
+  "security",
+  "utility",
+  "verification"
+]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Environment :: Console",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Topic :: Utilities"
+]
+
+[tool.poetry.urls]
+Documentation = "https://github.com/madebyjake/hashreport"
+Repository = "https://github.com/madebyjake/hashreport"
+Issues = "https://github.com/madebyjake/hashreport/issues"
+
+[tool.poetry.scripts]
+hashreport = "hashreport.cli:main"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+typing-extensions = "^4.12.2"
+
+[tool.poetry.group.dev.dependencies]
+
+[tool.poetry.group.docs.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
