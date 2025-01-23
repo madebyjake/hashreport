@@ -12,7 +12,7 @@ theme:
   name: material
   language: en
   font:
-    text: DM Mono
+    text: DM Sans
     code: DM Mono
   palette:
     # Palette toggle for automatic mode
