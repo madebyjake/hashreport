@@ -5,6 +5,8 @@ copyright: Copyright © 2025 Jake Wells
 
 nav:
   - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/install.md
   - Development:
     - Project Scripts: development/scripts.md
 
