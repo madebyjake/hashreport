@@ -5,12 +5,14 @@ copyright: Copyright © 2025 Jake Wells
 
 nav:
   - Home: index.md
+  - Development:
+    - Project Scripts: development/scripts.md
 
 theme:
   name: material
   language: en
   font:
-    text: DM Mono
+    text: DM Sans
     code: DM Mono
   palette:
     # Palette toggle for automatic mode
