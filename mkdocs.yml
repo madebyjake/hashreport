@@ -5,6 +5,8 @@ copyright: Copyright © 2025 Jake Wells
 
 nav:
   - Home: index.md
+  - Development:
+    - Project Scripts: development/scripts.md
 
 theme:
   name: material
