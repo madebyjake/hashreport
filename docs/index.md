@@ -30,7 +30,7 @@
 
 ## **Installation**
 
-See the [Installation](installation.md) page for detailed instructions on how to install **hashreport**.
+See the [Installation](install.md) page for detailed instructions on how to install **hashreport**.
 
 ## **License**
 
