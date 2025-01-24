@@ -43,6 +43,7 @@ hashreport = "hashreport.cli:cli"
 [tool.poetry.dependencies]
 click = "^8.1.8"
 python = ">=3.10,<3.14"
+rich = "^13.9.4"
 tomli = "^2.2.1"
 tqdm = "^4.67.1"
 typing-extensions = "^4.12.2"
