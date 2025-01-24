@@ -17,4 +17,4 @@ def add_numbers(a, b):
 def test_add_numbers():
     """Basic test to verify pytest is working."""
     result = add_numbers(2, 3)
-    assert result == 5  #nosec
+    assert result == 5  # nosec
