@@ -41,12 +41,13 @@ class ConfigLoader:
             FileNotFoundError: If the configuration file is not found
             ValueError: If there is an error decoding the TOML file
         """
-        try:
-            with self.config_path.open("rb") as f:
-                return tomli.load(f)
-        except FileNotFoundError:
+        if not self.config_path.exists():
             raise FileNotFoundError(f"Config file not found: {self.config_path}")
-        except tomli.TOMLDecodeError as e:
+
+        try:
+            with self.config_path.open("r", encoding="utf-8") as f:
+                return tomli.loads(f.read())
+        except (tomli.TOMLDecodeError, UnicodeDecodeError) as e:
             raise ValueError(f"Error decoding TOML file: {e}")
 
 
