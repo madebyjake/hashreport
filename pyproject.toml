@@ -38,12 +38,13 @@ Repository = "https://github.com/madebyjake/hashreport"
 Issues = "https://github.com/madebyjake/hashreport/issues"
 
 [tool.poetry.scripts]
-hashreport = "hashreport.cli:main"
+hashreport = "hashreport.cli:cli"
 
 [tool.poetry.dependencies]
 click = "^8.1.8"
 python = ">=3.10,<3.14"
 tomli = "^2.2.1"
+tqdm = "^4.67.1"
 typing-extensions = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
