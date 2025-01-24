@@ -6,7 +6,7 @@
 - **reports**: add csv handler
 - **reports**: add base classes for handlers
 - **reports**: add reports package
-- **utils**: add email_sender module
+- **utils**: add email_sender module (not tested)
 - **utils**: add threading module
 - **utils**: add config module
 - **utils**: add conversions module
@@ -17,23 +17,15 @@
 - **utils**: add logging module
 - **utils**: add scanner module
 - **cli**: rework cli
-- add rich as a dependency
 - **cli**: add cli module
 - **const**: handle errors reading TOML files
 - **scripts**: add common check_dependency
-- **scripts**: add common check_dependency
-- add scripts for performing common tasks
-- add scripts for performing common tasks
+- **scripts**: add scripts for performing common tasks
 - add const module
-- init packages for project structure
 
 ### Fix
 
 - **tests**: add a space to nosec
 - **docs**: correct link to getting-started/install page
-- **docs**: correct link to install.md page
-- use GITHUB_TOKEN
-- use GITHUB_TOKEN
-- add permissions 'id-token: write'
 - comment-out coverage fail_under condition
 - change coverage source from string to list
