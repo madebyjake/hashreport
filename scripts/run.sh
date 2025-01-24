@@ -20,6 +20,7 @@ show_help() {
     echo "  lint              Lint the code"
     echo "  format            Format the code"
     echo "  install           Run the install script"
+    echo "  setup-hooks       Set up pre-commit hooks"
 }
 
 run_script() {
@@ -39,6 +40,9 @@ run_script() {
         install)
             ./scripts/install.sh
             ;;
+        setup-hooks)
+            ./scripts/actions/setup-hooks.sh
+            ;;
         *)
             echo "Unknown script: $1"
             show_help
@@ -54,6 +58,7 @@ interactive_mode() {
     echo "3: lint"
     echo "4: format"
     echo "5: install"
+    echo "6: setup-hooks"
     read -r -p "Enter the number of your choice: " choice
     case $choice in
          1) run_script test ;;
@@ -61,6 +66,7 @@ interactive_mode() {
          3) run_script lint ;;
          4) run_script format ;;
          5) run_script install ;;
+         6) run_script setup-hooks ;;
          *) echo "Invalid choice" ;;
     esac
 }
