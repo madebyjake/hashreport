@@ -38,12 +38,14 @@ Repository = "https://github.com/madebyjake/hashreport"
 Issues = "https://github.com/madebyjake/hashreport/issues"
 
 [tool.poetry.scripts]
-hashreport = "hashreport.cli:main"
+hashreport = "hashreport.cli:cli"
 
 [tool.poetry.dependencies]
 click = "^8.1.8"
 python = ">=3.10,<3.14"
+rich = "^13.9.4"
 tomli = "^2.2.1"
+tqdm = "^4.67.1"
 typing-extensions = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -74,6 +76,7 @@ line-length = 88
 name = "cz_conventional_commits"
 version_provider = "poetry"
 tag_format = "v$version"
+update_changelog_on_bump = true
 
 [tool.coverage.run]
 branch = true
