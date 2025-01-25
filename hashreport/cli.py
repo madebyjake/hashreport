@@ -1,5 +1,6 @@
 """CLI module for hashreport."""
 
+import os
 from typing import List, Optional
 
 import click
@@ -57,10 +58,11 @@ def cli():
 @click.option("-o", "--output", type=click.Path(), help="Output file path or directory")
 @click.option("-a", "--algorithm", default="md5", help="Hash algorithm to use")
 @click.option(
+    "-f",
     "--format",
-    type=click.Choice(["csv", "json"]),
+    "output_format",
     default="csv",
-    help="Output format (default: csv)",
+    help="Output format (csv, json)",
 )
 @click.option(
     "--min-size", callback=validate_size, help="Minimum file size (e.g., 1MB)"
@@ -96,7 +98,7 @@ def scan(
     directory: str,
     output: Optional[str],
     algorithm: str,
-    format: str,
+    output_format: str,
     min_size: Optional[str],
     max_size: Optional[str],
     include: Optional[List[str]],
@@ -116,6 +118,9 @@ def scan(
     DIRECTORY is the path to scan for files.
     """
     try:
+        # Set default output path if none provided
+        if not output:
+            output = os.path.join(os.getcwd(), f"hashreport.{output_format}")
         walk_directory_and_log(directory, output, algorithm=algorithm)
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
