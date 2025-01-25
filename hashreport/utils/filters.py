@@ -1,6 +1,7 @@
 """File filtering utilities."""
 
 import fnmatch
+import logging
 import re
 from pathlib import Path
 from typing import List, Optional, Pattern, Union
@@ -55,9 +56,9 @@ def should_process_file(
 
         # Check size constraints
         size = path.stat().st_size
-        if min_size and size < min_size:
+        if min_size is not None and size < min_size:
             return False
-        if max_size and size > max_size:
+        if max_size is not None and size > max_size:
             return False
 
         # Check patterns
@@ -72,5 +73,6 @@ def should_process_file(
 
         return True
 
-    except Exception:
+    except Exception as e:
+        logging.error(f"Error processing file {file_path}: {e}")
         return False
