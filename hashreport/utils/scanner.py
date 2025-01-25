@@ -34,9 +34,17 @@ def get_report_filename(output_path: str) -> str:
     """Generate report filename with timestamp."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     path = Path(output_path)
+
+    # If path is a directory, use CSV as default format
     if path.is_dir():
-        return path / f"hashreport-{timestamp}.csv"
-    return path.parent / f"hashreport-{timestamp}{path.suffix}"
+        return str(path / f"hashreport-{timestamp}.csv")
+
+    # If path exists or has a suffix, use it as is
+    if path.suffix or path.exists():
+        return str(path)
+
+    # Default to CSV if no extension is provided
+    return str(path.with_suffix(".csv"))
 
 
 def walk_directory_and_log(
@@ -50,6 +58,7 @@ def walk_directory_and_log(
     specific_files: Optional[Set[str]] = None,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
+    directory = Path(directory)
     output_path = str(get_report_filename(output_path))
     success = False
 
