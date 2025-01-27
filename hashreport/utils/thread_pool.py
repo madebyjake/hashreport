@@ -74,6 +74,7 @@ class ThreadPoolManager:
                     print(f"Error processing item: {e}")
 
         finally:
-            pass
+            if self.progress_bar:
+                self.progress_bar.finish()
 
         return results

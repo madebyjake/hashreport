@@ -88,9 +88,8 @@ def test_progress_tracking(mock_progress):
     items = [1, 2, 3]
     mock_progress.return_value.finish = MagicMock()
 
-    with ThreadPoolManager() as pool:
+    with ThreadPoolManager(progress_bar=mock_progress.return_value) as pool:
         pool.process_items(items, lambda x: x)
 
     assert mock_progress.return_value.update.call_count == len(items)
-    mock_progress.return_value.finish.assert_called_once()
     mock_progress.return_value.finish.assert_called_once()
