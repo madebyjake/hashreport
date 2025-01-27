@@ -1,13 +1,12 @@
 """Base classes for report handlers."""
 
-from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, ClassVar, Dict, List, Union
 
 from hashreport.utils.exceptions import ReportError
 
 
-class BaseReportHandler(ABC):
+class BaseReportHandler:
     """Base class for report handlers."""
 
     REQUIRED_METHODS: ClassVar[set] = {"read", "write", "append"}
@@ -23,15 +22,20 @@ class BaseReportHandler(ABC):
 
     def _validate_interface(self) -> None:
         """Validate that all required methods are implemented."""
-        missing = [
-            method for method in self.REQUIRED_METHODS if not hasattr(self, method)
-        ]
+        missing = []
+        for m in self.REQUIRED_METHODS:
+            method = getattr(self, m, None)
+            base_method = getattr(BaseReportHandler, m, None)
+            if method is None or getattr(method, "__code__", None) == getattr(
+                base_method, "__code__", None
+            ):
+                missing.append(m)
+
         if missing:
             raise NotImplementedError(
                 f"Handler missing required methods: {', '.join(missing)}"
             )
 
-    @abstractmethod
     def read(self) -> List[Dict[str, Any]]:
         """Read the report file.
 
@@ -41,9 +45,8 @@ class BaseReportHandler(ABC):
         Raises:
             ReportError: If there's an error reading the report
         """
-        pass
+        raise NotImplementedError("Subclasses must override 'read'.")
 
-    @abstractmethod
     def write(self, data: List[Dict[str, Any]], **kwargs: Any) -> None:
         """Write data to the report file.
 
@@ -54,9 +57,8 @@ class BaseReportHandler(ABC):
         Raises:
             ReportError: If there's an error writing the report
         """
-        pass
+        raise NotImplementedError("Subclasses must override 'write'.")
 
-    @abstractmethod
     def append(self, entry: Dict[str, Any]) -> None:
         """Append a single entry to the report.
 
@@ -66,7 +68,7 @@ class BaseReportHandler(ABC):
         Raises:
             ReportError: If there's an error appending to the report
         """
-        pass
+        raise NotImplementedError("Subclasses must override 'append'.")
 
     def validate_path(self) -> None:
         """Validate and prepare the report filepath.
@@ -75,6 +77,13 @@ class BaseReportHandler(ABC):
             ReportError: If there's an issue with the filepath
         """
         try:
-            self.filepath.parent.mkdir(parents=True, exist_ok=True)
+            parent = self.filepath.parent
+            if not parent.exists():
+                try:
+                    parent.mkdir(parents=True, exist_ok=True)
+                except OSError as e:
+                    raise ReportError(f"Failed to create directory '{parent}': {e}")
+            elif not parent.is_dir():
+                raise ReportError(f"Path exists but is not a directory: {parent}")
         except Exception as e:
-            raise ReportError(f"Failed to create directory: {e}")
+            raise ReportError(f"Failed to validate path: {e}")
