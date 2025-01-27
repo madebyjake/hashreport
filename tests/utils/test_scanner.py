@@ -73,3 +73,62 @@ def test_walk_directory_and_log(
         pytest.fail("Expected write to be called with a list")
     if len(results) != 2:  # We had 2 files in our mock walk
         pytest.fail(f"Expected 2 results, got {len(results)}")
+
+
+def test_get_report_filename_with_timestamp(tmp_path):
+    """Test report filename generation with timestamp."""
+    result = get_report_filename(str(tmp_path))
+    if not result.startswith(str(tmp_path)):
+        pytest.fail("Expected path to start with tmp_path")
+    if "hashreport-" not in result:
+        pytest.fail("Expected 'hashreport-' in filename")
+    if not result.endswith(".csv"):
+        pytest.fail("Expected .csv extension")
+
+
+def test_get_report_filename_existing_path():
+    """Test report filename with existing path."""
+    existing = "report.json"
+    result = get_report_filename(existing)
+    if result != existing:
+        pytest.fail("Expected existing path to be returned unchanged")
+
+
+@patch("hashreport.utils.scanner.calculate_hash")
+def test_walk_directory_with_filters(mock_hash, tmp_path):
+    """Test directory walking with filters."""
+    mock_hash.return_value = ("test.txt", "abc123", "2024-01-01 00:00:00")
+
+    # Create test files
+    (tmp_path / "test.txt").touch()
+    (tmp_path / "skip.txt").touch()
+    (tmp_path / "test.pdf").touch()
+
+    exclude_paths = {str(tmp_path / "skip.txt")}
+    file_extension = ".txt"
+
+    output = tmp_path / "report.csv"
+    walk_directory_and_log(
+        str(tmp_path),
+        str(output),
+        exclude_paths=exclude_paths,
+        file_extension=file_extension,
+    )
+
+    # Should process only test.txt
+    if mock_hash.call_count != 1:
+        pytest.fail("Expected exactly one file to be processed")
+
+
+def test_walk_directory_with_specific_files(tmp_path):
+    """Test processing specific files only."""
+    test_file = tmp_path / "specific.txt"
+    test_file.touch()
+
+    specific_files = {str(test_file)}
+    output = tmp_path / "report.csv"
+
+    walk_directory_and_log(str(tmp_path), str(output), specific_files=specific_files)
+
+    if not output.exists():
+        pytest.fail("Expected output file to be created")
