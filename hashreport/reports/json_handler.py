@@ -36,11 +36,14 @@ class JSONReportHandler(BaseReportHandler):
         Raises:
             ReportError: If there's an error writing the report
         """
+        if not isinstance(data, list):
+            raise ReportError("Data must be a list of dictionaries")
+
         try:
             self.validate_path()
             with self.filepath.open("w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, **kwargs)
-        except Exception as e:
+        except OSError as e:
             raise ReportError(f"Error writing JSON report: {e}")
 
     def append(self, entry: Dict[str, Any]) -> None:
