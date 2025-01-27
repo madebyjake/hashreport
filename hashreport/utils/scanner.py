@@ -2,21 +2,24 @@
 
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Union
 
 import click
 
+from hashreport.config import get_config
 from hashreport.reports.base import BaseReportHandler
 from hashreport.reports.csv_handler import CSVReportHandler
 from hashreport.reports.json_handler import JSONReportHandler
 from hashreport.utils.conversions import format_size
 from hashreport.utils.hasher import calculate_hash
 from hashreport.utils.progress_bar import ProgressBar
+from hashreport.utils.thread_pool import ThreadPoolManager
 
 logger = logging.getLogger(__name__)
+
+config = get_config()
 
 
 def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
@@ -39,23 +42,25 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
 
 def get_report_filename(output_path: str) -> str:
     """Generate report filename with timestamp."""
-    timestamp = datetime.now().strftime("%y%m%d-%H%M")
+    timestamp = datetime.now().strftime(config.timestamp_format)
     path = Path(output_path)
 
-    # If path is a directory, return base path with .csv extension
+    # If path is a directory, return base path with default format extension
     if path.is_dir():
-        return str(path / f"hashreport-{timestamp}.csv")
+        ext = ".json" if config.default_format == "json" else ".csv"
+        return str(path / f"hashreport-{timestamp}{ext}")
 
-    # Return existing path if it has an extension, otherwise add .csv
+    # Return existing path if it has an extension, otherwise add default
     if path.suffix:
         return str(path)
-    return str(path) + ".csv"
+    ext = ".json" if config.default_format == "json" else ".csv"
+    return str(path) + ext
 
 
 def walk_directory_and_log(
     directory: str,
     output_files: Union[str, List[str]],
-    algorithm: str = "md5",
+    algorithm: str = None,
     exclude_paths: Optional[Set[str]] = None,
     file_extension: Optional[str] = None,
     file_names: Optional[Set[str]] = None,
@@ -63,6 +68,7 @@ def walk_directory_and_log(
     specific_files: Optional[Set[str]] = None,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
+    algorithm = algorithm or config.default_algorithm
     directory = Path(directory)
 
     # Handle both string and list inputs for output_files
@@ -77,7 +83,7 @@ def walk_directory_and_log(
         logger.debug(
             f"Using handlers: {[type(handler).__name__ for handler in handlers]}"
         )
-        results: List[Dict[str, str]] = []
+        final_results: List[Dict[str, str]] = []
 
         total_files = (
             len(specific_files)
@@ -87,20 +93,17 @@ def walk_directory_and_log(
         progress_bar = ProgressBar(total=total_files)
 
         try:
-            max_workers = os.cpu_count()
-            futures = []
-
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                count = 0
+            with ThreadPoolManager(
+                initial_workers=config.max_workers, progress_bar=progress_bar
+            ) as pool:
                 if specific_files:
-                    for file_path in specific_files:
-                        futures.append(
-                            executor.submit(calculate_hash, file_path, algorithm)
-                        )
-                        count += 1
-                        if limit and count >= limit:
-                            break
+                    results = pool.process_items(
+                        specific_files,
+                        lambda x: calculate_hash(x, algorithm),
+                    )
                 else:
+                    # Build list of files to process
+                    files_to_process = []
                     for root, dirs, files in os.walk(directory):
                         if exclude_paths:
                             dirs[:] = [
@@ -118,38 +121,34 @@ def walk_directory_and_log(
                                 continue
                             if file_names and file_name not in file_names:
                                 continue
-                            futures.append(
-                                executor.submit(calculate_hash, full_path, algorithm)
-                            )
-                            count += 1
-                            if limit and count >= limit:
+                            files_to_process.append(full_path)
+                            if limit and len(files_to_process) >= limit:
                                 break
-                        if limit and count >= limit:
+                        if limit and len(files_to_process) >= limit:
                             break
 
-                for future in as_completed(futures):
-                    try:
-                        path, hash_val, mod_time = future.result()
-                        if hash_val:  # Only add if hash was successful
-                            file_path = Path(path)
-                            file_size = os.path.getsize(path)
-                            results.append(
-                                {
-                                    "File Name": file_path.name,
-                                    "File Path": str(file_path),
-                                    "Size": format_size(file_size),
-                                    "Hash Algorithm": algorithm,
-                                    "Hash Value": hash_val,
-                                    "Last Modified Date": mod_time,
-                                    "Created Date": datetime.fromtimestamp(
-                                        os.path.getctime(path)
-                                    ).strftime("%Y-%m-%d %H:%M:%S"),
-                                }
-                            )
-                            progress_bar.update()
-                    except ValueError as e:
-                        logger.error(f"Error processing result: {e}")
-                        continue
+                    results = pool.process_items(
+                        files_to_process, lambda x: calculate_hash(x, algorithm)
+                    )
+
+                for result in results:
+                    path, hash_val, mod_time = result
+                    if hash_val:  # Only add if hash was successful
+                        file_path = Path(path)
+                        file_size = os.path.getsize(path)
+                        final_results.append(
+                            {
+                                "File Name": file_path.name,
+                                "File Path": str(file_path),
+                                "Size": format_size(file_size),
+                                "Hash Algorithm": algorithm,
+                                "Hash Value": hash_val,
+                                "Last Modified Date": mod_time,
+                                "Created Date": datetime.fromtimestamp(
+                                    os.path.getctime(path)
+                                ).strftime("%Y-%m-%d %H:%M:%S"),
+                            }
+                        )
 
             reports = []
             for handler in handlers:
@@ -159,8 +158,8 @@ def walk_directory_and_log(
                         err=True,
                     )
                     return
-                logger.debug(f"Writing {len(results)} results to {output_files}")
-                handler.write(results)
+                logger.debug(f"Writing {len(final_results)} results to {output_files}")
+                handler.write(final_results)
                 reports.append(str(handler.filepath))
             success = True  # Mark as successful only if we get here
             logger.debug("Successfully wrote results")

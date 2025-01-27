@@ -6,7 +6,7 @@ from typing import List, Optional
 import click
 from rich.console import Console
 
-from hashreport.const import global_const
+from hashreport.config import get_config
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 
@@ -28,41 +28,47 @@ def validate_size(ctx, param, value):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version=global_const.VERSION)
+@click.version_option(
+    version=get_config().version,
+    prog_name=get_config().name,
+    message="%(prog)s version %(version)s\n"
+    f"Author: {', '.join(get_config().authors)}\n"
+    f"License: {get_config().project_license}",
+)
 def cli():
     r"""
     Generate hash reports for files in a directory.
 
-    hashreport is a command-line tool that generates comprehensive hash reports
-    for files within a directory. The reports include file details such as name,
-    path, size, hash value, and last modified date.
+    {name} {version} - {description}
 
-    Example usage:
-    \b
-    # Basic usage - generates MD5 hashes for all files
-    hashreport scan /path/to/directory -o report.csv
+    {license} License
 
-    \b
-    # Use SHA256 and filter by size
-    hashreport scan /path/to/directory -a sha256 --min-size 1MB --max-size 1GB
-
-    \b
-    # Filter by file patterns and email the report
-    hashreport scan /path/to/directory --include "*.pdf" --email user@example.com
-    """
-    pass
+    {docs}
+    """.format(
+        name=get_config().name.title(),
+        version=get_config().version,
+        description=get_config().description,
+        license=get_config().project_license,
+        docs=get_config().urls.get("documentation", ""),
+    )
 
 
 @cli.command()
 @click.argument("directory", type=click.Path(exists=True, file_okay=False))
 @click.option("-o", "--output", type=click.Path(), help="Output directory path")
-@click.option("-a", "--algorithm", default="md5", help="Hash algorithm to use")
+@click.option(
+    "-a",
+    "--algorithm",
+    default=get_config().default_algorithm,
+    help="Hash algorithm to use",
+)
 @click.option(
     "-f",
     "--format",
     "output_formats",
     multiple=True,
-    default=["csv"],
+    type=click.Choice(get_config().supported_formats),
+    default=[get_config().default_format],
     help="Output formats (csv, json)",
 )
 @click.option(
