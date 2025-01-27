@@ -18,38 +18,34 @@ from hashreport.utils.progress_bar import ProgressBar
 logger = logging.getLogger(__name__)
 
 
-def get_report_handler(file_path: str):
-    """Get the appropriate report handler based on file extension."""
-    logger.debug(f"Creating report handler for {file_path}")
-    handler = (
-        JSONReportHandler(file_path)
-        if file_path.lower().endswith(".json")
-        else CSVReportHandler(file_path)
-    )
-    logger.debug(f"Handler methods: {dir(handler)}")
-    return handler
+def get_report_handlers(filenames):
+    """Get report handlers for the given filenames."""
+    handlers = []
+    for filename in filenames:
+        if filename.endswith(".json"):
+            handlers.append(JSONReportHandler(filename))
+        else:
+            handlers.append(CSVReportHandler(filename))
+    return handlers
 
 
 def get_report_filename(output_path: str) -> str:
     """Generate report filename with timestamp."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%y%m%d-%H%M")
     path = Path(output_path)
 
-    # If path is a directory, use CSV as default format
+    # If path is a directory, return base path
     if path.is_dir():
-        return str(path / f"hashreport-{timestamp}.csv")
+        return str(path / f"hashreport-{timestamp}")
 
-    # If path exists or has a suffix, use it as is
-    if path.suffix or path.exists():
-        return str(path)
-
-    # Default to CSV if no extension is provided
-    return str(path.with_suffix(".csv"))
+    # Extract extension if present, otherwise default to .csv
+    suffix = path.suffix or ".csv"
+    return str(path.with_name(f"hashreport-{timestamp}{suffix}"))
 
 
 def walk_directory_and_log(
     directory: str,
-    output_path: str,
+    output_files: List[str],
     algorithm: str = "md5",
     exclude_paths: Optional[Set[str]] = None,
     file_extension: Optional[str] = None,
@@ -59,12 +55,16 @@ def walk_directory_and_log(
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
     directory = Path(directory)
-    output_path = str(get_report_filename(output_path))
+    output_files = [
+        str(get_report_filename(output_file)) for output_file in output_files
+    ]
     success = False
 
     try:
-        handler = get_report_handler(output_path)
-        logger.debug(f"Using handler: {type(handler).__name__}")
+        handlers = get_report_handlers(output_files)
+        logger.debug(
+            f"Using handlers: {[type(handler).__name__ for handler in handlers]}"
+        )
         results: List[Dict[str, str]] = []
 
         total_files = (
@@ -139,14 +139,15 @@ def walk_directory_and_log(
                         logger.error(f"Error processing result: {e}")
                         continue
 
-            if not hasattr(handler, "write"):
-                click.echo(
-                    f"Error: Handler {type(handler).__name__} missing write method",
-                    err=True,
-                )
-                return
-            logger.debug(f"Writing {len(results)} results to {output_path}")
-            handler.write(results)
+            for handler in handlers:
+                if not hasattr(handler, "write"):
+                    click.echo(
+                        f"Error: Handler {type(handler).__name__} missing write method",
+                        err=True,
+                    )
+                    return
+                logger.debug(f"Writing {len(results)} results to {output_files}")
+                handler.write(results)
             success = True  # Mark as successful only if we get here
             logger.debug("Successfully wrote results")
         except AttributeError as e:
@@ -163,4 +164,4 @@ def walk_directory_and_log(
     finally:
         progress_bar.finish()
         if success:  # Only show output path if everything succeeded
-            click.echo(f"Report saved to: {output_path}")
+            click.echo(f"Report saved to: {output_files}")

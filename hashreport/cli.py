@@ -8,7 +8,7 @@ from rich.console import Console
 
 from hashreport.const import global_const
 from hashreport.utils.hasher import show_available_options
-from hashreport.utils.scanner import walk_directory_and_log
+from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 
 console = Console()
 
@@ -55,14 +55,15 @@ def cli():
 
 @cli.command()
 @click.argument("directory", type=click.Path(exists=True, file_okay=False))
-@click.option("-o", "--output", type=click.Path(), help="Output file path or directory")
+@click.option("-o", "--output", type=click.Path(), help="Output directory path")
 @click.option("-a", "--algorithm", default="md5", help="Hash algorithm to use")
 @click.option(
     "-f",
     "--format",
-    "output_format",
-    default="csv",
-    help="Output format (csv, json)",
+    "output_formats",
+    multiple=True,
+    default=["csv"],
+    help="Output formats (csv, json)",
 )
 @click.option(
     "--min-size", callback=validate_size, help="Minimum file size (e.g., 1MB)"
@@ -96,9 +97,9 @@ def cli():
 )
 def scan(
     directory: str,
-    output: Optional[str],
+    output: str,
     algorithm: str,
-    output_format: str,
+    output_formats: List[str],
     min_size: Optional[str],
     max_size: Optional[str],
     include: Optional[List[str]],
@@ -120,8 +121,15 @@ def scan(
     try:
         # Set default output path if none provided
         if not output:
-            output = os.path.join(os.getcwd(), f"hashreport.{output_format}")
-        walk_directory_and_log(directory, output, algorithm=algorithm)
+            output = os.getcwd()
+
+        # Create output files with their respective extensions
+        output_files = [
+            get_report_filename(os.path.join(output, f"hashreport.{fmt}"))
+            for fmt in output_formats
+        ]
+
+        walk_directory_and_log(directory, output_files, algorithm=algorithm)
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         raise click.Abort()
