@@ -9,7 +9,12 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
+from hashreport.config import get_config
+
 logger = logging.getLogger(__name__)
+
+# Get configuration instance
+config = get_config()
 
 
 def format_size(size_bytes: Optional[int]) -> Optional[str]:
@@ -38,7 +43,7 @@ def get_file_reader(file_path: str, use_mmap: bool = True):
 
 
 def calculate_hash(
-    filepath: str, algorithm: str = "md5"
+    filepath: str, algorithm: str = None
 ) -> Tuple[str, Optional[str], str]:
     """Calculate hash for a file.
 
@@ -50,10 +55,11 @@ def calculate_hash(
         Tuple containing (filepath, hash_value, modification_time)
         If hashing fails, hash_value will be None
     """
+    algorithm = algorithm or config.default_algorithm
     try:
         hasher = hashlib.new(algorithm)
         with open(filepath, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
+            for chunk in iter(lambda: f.read(config.chunk_size), b""):
                 hasher.update(chunk)
 
         # Get file modification time
