@@ -1,0 +1,10 @@
+# This is bandit's config file
+exclude_dirs:
+  - 'tests'
+  - '.venv'
+  - 'venv'
+  - 'build'
+  - 'dist'
+
+skips:
+  - B101  # Skip assert statements in all test files

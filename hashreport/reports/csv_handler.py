@@ -36,7 +36,7 @@ class CSVReportHandler(BaseReportHandler):
                 writer = csv.DictWriter(f, fieldnames=data[0].keys())
                 writer.writeheader()
                 writer.writerows(data)
-        except Exception as e:
+        except OSError as e:
             raise ReportError(f"Error writing CSV report: {e}")
 
     def append(self, entry: Dict[str, Any]) -> None:

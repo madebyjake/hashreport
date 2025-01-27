@@ -1,3 +1,29 @@
+## v0.3.0 (2025-01-27)
+
+### Feat
+
+- rework to use improved config module
+- add support for multiple output formats
+
+### Fix
+
+- **utils**: ensure progress bar updates correctly
+- **scanner**: handle output extensions and paths
+- **reports**: improve method validation
+- **reports**: handle redundant exception types
+- **reports**: handle redundant exception types
+- **utils**: improve error logging
+- **cli**: handle output path and format properly
+- **utils**: modify get_report_filename
+- **utils**: improve error logging
+- **cli**: handle output path and format properly
+- **utils**: modify get_report_filename
+
+### Refactor
+
+- remove old config module
+- remove const module
+
 ## v0.2.0 (2025-01-24)
 
 ### Feat
