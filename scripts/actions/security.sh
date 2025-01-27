@@ -18,5 +18,5 @@ fi
 
 echo "Checking for security vulnerabilities..."
 check_dependency bandit
-poetry run bandit -r . -v
+poetry run bandit -r . -c .bandit.yaml -v
 echo "Done!"

@@ -38,13 +38,44 @@ def test_scan_command(mock_walk, tmp_path):
     """Test scan command with basic options."""
     runner = CliRunner()
     input_dir = tmp_path / "input"
-    output_file = tmp_path / "report.csv"
+    output_dir = tmp_path / "output"
     input_dir.mkdir()
 
-    result = runner.invoke(cli, ["scan", str(input_dir), "-o", str(output_file)])
-    if result.exit_code != 0:
-        pytest.fail(f"Scan command failed: {result.output}")
-    mock_walk.assert_called_once()
+    result = runner.invoke(
+        cli, ["scan", str(input_dir), "-o", str(output_dir), "-f", "csv", "-f", "json"]
+    )
+    assert result.exit_code == 0
+
+    # Get the actual calls to the mock
+    mock_calls = mock_walk.call_args_list
+    assert len(mock_calls) == 1
+
+    args, kwargs = mock_calls[0]
+    assert args[0] == str(input_dir)
+    assert len(args[1]) == 2  # Two output files
+    assert any(f.endswith(".csv") for f in args[1])
+    assert any(f.endswith(".json") for f in args[1])
+
+
+@patch("hashreport.cli.walk_directory_and_log")
+def test_multiple_formats(mock_walk, tmp_path):
+    """Test scan command with multiple output formats."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+
+    result = runner.invoke(
+        cli, ["scan", str(input_dir), "-o", str(output_dir), "-f", "json", "-f", "csv"]
+    )
+
+    assert result.exit_code == 0
+
+    # Verify walk_directory_and_log was called with correct arguments
+    args, _ = mock_walk.call_args
+    assert len(args[1]) == 2  # Two output files
+    assert any(".json" in f for f in args[1])
+    assert any(".csv" in f for f in args[1])
 
 
 @patch("hashreport.cli.show_available_options")
@@ -95,6 +126,12 @@ def test_scan_with_options(tmp_path):
 
     with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
         result = runner.invoke(cli, command)
-        if result.exit_code != 0:
-            pytest.fail(f"Scan command with options failed: {result.output}")
+        assert result.exit_code == 0, f"Command failed: {result.output}"
+
         mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+
+        assert args[0] == str(input_dir)  # Input directory
+        assert len(args[1]) == 1  # One output file
+        assert args[1][0].endswith(".json")  # JSON extension
+        assert kwargs.get("algorithm") == "sha256"

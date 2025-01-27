@@ -1,4 +1,4 @@
-"""Tests for threading utilities."""
+"""Tests for thread pool utilities."""
 
 import time
 from concurrent.futures import Future
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from hashreport.utils.threading import ThreadPoolManager
+from hashreport.utils.thread_pool import ThreadPoolManager
 
 
 def test_thread_pool_initialization():
@@ -19,9 +19,9 @@ def test_thread_pool_initialization():
 def test_context_manager():
     """Test thread pool context manager functionality."""
     with ThreadPoolManager() as pool:
-        if pool._executor is None:
+        if pool.executor is None:
             pytest.fail("Expected executor to be initialized")
-    if pool._executor is not None:
+    if pool.executor is not None:
         pytest.fail("Expected executor to be shutdown")
 
 
@@ -34,7 +34,7 @@ def test_parallel_processing():
 
     items = [1, 2, 3]
     with ThreadPoolManager(initial_workers=2) as pool:
-        results = pool.process_items(items, slow_process, desc="Testing")
+        results = pool.process_items(items, slow_process, show_progress=True)
         if sorted(results) != [2, 4, 6]:
             pytest.fail("Expected doubled values")
 
@@ -76,21 +76,20 @@ def test_shutdown_during_processing(mock_submit):
     mock_submit.return_value = mock_future()
 
     with ThreadPoolManager() as pool:
-        pool._shutdown.set()  # Simulate shutdown signal
+        pool._shutdown_event.set()  # Use proper shutdown mechanism
         results = pool.process_items([1, 2, 3], lambda x: x)
         if results != []:
-            pytest.fail("Expected no results after shutdown signal")
+            pytest.fail("Expected no results after shutdown")
 
 
-def test_progress_tracking():
+@patch("hashreport.utils.thread_pool.ProgressBar")
+def test_progress_tracking(mock_progress):
     """Test progress bar updates during processing."""
     items = [1, 2, 3]
-    mock_progress = MagicMock()
+    mock_progress.return_value.finish = MagicMock()
 
-    with patch("hashreport.utils.threading.ProgressBar", return_value=mock_progress):
-        with ThreadPoolManager() as pool:
-            pool.process_items(items, lambda x: x)
+    with ThreadPoolManager(progress_bar=mock_progress.return_value) as pool:
+        pool.process_items(items, lambda x: x)
 
-        if mock_progress.update.call_count != len(items):
-            pytest.fail(f"Expected {len(items)} progress updates")
-        mock_progress.close.assert_called_once()
+    assert mock_progress.return_value.update.call_count == len(items)
+    mock_progress.return_value.finish.assert_called_once()
