@@ -5,10 +5,11 @@ import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Union
 
 import click
 
+from hashreport.reports.base import BaseReportHandler
 from hashreport.reports.csv_handler import CSVReportHandler
 from hashreport.reports.json_handler import JSONReportHandler
 from hashreport.utils.conversions import format_size
@@ -18,8 +19,15 @@ from hashreport.utils.progress_bar import ProgressBar
 logger = logging.getLogger(__name__)
 
 
-def get_report_handlers(filenames):
-    """Get report handlers for the given filenames."""
+def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
+    """Get report handlers for the given filenames.
+
+    Args:
+        filenames: List of output file paths
+
+    Returns:
+        List of appropriate report handlers
+    """
     handlers = []
     for filename in filenames:
         if filename.endswith(".json"):
@@ -34,18 +42,19 @@ def get_report_filename(output_path: str) -> str:
     timestamp = datetime.now().strftime("%y%m%d-%H%M")
     path = Path(output_path)
 
-    # If path is a directory, return base path
+    # If path is a directory, return base path with .csv extension
     if path.is_dir():
-        return str(path / f"hashreport-{timestamp}")
+        return str(path / f"hashreport-{timestamp}.csv")
 
-    # Extract extension if present, otherwise default to .csv
-    suffix = path.suffix or ".csv"
-    return str(path.with_name(f"hashreport-{timestamp}{suffix}"))
+    # Return existing path if it has an extension, otherwise add .csv
+    if path.suffix:
+        return str(path)
+    return str(path) + ".csv"
 
 
 def walk_directory_and_log(
     directory: str,
-    output_files: List[str],
+    output_files: Union[str, List[str]],
     algorithm: str = "md5",
     exclude_paths: Optional[Set[str]] = None,
     file_extension: Optional[str] = None,
@@ -55,9 +64,12 @@ def walk_directory_and_log(
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
     directory = Path(directory)
-    output_files = [
-        str(get_report_filename(output_file)) for output_file in output_files
-    ]
+
+    # Handle both string and list inputs for output_files
+    if isinstance(output_files, str):
+        output_files = [output_files]
+
+    output_files = [str(get_report_filename(f)) for f in output_files]
     success = False
 
     try:
@@ -139,6 +151,7 @@ def walk_directory_and_log(
                         logger.error(f"Error processing result: {e}")
                         continue
 
+            reports = []
             for handler in handlers:
                 if not hasattr(handler, "write"):
                     click.echo(
@@ -148,8 +161,10 @@ def walk_directory_and_log(
                     return
                 logger.debug(f"Writing {len(results)} results to {output_files}")
                 handler.write(results)
+                reports.append(str(handler.filepath))
             success = True  # Mark as successful only if we get here
             logger.debug("Successfully wrote results")
+
         except AttributeError as e:
             click.echo(f"Error: Invalid handler interface - {e}", err=True)
             return
@@ -163,5 +178,10 @@ def walk_directory_and_log(
         click.echo(f"Error during scanning: {e}", err=True)
     finally:
         progress_bar.finish()
-        if success:  # Only show output path if everything succeeded
-            click.echo(f"Report saved to: {output_files}")
+        if success:  # Only show paths if everything succeeded
+            if len(reports) == 1:
+                click.echo(f"Report saved to: {reports[0]}")
+            else:
+                click.echo("Reports saved to:")
+                for report in reports:
+                    click.echo(f"  - {report}")
