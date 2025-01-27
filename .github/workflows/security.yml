@@ -36,4 +36,4 @@ jobs:
         run: poetry install --with dev
 
       - name: Run bandit
-        run: poetry run bandit -r . -ll
+        run: poetry run bandit -r . -c .bandit.yaml -ll
