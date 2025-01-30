@@ -33,28 +33,33 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
     """
     handlers = []
     for filename in filenames:
-        if filename.endswith(".json"):
+        # Use strict JSON checking
+        if filename.lower().endswith(".json"):
             handlers.append(JSONReportHandler(filename))
         else:
             handlers.append(CSVReportHandler(filename))
     return handlers
 
 
-def get_report_filename(output_path: str) -> str:
-    """Generate report filename with timestamp."""
+def get_report_filename(output_path: str, output_format: str = None) -> str:
+    """Generate report filename with timestamp.
+
+    Args:
+        output_path: Base output path
+        output_format: Optional format override (json/csv)
+    """
     timestamp = datetime.now().strftime(config.timestamp_format)
     path = Path(output_path)
 
-    # If path is a directory, return base path with default format extension
-    if path.is_dir():
-        ext = ".json" if config.default_format == "json" else ".csv"
-        return str(path / f"hashreport-{timestamp}{ext}")
+    # Force format extension
+    ext = f".{output_format.lower()}" if output_format else ".csv"
 
-    # Return existing path if it has an extension, otherwise add default
-    if path.suffix:
-        return str(path)
-    ext = ".json" if config.default_format == "json" else ".csv"
-    return str(path) + ext
+    # If path is a directory, create new timestamped file
+    if path.is_dir():
+        return str(path / f"hashreport_{timestamp}{ext}")
+
+    # For explicit paths, replace extension with format
+    return str(path.with_suffix(ext))
 
 
 def count_files(directory: Path, recursive: bool) -> int:
@@ -95,11 +100,13 @@ def walk_directory_and_log(
     if isinstance(output_files, str):
         output_files = [output_files]
 
-    output_files = [str(get_report_filename(f)) for f in output_files]
+    # Use the extensions as provided, no modification
     success = False
 
     try:
-        handlers = get_report_handlers(output_files)
+        handlers = get_report_handlers(
+            output_files
+        )  # This determines handler type based on extension
         logger.debug(
             f"Using handlers: {[type(handler).__name__ for handler in handlers]}"
         )

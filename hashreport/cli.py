@@ -135,14 +135,22 @@ def scan(
         if not output:
             output = os.getcwd()
 
-        # Create output files with their respective extensions
-        output_files = [
-            get_report_filename(os.path.join(output, f"hashreport.{fmt}"))
-            for fmt in output_formats
-        ]
+        # Create output files with explicit formats
+        output_files = []
+        for fmt in output_formats:
+            if output.endswith(f".{fmt}"):
+                # Use as-is if already has correct extension
+                output_files.append(output)
+            else:
+                # Updated parameter name from format to output_format
+                output_file = get_report_filename(output, output_format=fmt)
+                output_files.append(output_file)
 
         walk_directory_and_log(
-            directory, output_files, algorithm=algorithm, recursive=recursive
+            directory,
+            output_files,  # Pass the fully qualified paths with correct extensions
+            algorithm=algorithm,
+            recursive=recursive,
         )
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
