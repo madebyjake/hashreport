@@ -457,6 +457,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#filelist-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filelist Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#size-format" class="md-nav__link">
     <span class="md-ellipsis">
       Size Format
@@ -629,6 +638,15 @@
   <a href="#scan-command-options" class="md-nav__link">
     <span class="md-ellipsis">
       Scan Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filelist-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filelist Command Options
     </span>
   </a>
   
@@ -819,6 +837,49 @@
 <td><code>--test-email</code></td>
 <td>False</td>
 <td>Test email configuration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="filelist-command-options"><strong>Filelist Command Options</strong></h2>
+<p>The <code>filelist</code> command generates a list of all files in a directory. Here are all available options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DIRECTORY</code></td>
+<td>Required</td>
+<td>Path to scan for files</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>Current directory</td>
+<td>Output file path</td>
+</tr>
+<tr>
+<td><code>--recursive/--no-recursive</code></td>
+<td>True</td>
+<td>Process subdirectories recursively</td>
+</tr>
+<tr>
+<td><code>--include</code></td>
+<td>None</td>
+<td>Include files matching pattern</td>
+</tr>
+<tr>
+<td><code>--exclude</code></td>
+<td>None</td>
+<td>Exclude files matching pattern</td>
+</tr>
+<tr>
+<td><code>--regex</code></td>
+<td>False</td>
+<td>Use regex for pattern matching</td>
 </tr>
 </tbody>
 </table>
