@@ -12,71 +12,37 @@ The `run.sh` script is the main entry point for running project scripts, however
 
 The `run.sh` script provides a quick way to run various project actions. The following options are available:
 
+- `-h`, `--help`: show help message and exit
 - `test`: run tests with coverage
 - `security`: check for security issues
 - `lint`: lint the code
 - `format`: format code
 - `install`: install dependencies
+- `setup-hooks`: setup pre-commit hooks
+- `pre-commit`: run pre-commit hooks
 
 ### Usage
 
-To run a specific action, use the following command:
+**Interactive**
+
+The `run.sh` script can also be run in interactive mode. To do this, simply run the script without any options:
+
+```bash
+bash scripts/run.sh
+```
+
+This will prompt you to select an action to run.
+
+**Non-Interactive**
+
+To run a specific action without being prompted, you can pass the action as an argument:
 
 ```bash
 bash scripts/run.sh [OPTION] [FLAGS]
 ```
 
-## **Install Dependencies**
-
-`scripts/install.sh`
-
-Installs Poetry (if needed) and then installs project dependencies. The script can be run with the following command:
-
-```bash
-bash scripts/run.sh install
-```
-To automatically install all dependencies, use the `-a` or `--all` flag:
-
-```bash
-bash scripts/run.sh install -a
-```
-
-## **Testing with Coverage**
-
-`scripts/actions/test.sh`
-
-Lint the code and run tests with coverage. This script can be run with the following command:
+For example, to run tests with coverage:
 
 ```bash
 bash scripts/run.sh test
-```
-
-## **Security Check**
-
-`scripts/actions/security.sh`
-
-Check for security vulnerabilities with Bandit. This script can be run with the following command:
-
-```bash
-bash scripts/run.sh security
-```
-
-## **Linting**
-
-`scripts/actions/lint.sh`
-
-Lint the code using flake8. This script can be run with the following command:
-
-```bash
-bash scripts/run.sh lint
-```
-
-## **Code Formatting**
-
-`scripts/actions/format.sh`
-
-Format code with Black and sort imports with isort. This script can be run with the following command:
-
-```bash
-bash scripts/run.sh format
 ```
