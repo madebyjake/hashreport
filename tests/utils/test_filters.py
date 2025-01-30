@@ -24,6 +24,21 @@ def test_compile_patterns():
         pytest.fail("Expected compiled regex patterns")
 
 
+def test_compile_patterns_case_sensitivity():
+    """Test pattern compilation with case sensitivity."""
+    patterns = ["Test.*"]
+
+    # Test case insensitive (default)
+    result = compile_patterns(patterns, use_regex=True)
+    if not result[0].search("test.txt"):
+        pytest.fail("Expected case-insensitive match")
+
+    # Test case sensitive
+    result = compile_patterns(patterns, use_regex=True, case_sensitive=True)
+    if result[0].search("test.txt"):
+        pytest.fail("Expected case-sensitive match to fail")
+
+
 def test_matches_pattern():
     """Test pattern matching functionality."""
     # Test glob matching
@@ -37,6 +52,18 @@ def test_matches_pattern():
     patterns = compile_patterns([r"\.txt$", r"^test\."], use_regex=True)
     if not matches_pattern("test.txt", patterns, use_regex=True):
         pytest.fail("Expected 'test.txt' to match regex patterns")
+
+
+def test_matches_pattern_filename_only():
+    """Test that pattern matching only uses filename."""
+    patterns = compile_patterns(["test.*"], use_regex=True)
+
+    # Should match regardless of path
+    if not matches_pattern("/long/path/test.txt", patterns, use_regex=True):
+        pytest.fail("Expected match on filename only")
+
+    if not matches_pattern("test.txt", patterns, use_regex=True):
+        pytest.fail("Expected match on filename")
 
 
 def test_should_process_file(tmp_path):
@@ -75,3 +102,13 @@ def test_should_process_invalid_file(tmp_path):
     test_dir.mkdir()
     if should_process_file(str(test_dir)):
         pytest.fail("Should return False for directory")
+
+
+def test_pattern_error_handling():
+    """Test error handling for invalid patterns."""
+    # Invalid regex pattern
+    patterns = compile_patterns(["[invalid"], use_regex=True)
+    assert len(patterns) == 0, "Expected empty list for invalid pattern"
+
+    # Invalid glob pattern
+    assert not matches_pattern("test.txt", ["["], use_regex=False)
