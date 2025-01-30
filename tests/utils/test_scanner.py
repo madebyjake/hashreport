@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from hashreport.utils.scanner import (
+    count_files,
     get_report_filename,
     get_report_handlers,
     walk_directory_and_log,
@@ -145,3 +146,21 @@ def test_get_report_handlers():
 
     assert isinstance(handlers[0], JSONReportHandler)
     assert isinstance(handlers[1], CSVReportHandler)
+
+
+def test_count_files(tmp_path):
+    """Test counting files in directory."""
+    # Create test files
+    (tmp_path / "test1.txt").write_text("test")
+    (tmp_path / "test2.txt").write_text("test")
+
+    # Create nested files
+    nested = tmp_path / "nested"
+    nested.mkdir()
+    (nested / "test3.txt").write_text("test")
+
+    # Test recursive counting
+    assert count_files(tmp_path, recursive=True) == 3
+
+    # Test non-recursive counting
+    assert count_files(tmp_path, recursive=False) == 2
