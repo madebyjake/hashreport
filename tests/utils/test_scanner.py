@@ -61,18 +61,40 @@ def test_get_report_filename_with_timestamp(tmp_path):
     result = get_report_filename(str(tmp_path))
     if not result.startswith(str(tmp_path)):
         pytest.fail("Expected path to start with tmp_path")
-    if "hashreport-" not in result:
-        pytest.fail("Expected 'hashreport-' in filename")
+    if "hashreport_" not in result:
+        pytest.fail("Expected 'hashreport_' in filename")
     if not result.endswith(".csv"):
         pytest.fail("Expected .csv extension")
 
 
-def test_get_report_filename_existing_path():
+def test_get_report_filename_existing_path(tmp_path):
     """Test report filename with existing path."""
-    existing = "report.json"
-    result = get_report_filename(existing)
-    if result != existing:
-        pytest.fail("Expected existing path to be returned unchanged")
+    path = tmp_path / "report.json"
+    result = get_report_filename(str(path), output_format="json")
+    assert (
+        str(path.with_suffix(".json")) == result
+    ), "Expected path with .json extension"
+
+
+def test_get_report_filename_with_format(tmp_path):
+    """Test report filename generation with explicit format."""
+    result = get_report_filename(str(tmp_path), output_format="json")
+    assert result.endswith(
+        ".json"
+    ), "Expected .json extension when json format specified"
+    assert "hashreport_" in result, "Expected hashreport_ prefix"
+
+    result = get_report_filename(str(tmp_path), output_format="csv")
+    assert result.endswith(".csv"), "Expected .csv extension when csv format specified"
+
+
+def test_get_report_filename_format_override(tmp_path):
+    """Test that format parameter overrides existing extension."""
+    path = tmp_path / "report.csv"
+    result = get_report_filename(str(path), output_format="json")
+    assert result.endswith(
+        ".json"
+    ), "Expected format override to change extension to .json"
 
 
 @patch("hashreport.utils.scanner.calculate_hash")
@@ -160,6 +182,16 @@ def test_count_files(tmp_path):
     (nested / "test3.txt").write_text("test")
 
     # Test recursive counting
+    assert count_files(tmp_path, recursive=True) == 3
+
+    # Test non-recursive counting
+    assert count_files(tmp_path, recursive=False) == 2
+    assert count_files(tmp_path, recursive=True) == 3
+
+    # Test non-recursive counting
+    assert count_files(tmp_path, recursive=False) == 2
+
+    assert count_files(tmp_path, recursive=False) == 2
     assert count_files(tmp_path, recursive=True) == 3
 
     # Test non-recursive counting
