@@ -21,6 +21,7 @@ show_help() {
     echo "  format            Format the code"
     echo "  install           Run the install script"
     echo "  setup-hooks       Set up pre-commit hooks"
+    echo "  pre-commit        Run pre-commit hooks"
 }
 
 run_script() {
@@ -43,6 +44,9 @@ run_script() {
         setup-hooks)
             ./scripts/actions/setup-hooks.sh
             ;;
+        pre-commit)
+            ./scripts/actions/pre-commit.sh
+            ;;
         *)
             echo "Unknown script: $1"
             show_help
@@ -59,6 +63,7 @@ interactive_mode() {
     echo "4: format"
     echo "5: install"
     echo "6: setup-hooks"
+    echo "7: pre-commit"
     read -r -p "Enter the number of your choice: " choice
     case $choice in
          1) run_script test ;;
@@ -67,9 +72,15 @@ interactive_mode() {
          4) run_script format ;;
          5) run_script install ;;
          6) run_script setup-hooks ;;
+         7) run_script pre-commit ;;
          *) echo "Invalid choice" ;;
     esac
 }
+
+if [[ $# -eq 0 ]]; then
+    interactive_mode
+    exit 0
+fi
 
 if [[ $# -eq 0 ]]; then
     show_help
