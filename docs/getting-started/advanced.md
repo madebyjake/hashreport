@@ -25,9 +25,9 @@ hashreport scan --regex \
   /path/to/directory
 ```
 
-### **Pattern Matching Options**
+### **Filelist with Patterns**
 
-Regex patterns are case-insensitive by default. For case-sensitive matching, use the appropriate regex syntax.
+The filelist command supports the same pattern matching:
 
 ## **Email Notifications**
 
