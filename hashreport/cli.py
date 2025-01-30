@@ -101,6 +101,11 @@ def cli():
     is_flag=True,
     help="Test email configuration without processing files",
 )
+@click.option(
+    "--recursive/--no-recursive",
+    default=True,
+    help="Recursively process subdirectories (default: True)",
+)
 def scan(
     directory: str,
     output: str,
@@ -118,6 +123,7 @@ def scan(
     smtp_user: Optional[str],
     smtp_password: Optional[str],
     test_email: bool,
+    recursive: bool,
 ):
     """
     Scan directory and generate hash report.
@@ -135,7 +141,9 @@ def scan(
             for fmt in output_formats
         ]
 
-        walk_directory_and_log(directory, output_files, algorithm=algorithm)
+        walk_directory_and_log(
+            directory, output_files, algorithm=algorithm, recursive=recursive
+        )
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         raise click.Abort()

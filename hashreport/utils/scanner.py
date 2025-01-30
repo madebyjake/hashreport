@@ -57,6 +57,25 @@ def get_report_filename(output_path: str) -> str:
     return str(path) + ext
 
 
+def count_files(directory: Path, recursive: bool) -> int:
+    """
+    Count the total number of files in the directory.
+
+    Args:
+        directory (Path): The directory to scan.
+        recursive (bool): Whether to recurse into subdirectories.
+
+    Returns:
+        int: The total number of files found.
+    """
+    total = 0
+    for _root, dirs, files in os.walk(directory):
+        if not recursive:
+            dirs[:] = []
+        total += len(files)
+    return total
+
+
 def walk_directory_and_log(
     directory: str,
     output_files: Union[str, List[str]],
@@ -66,6 +85,7 @@ def walk_directory_and_log(
     file_names: Optional[Set[str]] = None,
     limit: Optional[int] = None,
     specific_files: Optional[Set[str]] = None,
+    recursive: bool = True,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
     algorithm = algorithm or config.default_algorithm
@@ -85,11 +105,7 @@ def walk_directory_and_log(
         )
         final_results: List[Dict[str, str]] = []
 
-        total_files = (
-            len(specific_files)
-            if specific_files
-            else sum(len(files) for _, _, files in os.walk(directory))
-        )
+        total_files = count_files(directory, recursive)
         progress_bar = ProgressBar(total=total_files)
 
         try:
@@ -105,6 +121,8 @@ def walk_directory_and_log(
                     # Build list of files to process
                     files_to_process = []
                     for root, dirs, files in os.walk(directory):
+                        if not recursive:
+                            dirs[:] = []
                         if exclude_paths:
                             dirs[:] = [
                                 d
