@@ -7,6 +7,9 @@ nav:
   - Home: index.md
   - Getting Started:
     - Installation: getting-started/install.md
+    - Basic Usage: getting-started/basic.md
+    - Advanced Usage: getting-started/advanced.md
+    - Command Reference: getting-started/commands.md
   - Development:
     - Project Scripts: development/scripts.md
 
