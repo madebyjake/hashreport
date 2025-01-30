@@ -114,7 +114,7 @@ def cli():
 @click.option(
     "--recursive/--no-recursive",
     default=True,
-    help="Recursively process subdirectories (default: True)",
+    help="Recursively process subdirectories (recursive by default)",
 )
 def scan(
     directory: str,
@@ -178,7 +178,7 @@ def scan(
 @click.option(
     "--recursive/--no-recursive",
     default=True,
-    help="Recursively process subdirectories (default: True)",
+    help="Recursively process subdirectories (recursive by default)",
 )
 def filelist(
     directory: str,
