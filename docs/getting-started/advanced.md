@@ -25,6 +25,10 @@ hashreport scan --regex \
   /path/to/directory
 ```
 
+### **Pattern Matching Options**
+
+Regex patterns are case-insensitive by default. For case-sensitive matching, use the appropriate regex syntax.
+
 ## **Email Notifications**
 
 hashreport can email reports upon completion using SMTP.
