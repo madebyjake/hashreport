@@ -99,6 +99,14 @@ hashreport scan --limit 100 /path/to/directory
 hashreport scan --no-recursive /path/to/directory
 ```
 
+## **File Listing**
+
+Generate a list of files without calculating hashes:
+
+```bash
+hashreport filelist /path/to/directory
+```
+
 ## **Getting Help**
 
 For detailed information about available options:

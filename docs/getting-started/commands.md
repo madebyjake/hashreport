@@ -33,6 +33,19 @@ The `scan` command is the primary command for generating hash reports. Here are 
 | `--smtp-password` | None | SMTP password |
 | `--test-email` | False | Test email configuration |
 
+## **Filelist Command Options**
+
+The `filelist` command generates a list of all files in a directory. Here are all available options:
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `DIRECTORY` | Required | Path to scan for files |
+| `-o`, `--output` | Current directory | Output file path |
+| `--recursive/--no-recursive` | True | Process subdirectories recursively |
+| `--include` | None | Include files matching pattern |
+| `--exclude` | None | Exclude files matching pattern |
+| `--regex` | False | Use regex for pattern matching |
+
 ## **Size Format**
 
 When using `--min-size` or `--max-size`, the following formats are supported:

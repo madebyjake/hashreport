@@ -41,12 +41,15 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
     return handlers
 
 
-def get_report_filename(output_path: str, output_format: str = None) -> str:
+def get_report_filename(
+    output_path: str, output_format: str = None, prefix: str = "hashreport"
+) -> str:
     """Generate report filename with timestamp.
 
     Args:
         output_path: Base output path
         output_format: Optional format override (json/csv)
+        prefix: Optional prefix for the filename
     """
     timestamp = datetime.now().strftime(config.timestamp_format)
     path = Path(output_path)
@@ -56,7 +59,7 @@ def get_report_filename(output_path: str, output_format: str = None) -> str:
 
     # If path is a directory, create new timestamped file
     if path.is_dir():
-        return str(path / f"hashreport_{timestamp}{ext}")
+        return str(path / f"{prefix}_{timestamp}{ext}")
 
     # For explicit paths, replace extension with format
     return str(path.with_suffix(ext))
@@ -90,6 +93,11 @@ def walk_directory_and_log(
     file_names: Optional[Set[str]] = None,
     limit: Optional[int] = None,
     specific_files: Optional[Set[str]] = None,
+    min_size: Optional[str] = None,
+    max_size: Optional[str] = None,
+    include: Optional[tuple] = None,
+    exclude: Optional[tuple] = None,
+    regex: bool = False,
     recursive: bool = True,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
@@ -104,9 +112,7 @@ def walk_directory_and_log(
     success = False
 
     try:
-        handlers = get_report_handlers(
-            output_files
-        )  # This determines handler type based on extension
+        handlers = get_report_handlers(output_files)
         logger.debug(
             f"Using handlers: {[type(handler).__name__ for handler in handlers]}"
         )
@@ -126,31 +132,23 @@ def walk_directory_and_log(
                     )
                 else:
                     # Build list of files to process
-                    files_to_process = []
-                    for root, dirs, files in os.walk(directory):
-                        if not recursive:
-                            dirs[:] = []
-                        if exclude_paths:
-                            dirs[:] = [
-                                d
-                                for d in dirs
-                                if os.path.join(root, d) not in exclude_paths
-                            ]
-                        for file_name in files:
-                            full_path = os.path.join(root, file_name)
-                            if exclude_paths and full_path in exclude_paths:
-                                continue
-                            if file_extension and not file_name.endswith(
+                    files_to_process = [
+                        os.path.join(root, file_name)
+                        for root, dirs, files in os.walk(directory)
+                        if recursive or not dirs.clear()
+                        for file_name in files
+                        if not (
+                            (
+                                exclude_paths
+                                and os.path.join(root, file_name) in exclude_paths
+                            )
+                            or (
                                 file_extension
-                            ):
-                                continue
-                            if file_names and file_name not in file_names:
-                                continue
-                            files_to_process.append(full_path)
-                            if limit and len(files_to_process) >= limit:
-                                break
-                        if limit and len(files_to_process) >= limit:
-                            break
+                                and not file_name.endswith(file_extension)
+                            )
+                            or (file_names and file_name not in file_names)
+                        )
+                    ][:limit]
 
                     results = pool.process_items(
                         files_to_process, lambda x: calculate_hash(x, algorithm)
