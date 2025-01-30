@@ -1,12 +1,16 @@
 """CLI module for hashreport."""
 
 import os
-from typing import List, Optional
+from typing import List
 
 import click
 from rich.console import Console
 
 from hashreport.config import get_config
+from hashreport.reports.filelist_handler import (
+    get_filelist_filename,
+    list_files_in_directory,
+)
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 
@@ -72,10 +76,16 @@ def cli():
     help="Output formats (csv, json)",
 )
 @click.option(
-    "--min-size", callback=validate_size, help="Minimum file size (e.g., 1MB)"
+    "--min-size",
+    "min_size",
+    callback=validate_size,
+    help="Minimum file size (e.g., 1MB)",
 )
 @click.option(
-    "--max-size", callback=validate_size, help="Maximum file size (e.g., 1GB)"
+    "--max-size",
+    "max_size",
+    callback=validate_size,
+    help="Maximum file size (e.g., 1GB)",
 )
 @click.option(
     "--include",
@@ -111,17 +121,17 @@ def scan(
     output: str,
     algorithm: str,
     output_formats: List[str],
-    min_size: Optional[str],
-    max_size: Optional[str],
-    include: Optional[List[str]],
-    exclude: Optional[List[str]],
+    min_size: str,
+    max_size: str,
+    include: tuple,
+    exclude: tuple,
     regex: bool,
-    limit: Optional[int],
-    email: Optional[str],
-    smtp_host: Optional[str],
+    limit: int,
+    email: str,
+    smtp_host: str,
     smtp_port: int,
-    smtp_user: Optional[str],
-    smtp_password: Optional[str],
+    smtp_user: str,
+    smtp_password: str,
     test_email: bool,
     recursive: bool,
 ):
@@ -136,25 +146,68 @@ def scan(
             output = os.getcwd()
 
         # Create output files with explicit formats
-        output_files = []
-        for fmt in output_formats:
-            if output.endswith(f".{fmt}"):
-                # Use as-is if already has correct extension
-                output_files.append(output)
-            else:
-                # Updated parameter name from format to output_format
-                output_file = get_report_filename(output, output_format=fmt)
-                output_files.append(output_file)
+        output_files = [
+            (
+                get_report_filename(output, output_format=fmt)
+                if not output.endswith(f".{fmt}")
+                else output
+            )
+            for fmt in output_formats
+        ]
 
         walk_directory_and_log(
             directory,
-            output_files,  # Pass the fully qualified paths with correct extensions
+            output_files,
             algorithm=algorithm,
+            min_size=min_size,
+            max_size=max_size,
+            include=include,
+            exclude=exclude,
+            regex=regex,
+            limit=limit,
             recursive=recursive,
         )
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         raise click.Abort()
+
+
+@cli.command()
+@click.argument("directory", type=click.Path(exists=True, file_okay=False))
+@click.option("-o", "--output", type=click.Path(), help="Output file path")
+@click.option(
+    "--recursive/--no-recursive",
+    default=True,
+    help="Recursively process subdirectories (default: True)",
+)
+def filelist(
+    directory: str,
+    output: str,
+    recursive: bool,
+):
+    """
+    List files in the directory without generating hashes.
+
+    DIRECTORY is the path to scan for files.
+    """
+    try:
+        # Set default output path if none provided
+        if not output:
+            output = os.getcwd()
+
+        output_file = get_filelist_filename(output)
+
+        list_files_in_directory(
+            directory,
+            output_file,
+            recursive=recursive,
+        )
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        raise click.Abort()
+
+
+cli.add_command(filelist)
 
 
 @cli.command()
