@@ -8,7 +8,7 @@ The scripts directory contains scripts that can be used for various common proje
 
 The `run.sh` script is the main entry point for running project scripts, however, the scripts in the `actions` directory can also be run directly if desired.
 
-### Options
+### **Options**
 
 The `run.sh` script provides a quick way to run various project actions. The following options are available:
 
@@ -21,9 +21,9 @@ The `run.sh` script provides a quick way to run various project actions. The fol
 - `setup-hooks`: setup pre-commit hooks
 - `pre-commit`: run pre-commit hooks
 
-### Usage
+### **Usage**
 
-**Interactive**
+#### **Interactive**
 
 The `run.sh` script can also be run in interactive mode. To do this, simply run the script without any options:
 
@@ -33,9 +33,9 @@ bash scripts/run.sh
 
 This will prompt you to select an action to run.
 
-**Non-Interactive**
+#### **Non-Interactive**
 
-To run a specific action without being prompted, you can pass the action as an argument:
+To run a specific action without being prompted, you can pass the action as an option:
 
 ```bash
 bash scripts/run.sh [OPTION] [FLAGS]
