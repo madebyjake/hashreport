@@ -116,15 +116,15 @@ class ReportViewer:
 
         for change in changes:
             # Use bold text for change type
-            change_type = Text(str(change.type), style="bold")
+            change_type = Text(str(change.change_type), style="bold")
 
-            if change.type == ChangeType.MODIFIED:
+            if change.change_type == ChangeType.MODIFIED:
                 details = (
                     f"[bold]Hash changed:[/bold] {change.old_hash} → {change.new_hash}"
                 )
-            elif change.type == ChangeType.MOVED:
+            elif change.change_type == ChangeType.MOVED:
                 details = "[bold]File moved[/bold]"
-            elif change.type == ChangeType.REMOVED:
+            elif change.change_type == ChangeType.REMOVED:
                 details = f"[bold]Old hash:[/bold] {change.old_hash}"
             else:  # ADDED
                 details = f"[bold]New hash:[/bold] {change.new_hash}"
