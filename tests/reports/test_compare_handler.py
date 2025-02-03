@@ -53,9 +53,15 @@ def test_compare_reports(sample_data):
     changes = handler.compare_reports(sample_data, new_data)
 
     assert len(changes) == 3
-    assert any(c.type == ChangeType.MODIFIED and c.path == "test1.txt" for c in changes)
-    assert any(c.type == ChangeType.REMOVED and c.path == "test2.txt" for c in changes)
-    assert any(c.type == ChangeType.MOVED and c.path == "test3.txt" for c in changes)
+    assert any(
+        c.change_type == ChangeType.MODIFIED and c.path == "test1.txt" for c in changes
+    )
+    assert any(
+        c.change_type == ChangeType.REMOVED and c.path == "test2.txt" for c in changes
+    )
+    assert any(
+        c.change_type == ChangeType.MOVED and c.path == "test3.txt" for c in changes
+    )
 
 
 def test_output_filename():

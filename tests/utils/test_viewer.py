@@ -35,7 +35,7 @@ def sample_comparison():
     """Sample comparison data fixture."""
     return [
         FileChange(
-            type=ChangeType.MODIFIED,
+            change_type=ChangeType.MODIFIED,
             path="test1.txt",
             old_hash="abc123",
             new_hash="xyz789",
@@ -43,7 +43,7 @@ def sample_comparison():
             new_path="/path/to",
         ),
         FileChange(
-            type=ChangeType.MOVED,
+            change_type=ChangeType.MOVED,
             path="test2.txt",
             old_hash="def456",
             new_hash="def456",
@@ -51,13 +51,13 @@ def sample_comparison():
             new_path="/new/path",
         ),
         FileChange(
-            type=ChangeType.ADDED,
+            change_type=ChangeType.ADDED,
             path="test3.txt",
             new_hash="ghi789",
             new_path="/path/to",
         ),
         FileChange(
-            type=ChangeType.REMOVED,
+            change_type=ChangeType.REMOVED,
             path="test4.txt",
             old_hash="jkl012",
             old_path="/path/to",
