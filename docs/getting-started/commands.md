@@ -46,6 +46,21 @@ The `filelist` command generates a list of all files in a directory. Here are al
 | `--exclude` | None | Exclude files matching pattern |
 | `--regex` | False | Use regex for pattern matching |
 
+## **View Command Options**
+
+| Option | Description |
+|--------|-------------|
+| `REPORT` | Report file to view |
+| `-f`, `--filter` | Filter report entries |
+
+## **Compare Command Options**
+
+| Option | Description |
+|--------|-------------|
+| `REPORT1` | First report file to compare |
+| `REPORT2` | Second report file to compare |
+| `-o`, `--output` | Output directory for comparison report |
+
 ## **Size Format**
 
 When using `--min-size` or `--max-size`, the following formats are supported:
@@ -95,4 +110,16 @@ hashreport scan /path/to/directory \
   --regex \
   --include ".*\d{8}.*\.txt$" \
   --exclude "^temp_.*"
+
+# View report contents
+hashreport view report.csv
+
+# Filter report entries
+hashreport view report.csv -f "*.txt"
+
+# Compare two reports
+hashreport compare old_report.csv new_report.csv
+
+# Compare and save results
+hashreport compare old_report.csv new_report.csv -o /path/to/output/
 ```
