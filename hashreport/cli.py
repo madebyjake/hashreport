@@ -1,7 +1,8 @@
 """CLI module for hashreport."""
 
 import os
-from typing import List
+import sys
+from typing import List, Optional
 
 import click
 from rich.console import Console
@@ -13,6 +14,7 @@ from hashreport.reports.filelist_handler import (
 )
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
+from hashreport.utils.viewer import ReportViewer
 
 console = Console()
 
@@ -205,6 +207,38 @@ def filelist(
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
         raise click.Abort()
+
+
+@cli.command()
+@click.argument("report", type=click.Path(exists=True))
+@click.option("-f", "--filter", "filter_text", help="Filter report entries")
+def view(report: str, filter_text: Optional[str]) -> None:
+    """View report contents with optional filtering."""
+    viewer = ReportViewer()
+    try:
+        viewer.display_report(report, filter_text)
+    except Exception as e:
+        click.echo(f"Error viewing report: {e}", err=True)
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("report1", type=click.Path(exists=True))
+@click.argument("report2", type=click.Path(exists=True))
+@click.option(
+    "-o", "--output", type=click.Path(), help="Output directory for comparison report"
+)
+def compare(report1: str, report2: str, output: Optional[str]) -> None:
+    """Compare two reports and show differences."""
+    viewer = ReportViewer()
+    try:
+        changes = viewer.compare_reports(report1, report2)
+        viewer.display_comparison(changes)
+        if output:
+            viewer.save_comparison(changes, output, report1, report2)
+    except Exception as e:
+        click.echo(f"Error comparing reports: {e}", err=True)
+        sys.exit(1)
 
 
 cli.add_command(filelist)
