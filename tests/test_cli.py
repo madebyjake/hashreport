@@ -78,6 +78,41 @@ def test_multiple_formats(mock_walk, tmp_path):
     assert any(".csv" in f for f in args[1])
 
 
+@patch("hashreport.cli.walk_directory_and_log")
+def test_scan_format_handling(mock_walk, tmp_path):
+    """Test scan command respects format option."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    output_dir.mkdir()
+
+    # Test with single format
+    result = runner.invoke(
+        cli, ["scan", str(input_dir), "-o", str(output_dir), "--format", "json"]
+    )
+    assert result.exit_code == 0
+    args, _ = mock_walk.call_args
+    assert len(args[1]) == 1  # One output file
+    assert args[1][0].endswith(".json")  # Should have json extension
+
+    # Test explicit output path with extension
+    result = runner.invoke(
+        cli,
+        [
+            "scan",
+            str(input_dir),
+            "-o",
+            str(output_dir / "report.csv"),
+            "--format",
+            "json",
+        ],
+    )
+    assert result.exit_code == 0
+    args, _ = mock_walk.call_args
+    assert args[1][0].endswith(".json")  # Format should override existing extension
+
+
 @patch("hashreport.cli.show_available_options")
 def test_algorithms_command(mock_show):
     """Test algorithms command."""

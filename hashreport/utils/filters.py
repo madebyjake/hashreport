@@ -8,35 +8,63 @@ from typing import List, Optional, Pattern, Union
 
 
 def compile_patterns(
-    patterns: List[str], use_regex: bool = False
+    patterns: List[str],
+    use_regex: bool = False,
+    case_sensitive: bool = False,
 ) -> List[Union[str, Pattern]]:
     """Compile file matching patterns."""
     if not patterns:
         return []
 
     if use_regex:
-        return [re.compile(pattern) for pattern in patterns]
+        flags = 0 if case_sensitive else re.IGNORECASE
+        # Add multiline for matching start/end of lines
+        flags |= re.MULTILINE
+        # Add verbose flag for cleaner pattern formatting
+        flags |= re.VERBOSE
+        try:
+            return [re.compile(p, flags) for p in patterns]
+        except re.error as e:
+            logging.error(f"Invalid regex pattern in patterns: {e}")
+            return []
     return patterns
 
 
 def matches_pattern(
-    path: str, patterns: List[Union[str, Pattern]], use_regex: bool = False
+    path: str,
+    patterns: List[Union[str, Pattern]],
+    use_regex: bool = False,
+    case_sensitive: bool = False,
 ) -> bool:
     """Check if path matches any pattern."""
     if not patterns:
         return True
 
-    path = str(Path(path))
+    # Only match against filename
+    filename = Path(path).name
+
     for pattern in patterns:
         if use_regex:
             if isinstance(pattern, Pattern):
-                if pattern.search(path):
-                    return True
+                try:
+                    if pattern.search(filename):
+                        return True
+                except (re.error, TypeError) as e:
+                    logging.warning(f"Error matching pattern '{pattern}': {e}")
             else:
-                if re.search(pattern, path):
+                try:
+                    flags = 0 if case_sensitive else re.IGNORECASE
+                    if re.search(pattern, filename, flags):
+                        return True
+                except re.error as e:
+                    logging.warning(f"Invalid regex pattern '{pattern}': {e}")
+        else:
+            try:
+                if fnmatch.fnmatch(filename, str(pattern)):
                     return True
-        elif fnmatch.fnmatch(path, str(pattern)):
-            return True
+            except Exception as e:
+                logging.warning(f"Error matching glob pattern '{pattern}': {e}")
+
     return False
 
 

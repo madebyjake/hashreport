@@ -7,6 +7,9 @@ nav:
   - Home: index.md
   - Getting Started:
     - Installation: getting-started/install.md
+    - Basic Usage: getting-started/basic.md
+    - Advanced Usage: getting-started/advanced.md
+    - Command Reference: getting-started/commands.md
   - Development:
     - Project Scripts: development/scripts.md
 
@@ -16,6 +19,9 @@ theme:
   font:
     text: DM Sans
     code: DM Mono
+  features:
+    - navigation.footer
+    - navigation.indexes
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"

@@ -33,28 +33,55 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
     """
     handlers = []
     for filename in filenames:
-        if filename.endswith(".json"):
+        # Use strict JSON checking
+        if filename.lower().endswith(".json"):
             handlers.append(JSONReportHandler(filename))
         else:
             handlers.append(CSVReportHandler(filename))
     return handlers
 
 
-def get_report_filename(output_path: str) -> str:
-    """Generate report filename with timestamp."""
+def get_report_filename(
+    output_path: str, output_format: str = None, prefix: str = "hashreport"
+) -> str:
+    """Generate report filename with timestamp.
+
+    Args:
+        output_path: Base output path
+        output_format: Optional format override (json/csv)
+        prefix: Optional prefix for the filename
+    """
     timestamp = datetime.now().strftime(config.timestamp_format)
     path = Path(output_path)
 
-    # If path is a directory, return base path with default format extension
-    if path.is_dir():
-        ext = ".json" if config.default_format == "json" else ".csv"
-        return str(path / f"hashreport-{timestamp}{ext}")
+    # Force format extension
+    ext = f".{output_format.lower()}" if output_format else ".csv"
 
-    # Return existing path if it has an extension, otherwise add default
-    if path.suffix:
-        return str(path)
-    ext = ".json" if config.default_format == "json" else ".csv"
-    return str(path) + ext
+    # If path is a directory, create new timestamped file
+    if path.is_dir():
+        return str(path / f"{prefix}_{timestamp}{ext}")
+
+    # For explicit paths, replace extension with format
+    return str(path.with_suffix(ext))
+
+
+def count_files(directory: Path, recursive: bool) -> int:
+    """
+    Count the total number of files in the directory.
+
+    Args:
+        directory (Path): The directory to scan.
+        recursive (bool): Whether to recurse into subdirectories.
+
+    Returns:
+        int: The total number of files found.
+    """
+    total = 0
+    for _root, dirs, files in os.walk(directory):
+        if not recursive:
+            dirs[:] = []
+        total += len(files)
+    return total
 
 
 def walk_directory_and_log(
@@ -66,6 +93,12 @@ def walk_directory_and_log(
     file_names: Optional[Set[str]] = None,
     limit: Optional[int] = None,
     specific_files: Optional[Set[str]] = None,
+    min_size: Optional[str] = None,
+    max_size: Optional[str] = None,
+    include: Optional[tuple] = None,
+    exclude: Optional[tuple] = None,
+    regex: bool = False,
+    recursive: bool = True,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
     algorithm = algorithm or config.default_algorithm
@@ -75,7 +108,7 @@ def walk_directory_and_log(
     if isinstance(output_files, str):
         output_files = [output_files]
 
-    output_files = [str(get_report_filename(f)) for f in output_files]
+    # Use the extensions as provided, no modification
     success = False
 
     try:
@@ -85,11 +118,7 @@ def walk_directory_and_log(
         )
         final_results: List[Dict[str, str]] = []
 
-        total_files = (
-            len(specific_files)
-            if specific_files
-            else sum(len(files) for _, _, files in os.walk(directory))
-        )
+        total_files = count_files(directory, recursive)
         progress_bar = ProgressBar(total=total_files)
 
         try:
@@ -103,29 +132,23 @@ def walk_directory_and_log(
                     )
                 else:
                     # Build list of files to process
-                    files_to_process = []
-                    for root, dirs, files in os.walk(directory):
-                        if exclude_paths:
-                            dirs[:] = [
-                                d
-                                for d in dirs
-                                if os.path.join(root, d) not in exclude_paths
-                            ]
-                        for file_name in files:
-                            full_path = os.path.join(root, file_name)
-                            if exclude_paths and full_path in exclude_paths:
-                                continue
-                            if file_extension and not file_name.endswith(
+                    files_to_process = [
+                        os.path.join(root, file_name)
+                        for root, dirs, files in os.walk(directory)
+                        if recursive or not dirs.clear()
+                        for file_name in files
+                        if not (
+                            (
+                                exclude_paths
+                                and os.path.join(root, file_name) in exclude_paths
+                            )
+                            or (
                                 file_extension
-                            ):
-                                continue
-                            if file_names and file_name not in file_names:
-                                continue
-                            files_to_process.append(full_path)
-                            if limit and len(files_to_process) >= limit:
-                                break
-                        if limit and len(files_to_process) >= limit:
-                            break
+                                and not file_name.endswith(file_extension)
+                            )
+                            or (file_names and file_name not in file_names)
+                        )
+                    ][:limit]
 
                     results = pool.process_items(
                         files_to_process, lambda x: calculate_hash(x, algorithm)

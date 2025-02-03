@@ -1,3 +1,22 @@
+## v0.4.0 (2025-02-03)
+
+### BREAKING CHANGE
+
+- Pattern matching now only uses filenames instead of full paths
+
+### Feat
+
+- **utils**: improve scanner utility
+- **cli**: add filelist command and cleanup
+- **reports**: add filelist report handler
+- **utils**: improve regex pattern matching
+- add flag to run no-recursive
+
+### Fix
+
+- **cli**: reword recursive option help message
+- correct output format handling
+
 ## v0.3.0 (2025-01-27)
 
 ### Feat
