@@ -508,6 +508,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#viewing-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Reports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing Reports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#getting-help" class="md-nav__link">
     <span class="md-ellipsis">
       Getting Help
@@ -779,6 +797,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#viewing-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Viewing Reports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparing Reports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#getting-help" class="md-nav__link">
     <span class="md-ellipsis">
       Getting Help
@@ -872,6 +908,29 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--no-recursive<spa
 <p>Generate a list of files without calculating hashes:</p>
 <div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>filelist<span class="w"> </span>/path/to/directory
 </code></pre></div>
+<h2 id="viewing-reports"><strong>Viewing Reports</strong></h2>
+<p>View report contents in a paginated format:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View entire report</span>
+hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv
+
+<span class="c1"># Filter report entries</span>
+hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;mydoc&quot;</span>
+</code></pre></div>
+<h2 id="comparing-reports"><strong>Comparing Reports</strong></h2>
+<p>Compare two reports to identify changes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># View differences between reports</span>
+hashreport<span class="w"> </span>compare<span class="w"> </span>hashreport_&lt;old&gt;.csv<span class="w"> </span>hashreport_&lt;new&gt;.csv
+
+<span class="c1"># Save comparison results</span>
+hashreport<span class="w"> </span>compare<span class="w"> </span>hashreport_&lt;old&gt;.csv<span class="w"> </span>hashreport_&lt;new&gt;.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
+</code></pre></div>
+<p>The comparison will show:</p>
+<ul>
+<li>Modified files (hash changed)</li>
+<li>Moved files (same hash, different location)</li>
+<li>Added files (new in second report)</li>
+<li>Removed files (missing in second report)</li>
+</ul>
 <h2 id="getting-help"><strong>Getting Help</strong></h2>
 <p>For detailed information about available options:</p>
 <div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>--help

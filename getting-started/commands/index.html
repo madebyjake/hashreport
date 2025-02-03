@@ -466,6 +466,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#view-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      View Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compare-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compare Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#size-format" class="md-nav__link">
     <span class="md-ellipsis">
       Size Format
@@ -647,6 +665,24 @@
   <a href="#filelist-command-options" class="md-nav__link">
     <span class="md-ellipsis">
       Filelist Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#view-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      View Command Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compare-command-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compare Command Options
     </span>
   </a>
   
@@ -883,6 +919,48 @@
 </tr>
 </tbody>
 </table>
+<h2 id="view-command-options"><strong>View Command Options</strong></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REPORT</code></td>
+<td>Report file to view</td>
+</tr>
+<tr>
+<td><code>-f</code>, <code>--filter</code></td>
+<td>Filter report entries</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compare-command-options"><strong>Compare Command Options</strong></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REPORT1</code></td>
+<td>First report file to compare</td>
+</tr>
+<tr>
+<td><code>REPORT2</code></td>
+<td>Second report file to compare</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>Output directory for comparison report</td>
+</tr>
+</tbody>
+</table>
 <h2 id="size-format"><strong>Size Format</strong></h2>
 <p>When using <code>--min-size</code> or <code>--max-size</code>, the following formats are supported:</p>
 <table>
@@ -951,6 +1029,18 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
 <span class="w">  </span>--regex<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{8}.*\.txt</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--exclude<span class="w"> </span><span class="s2">&quot;^temp_.*&quot;</span>
+
+<span class="c1"># View report contents</span>
+hashreport<span class="w"> </span>view<span class="w"> </span>report.csv
+
+<span class="c1"># Filter report entries</span>
+hashreport<span class="w"> </span>view<span class="w"> </span>report.csv<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;*.txt&quot;</span>
+
+<span class="c1"># Compare two reports</span>
+hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv
+
+<span class="c1"># Compare and save results</span>
+hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
 </code></pre></div>
 
 

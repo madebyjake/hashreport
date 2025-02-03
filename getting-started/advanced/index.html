@@ -567,6 +567,57 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#report-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Comparison
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saving-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saving Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-with-version-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using with Version Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -847,6 +898,57 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#report-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Comparison
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Comparison">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saving-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Saving Comparisons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-with-version-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using with Version Control
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -956,6 +1058,40 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
 hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-o<span class="w"> </span>report.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json
+</code></pre></div>
+<h2 id="report-comparison"><strong>Report Comparison</strong></h2>
+<h3 id="understanding-changes"><strong>Understanding Changes</strong></h3>
+<p>The comparison functionality identifies several types of changes:</p>
+<ul>
+<li><strong>Modified</strong>: File exists in both reports but has different hash values</li>
+<li><strong>Moved</strong>: Same file (identical hash) exists in different locations</li>
+<li><strong>Added</strong>: File exists only in the newer report</li>
+<li><strong>Removed</strong>: File exists only in the older report</li>
+</ul>
+<h3 id="output-format"><strong>Output Format</strong></h3>
+<p>Changes are displayed with bold text for better visibility:</p>
+<ul>
+<li>Change type is displayed in <strong>bold</strong></li>
+<li>File paths show the original and new locations</li>
+<li>Details include hash values and change descriptions</li>
+<li>Complete path information is shown in separate columns</li>
+</ul>
+<h3 id="saving-comparisons"><strong>Saving Comparisons</strong></h3>
+<p>Comparison results can be saved to CSV format:</p>
+<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
+</code></pre></div>
+<p>The output filename will be generated automatically using the format:
+<code>compare_&lt;old_report&gt;_&lt;new_report&gt;.csv</code></p>
+<h3 id="using-with-version-control"><strong>Using with Version Control</strong></h3>
+<p>Example workflow for tracking file changes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate baseline report</span>
+hashreport<span class="w"> </span>scan<span class="w"> </span>/project/dir<span class="w"> </span>-o<span class="w"> </span>baseline.csv
+
+<span class="c1"># Later, generate new report</span>
+hashreport<span class="w"> </span>scan<span class="w"> </span>/project/dir<span class="w"> </span>-o<span class="w"> </span>current.csv
+
+<span class="c1"># Compare changes</span>
+hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<span class="w"> </span>current.csv
 </code></pre></div>
 
 
