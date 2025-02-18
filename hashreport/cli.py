@@ -23,8 +23,8 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 
 
 def validate_size(
     ctx: click.Context, param: click.Parameter, value: Optional[str]
-) -> Optional[int]:
-    """Validate and convert size parameter to bytes.
+) -> Optional[str]:
+    """Validate and convert size parameter format.
 
     Args:
         ctx: Click context
@@ -32,7 +32,7 @@ def validate_size(
         value: Size string with unit (e.g., "1MB", "500KB")
 
     Returns:
-        Size in bytes or None if no value provided
+        Valid size string or None if no value provided
 
     Raises:
         click.BadParameter: If size format is invalid
@@ -49,12 +49,32 @@ def validate_size(
 
     try:
         size = value.strip().upper()
-        for unit, multiplier in units.items():
-            if size.endswith(unit):
-                number = float(size[: -len(unit)])
-                return int(number * multiplier)
+        # Sort units by length (longest first) to avoid partial matches
+        sorted_units = sorted(units.keys(), key=len, reverse=True)
 
-        raise ValueError(f"Invalid unit. Must be one of: {', '.join(units.keys())}")
+        # Find matching unit
+        matched_unit = None
+        for unit in sorted_units:
+            if size.endswith(unit):
+                matched_unit = unit
+                break
+
+        if not matched_unit:
+            raise ValueError(
+                f"Size must include unit. Valid units are: {', '.join(sorted_units)}"
+            )
+
+        # Extract numeric part by removing the unit
+        number_str = size[: -len(matched_unit)]
+        if not number_str:
+            raise ValueError("No numeric value provided")
+
+        # Validate number can be converted
+        number = float(number_str)
+        if number <= 0:
+            raise ValueError("Size must be greater than 0")
+
+        return value
 
     except (ValueError, AttributeError) as e:
         raise click.BadParameter(f"Invalid size format: {e}")
