@@ -16,7 +16,7 @@ keywords = [
   "verification"
 ]
 classifiers = [
-  "Development Status :: 1 - Planning",
+  "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Intended Audience :: Information Technology",
   "License :: OSI Approved :: GNU Affero General Public License v3",

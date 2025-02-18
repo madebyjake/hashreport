@@ -1,0 +1,50 @@
+[hashreport]
+# Core settings
+default_algorithm = "md5"
+default_format = "csv"
+supported_formats = ["csv", "json"]
+chunk_size = 4096
+max_workers = 0  # 0 = Use CPU count
+timestamp_format = "%y%m%d-%H%M"
+show_progress = true
+max_errors_shown = 10
+
+# File processing settings
+min_file_size = "0B"
+max_file_size = ""  # Empty string = No limit
+default_recursive = true
+ignore_hidden_files = true
+ignore_system_files = true
+excluded_directories = [".git", "__pycache__", "node_modules"]
+excluded_extensions = [""]
+
+# Email settings
+[hashreport.email_defaults]
+port = 587
+use_tls = true
+host = "localhost"
+timeout = 30
+default_subject = "HashReport Results"
+retry_attempts = 3
+
+# Logging settings
+[hashreport.logging]
+level = "INFO"
+file_logging = false
+log_directory = "logs"
+max_log_size = "10MB"
+backup_count = 5
+
+# Progress display settings
+[hashreport.progress]
+refresh_rate = 0.1
+show_eta = true
+show_file_names = true
+show_speed = true
+
+# Report settings
+[hashreport.reports]
+include_metadata = true
+include_timing = true
+max_concurrent_writes = 4
+compression = false

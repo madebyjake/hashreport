@@ -131,3 +131,49 @@ hashreport scan /path/to/directory \
   -o report.csv \
   -f csv -f json
 ```
+
+## **Report Comparison**
+
+### **Understanding Changes**
+
+The comparison functionality identifies several types of changes:
+
+- **Modified**: File exists in both reports but has different hash values
+- **Moved**: Same file (identical hash) exists in different locations
+- **Added**: File exists only in the newer report
+- **Removed**: File exists only in the older report
+
+### **Output Format**
+
+Changes are displayed with bold text for better visibility:
+
+- Change type is displayed in **bold**
+- File paths show the original and new locations
+- Details include hash values and change descriptions
+- Complete path information is shown in separate columns
+
+### **Saving Comparisons**
+
+Comparison results can be saved to CSV format:
+
+```bash
+hashreport compare old_report.csv new_report.csv -o /path/to/output/
+```
+
+The output filename will be generated automatically using the format:
+`compare_<old_report>_<new_report>.csv`
+
+### **Using with Version Control**
+
+Example workflow for tracking file changes:
+
+```bash
+# Generate baseline report
+hashreport scan /project/dir -o baseline.csv
+
+# Later, generate new report
+hashreport scan /project/dir -o current.csv
+
+# Compare changes
+hashreport compare baseline.csv current.csv
+```

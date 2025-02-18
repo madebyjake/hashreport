@@ -170,3 +170,49 @@ def test_scan_with_options(tmp_path):
         assert len(args[1]) == 1  # One output file
         assert args[1][0].endswith(".json")  # JSON extension
         assert kwargs.get("algorithm") == "sha256"
+
+
+@patch("hashreport.cli._create_default_settings")
+def test_config_init(mock_create, tmp_path):
+    """Test config init command."""
+    runner = CliRunner()
+    result = runner.invoke(cli, ["config", "init"])
+    assert result.exit_code == 0
+    mock_create.assert_called_once_with(None)
+
+    # Test with custom path
+    custom_path = tmp_path / "config.toml"
+    result = runner.invoke(cli, ["config", "init", str(custom_path)])
+    assert result.exit_code == 0
+    mock_create.assert_called_with(str(custom_path))
+
+
+@patch("hashreport.cli.click.edit")
+@patch("hashreport.cli._create_default_settings")
+def test_config_edit(mock_create, mock_edit, tmp_path):
+    """Test config edit command."""
+    config_path = tmp_path / "settings.toml"
+    config_path.touch()
+
+    with patch("hashreport.config.HashReportConfig.get_settings_path") as mock_path:
+        mock_path.return_value = config_path
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "edit"])
+
+        assert result.exit_code == 0
+        mock_edit.assert_called_once_with(filename=str(config_path))
+        mock_create.assert_not_called()
+
+
+@patch("hashreport.cli.Console")
+def test_config_show(mock_console, tmp_path):
+    """Test config show command."""
+    runner = CliRunner()
+    result = runner.invoke(cli, ["config", "show"])
+    assert result.exit_code == 0
+
+    console = mock_console.return_value
+    assert console.print.called
+    # Verify section headers were printed
+    calls = console.print.call_args_list
+    assert any("Current Configuration" in str(c) for c in calls)
