@@ -12,6 +12,9 @@ env:
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_CACHE_DIR: ~/.cache/pypoetry
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
