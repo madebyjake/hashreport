@@ -8,6 +8,8 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 import tomli
 
+from hashreport.utils.exceptions import ConfigError
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,7 +18,10 @@ class HashReportConfig:
     """Configuration settings for hashreport."""
 
     # Class-level constants
-    DEFAULT_CONFIG_PATH: ClassVar[Path] = Path("pyproject.toml")
+    PROJECT_CONFIG_PATH: ClassVar[Path] = Path("pyproject.toml")
+    SETTINGS_PATH: ClassVar[Path] = (
+        Path.home() / ".config" / "hashreport" / "settings.toml"
+    )
     APP_CONFIG_KEY: ClassVar[str] = "hashreport"
     POETRY_CONFIG_KEY: ClassVar[str] = "poetry"
     DEFAULT_EMAIL_CONFIG: ClassVar[Dict[str, Union[int, bool, str]]] = {
@@ -60,13 +65,17 @@ class HashReportConfig:
             data: Poetry metadata section
 
         Raises:
-            ValueError: If required fields are missing
+            ConfigError: If required fields are missing or invalid
         """
         missing = [field for field in cls.REQUIRED_METADATA if field not in data]
         if missing:
-            raise ValueError(
+            raise ConfigError(
                 f"Missing required metadata fields in pyproject.toml: {', '.join(missing)}"  # noqa: E501
             )
+
+        # Validate version format
+        if not isinstance(data["version"], str) or not data["version"].strip():
+            raise ConfigError("Version must be a non-empty string in pyproject.toml")
 
     @classmethod
     def _load_metadata(cls, poetry_config: Dict[str, Any]) -> Dict[str, Any]:
@@ -103,7 +112,7 @@ class HashReportConfig:
         """
         current = path if path.is_absolute() else Path.cwd() / path
         while current != current.parent:
-            config_path = current / cls.DEFAULT_CONFIG_PATH
+            config_path = current / cls.PROJECT_CONFIG_PATH
             if config_path.exists():
                 try:
                     with config_path.open("rb") as f:
@@ -125,13 +134,12 @@ class HashReportConfig:
     @classmethod
     def from_file(cls, config_path: Optional[Path] = None) -> "HashReportConfig":
         """Load configuration from a TOML file."""
-        path = config_path or cls.DEFAULT_CONFIG_PATH
+        path = config_path or cls.PROJECT_CONFIG_PATH
 
         # Find valid config data
         data = cls._find_valid_config(path)
         if not data:
-            logger.error("No valid configuration found in path hierarchy")
-            raise ValueError(
+            raise ConfigError(
                 "No valid configuration found. Ensure pyproject.toml exists with required metadata."  # noqa: E501
             )
 
@@ -139,15 +147,18 @@ class HashReportConfig:
         app_config = tool_section.get(cls.APP_CONFIG_KEY, {})
         poetry_config = tool_section.get(cls.POETRY_CONFIG_KEY, {})
 
+        if not poetry_config:
+            raise ConfigError("Missing [tool.poetry] section in pyproject.toml")
+
         try:
             metadata = cls._load_metadata(poetry_config)
             instance = cls(**app_config)
             for key, value in metadata.items():
                 setattr(instance, key, value)
             return instance
-        except ValueError as e:
+        except (ValueError, ConfigError) as e:
             logger.error("Configuration error: %s", e)
-            raise
+            raise ConfigError(str(e))
 
     @classmethod
     def _load_toml(cls, config_path: Path) -> Dict[str, Any]:
@@ -174,24 +185,27 @@ class HashReportConfig:
             return {}
 
     @classmethod
-    def _find_config_file(cls, path: Path) -> Path:
-        """Search for configuration file in parent directories.
+    def get_settings_path(cls) -> Path:
+        """Get the user's settings file path."""
+        return cls.SETTINGS_PATH
 
-        Args:
-            path: Starting path for search
+    @classmethod
+    def load_settings(cls) -> Dict[str, Any]:
+        """Load user settings from settings file."""
+        settings_path = cls.get_settings_path()
+        if not settings_path.exists():
+            return {}
+        try:
+            with settings_path.open("rb") as f:
+                data = tomli.load(f)
+                return data.get(cls.APP_CONFIG_KEY, {})
+        except Exception as e:
+            logger.warning(f"Error loading settings: {e}")
+            return {}
 
-        Returns:
-            Path to found config file or original path
-        """
-        if path.is_absolute():
-            return path
-
-        current = Path.cwd()
-        while current != current.parent:
-            if (current / path).exists():
-                return current / path
-            current = current.parent
-        return path
+    def get_user_settings(self) -> Dict[str, Any]:
+        """Get user-editable settings as a dictionary."""
+        return self.load_settings()
 
     def get_metadata(self) -> Dict[str, Any]:
         """Get project metadata as a dictionary."""
@@ -204,24 +218,27 @@ class HashReportConfig:
             "urls": self.urls,
         }
 
+    def get_all_settings(self) -> Dict[str, Any]:
+        """Get complete configuration settings."""
+        settings = self.get_user_settings()
+        for section in ["email_defaults", "logging", "progress", "reports"]:
+            if section not in settings:
+                settings[section] = getattr(self, section, {})
+        return settings
+
 
 # Lazy-loaded configuration instance
 loaded_config = None
 
 
 def get_config() -> HashReportConfig:
-    """
-    Get the loaded configuration instance.
-
-    Returns:
-        HashReportConfig: Configuration instance
-    """
+    """Get the loaded configuration instance."""
     global loaded_config
     if loaded_config is None:
         try:
             loaded_config = HashReportConfig.from_file()
-        except ValueError as e:
-            logger.error(f"Falling back to defaults: {e}")
+        except Exception as e:
+            logger.error(f"Error loading config, falling back to defaults: {e}")
             loaded_config = HashReportConfig()
             loaded_config.name = "hashreport"
             loaded_config.version = "0.0.0"
