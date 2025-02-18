@@ -1,3 +1,16 @@
+## v0.5.0 (2025-02-18)
+
+### Feat
+
+- **cli**: implement config command and refactor
+- **config**: implement user config management
+- **utils**: add report viewer and comparison
+
+### Fix
+
+- **cli**: fix size validation logic
+- **viewer**: attribute ref in display_comparison
+
 ## v0.4.0 (2025-02-03)
 
 ### BREAKING CHANGE
