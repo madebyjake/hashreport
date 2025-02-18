@@ -138,6 +138,45 @@ The comparison will show:
 - Added files (new in second report)
 - Removed files (missing in second report)
 
+## **Configuration Management**
+
+hashreport settings can be managed using the `config` command:
+
+### Initialize Settings
+
+Create a default settings file:
+
+```bash
+# Create in default location (~/.config/hashreport/settings.toml)
+hashreport config init
+
+# Create in custom location
+hashreport config init ./my-settings.toml
+```
+
+### View Settings
+
+Display current configuration:
+
+```bash
+hashreport config show
+```
+
+### Edit Settings
+
+Open settings in your default text editor:
+
+```bash
+hashreport config edit
+```
+
+The editor used is determined by:
+1. $VISUAL environment variable
+2. $EDITOR environment variable
+3. Platform default (vi/vim on Unix, notepad on Windows)
+
+Settings are automatically validated when saved.
+
 ## **Getting Help**
 
 For detailed information about available options:

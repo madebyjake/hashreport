@@ -1,10 +1,11 @@
 """Tests for config utility."""
 
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
-from hashreport.config import HashReportConfig, get_config
+from hashreport.config import ConfigError, HashReportConfig, get_config
 
 
 def test_hashreport_config_defaults():
@@ -72,7 +73,7 @@ def test_invalid_config_file(tmp_path):
     config_file = tmp_path / "pyproject.toml"
     config_file.write_text("invalid toml content")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ConfigError):
         HashReportConfig.from_file(config_file)
 
 
@@ -86,7 +87,7 @@ description = "Test project"
     config_file = tmp_path / "pyproject.toml"
     config_file.write_text(config_content)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ConfigError):
         HashReportConfig.from_file(config_file)
 
 
@@ -142,9 +143,9 @@ def test_get_config_fallback():
 
     hashreport.config.loaded_config = None
 
-    # Temporarily modify DEFAULT_CONFIG_PATH to a non-existent path
-    original_path = HashReportConfig.DEFAULT_CONFIG_PATH
-    HashReportConfig.DEFAULT_CONFIG_PATH = Path("nonexistent.toml")
+    # Temporarily modify PROJECT_CONFIG_PATH to a non-existent path
+    original_path = HashReportConfig.PROJECT_CONFIG_PATH
+    HashReportConfig.PROJECT_CONFIG_PATH = Path("nonexistent.toml")
 
     try:
         config = get_config()
@@ -152,7 +153,7 @@ def test_get_config_fallback():
         assert config.version == "0.0.0"
     finally:
         # Restore original path
-        HashReportConfig.DEFAULT_CONFIG_PATH = original_path
+        HashReportConfig.PROJECT_CONFIG_PATH = original_path
 
 
 def test_email_defaults():
@@ -168,3 +169,43 @@ def test_custom_email_defaults():
     custom_email = {"port": 465, "use_tls": False, "host": "smtp.example.com"}
     config = HashReportConfig(email_defaults=custom_email)
     assert config.email_defaults == custom_email
+
+
+def test_get_settings_path():
+    """Test getting settings path."""
+    cfg = HashReportConfig()
+    path = cfg.get_settings_path()
+    assert path.name == "settings.toml"
+    assert ".config/hashreport" in str(path)
+
+
+def test_get_all_settings():
+    """Test getting complete settings."""
+    cfg = HashReportConfig()
+    cfg.name = "test"
+    cfg.version = "0.1.0"
+
+    settings = cfg.get_all_settings()
+    assert "email_defaults" in settings
+    assert "logging" in settings
+    assert "progress" in settings
+    assert "reports" in settings
+
+    # Check default sections are included
+    assert settings["email_defaults"]["port"] == 587
+    assert settings["email_defaults"]["host"] == "localhost"
+
+
+def test_load_settings(tmp_path):
+    """Test loading settings from file."""
+    settings_file = tmp_path / "settings.toml"
+    settings_content = """
+    [hashreport]
+    default_algorithm = "sha256"
+    """
+    settings_file.write_text(settings_content)
+
+    with patch("hashreport.config.HashReportConfig.SETTINGS_PATH", settings_file):
+        cfg = HashReportConfig()
+        settings = cfg.load_settings()
+        assert settings.get("default_algorithm") == "sha256"

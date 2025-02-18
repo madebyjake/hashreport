@@ -7,6 +7,12 @@ class HashReportError(Exception):
     pass
 
 
+class ConfigError(HashReportError):
+    """Raised when there's an error with configuration."""
+
+    pass
+
+
 class FileAccessError(HashReportError):
     """Raised when there's an error accessing a file."""
 
