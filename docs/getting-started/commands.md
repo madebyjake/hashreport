@@ -61,6 +61,18 @@ The `filelist` command generates a list of all files in a directory. Here are al
 | `REPORT2` | Second report file to compare |
 | `-o`, `--output` | Output directory for comparison report |
 
+## **Config Command Options**
+
+The `config` command manages user settings:
+
+| Command | Description |
+|---------|-------------|
+| `config init [PATH]` | Generate default settings file at optional PATH |
+| `config show` | Display current settings |
+| `config edit` | Edit settings in system default editor |
+
+Default settings location: `~/.config/hashreport/settings.toml`
+
 ## **Size Format**
 
 When using `--min-size` or `--max-size`, the following formats are supported:
@@ -122,4 +134,17 @@ hashreport compare old_report.csv new_report.csv
 
 # Compare and save results
 hashreport compare old_report.csv new_report.csv -o /path/to/output/
+
+# Initialize default settings
+hashreport config init
+
+# Create settings file in specific location
+hashreport config init ./my-settings.toml
+
+# View current settings
+hashreport config show
+
+# Edit settings in default editor
+hashreport config edit
 ```
+````
