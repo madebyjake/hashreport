@@ -12,7 +12,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from hashreport.config import get_config  # noqa: E402
 
 CONTROL_TEMPLATE = """\
-Source: python3-{name}
+Source: {name}
 Section: utils
 Priority: optional
 Maintainer: {maintainer}
@@ -26,14 +26,14 @@ Standards-Version: 4.6.0
 Homepage: {homepage}
 Rules-Requires-Root: no
 
-Package: python3-{name}
+Package: {name}
 Architecture: all
 Depends: python3,
          python3-pkg-resources,
-         ${python3:Depends},
+         ${{python3:Depends}},
          {depends}
 Description: {description}
- {long_description}
+{long_description}
 """
 
 RULES_TEMPLATE = """\
@@ -201,7 +201,7 @@ def main() -> None:
     metadata = config.get_metadata()
     maintainer = metadata["authors"][0]
     homepage = metadata["urls"].get("Repository", "")
-    package_name = metadata["name"]  # Original package name without python3- prefix
+    package_name = f"python3-{metadata['name']}"  # Add python3- prefix here
 
     # Get dependencies
     runtime_deps, build_deps = get_dependencies(config)
@@ -217,7 +217,6 @@ def main() -> None:
     changelog_path = Path("CHANGELOG.md")
     version, date, changes = parse_changelog(changelog_path, metadata["version"])
     if not all([version, date, changes]):
-        # Fallback if changelog entry not found
         version = metadata["version"]
         date = datetime.now().strftime("%Y-%m-%d")
         changes = "* Initial release."
@@ -230,13 +229,13 @@ def main() -> None:
         build_depends=format_build_dependencies(build_deps),
         depends=format_dependencies(runtime_deps),
         description=short_desc,
-        long_description=long_desc.lstrip(),
+        long_description=long_desc,
     )
     (debian_dir / "control").write_text(control_content)
 
-    # Write changelog
+    # Write changelog with the python3- prefix in package name
     changelog_content = generate_changelog(
-        f"python3-{package_name}",
+        package_name,
         version,
         changes,
         date,
@@ -244,7 +243,7 @@ def main() -> None:
     )
     (debian_dir / "changelog").write_text(changelog_content)
 
-    # Write rules file
+    # Write rules file with the original package name (without python3- prefix)
     rules_content = RULES_TEMPLATE.format(name=metadata["name"])
     rules_file = debian_dir / "rules"
     rules_file.write_text(rules_content)
