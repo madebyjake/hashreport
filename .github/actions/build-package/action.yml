@@ -18,8 +18,11 @@ runs:
         python3 -m venv $VENV_PATH
         . $VENV_PATH/bin/activate
         pip install --upgrade pip wheel setuptools poetry
-        # Install all dependencies including dev dependencies
-        poetry install --with dev --no-interaction
+        # Install project and its dependencies without dev dependencies
+        poetry config virtualenvs.create false
+        poetry install --no-dev --no-interaction
+        # Install additional build dependencies
+        pip install rich click tomli tqdm typing-extensions
 
     - name: Set up Git
       shell: bash
