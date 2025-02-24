@@ -19,7 +19,6 @@ Maintainer: {maintainer}
 Build-Depends: debhelper-compat (= 13),
                dh-python,
                python3-all,
-               python3-poetry,
                python3-setuptools,
                pybuild-plugin-pyproject,
                {build_depends}
@@ -30,32 +29,34 @@ Rules-Requires-Root: no
 Package: python3-{name}
 Architecture: all
 Depends: python3,
+         python3-pkg-resources,
+         ${python3:Depends},
          {depends}
 Description: {description}
-{long_description}
+ {long_description}
 """
 
 RULES_TEMPLATE = """\
 #!/usr/bin/make -f
 
 export DESTDIR=$(CURDIR)/debian/python3-{name}
+export PYBUILD_NAME=hashreport
+export PYBUILD_SYSTEM=distutils
+export PYBUILD_DISABLE=test
 
 %:
 \tdh $@ --with python3 --buildsystem=pybuild
 
-# Skip tests during package build
-override_dh_auto_test:
-
 override_dh_auto_build:
-\tpoetry install
-\tpoetry build
+\tdh_auto_build
+\tpython3 tools/docs/genman.py
 
 override_dh_auto_install:
-\tpython3 -m pip install --no-deps dist/*.whl --target $(DESTDIR)/usr/lib/python3/dist-packages/
-\tmkdir -p $(DESTDIR)/usr/bin
-\tcp -P .venv/bin/hashreport $(DESTDIR)/usr/bin/
-\tchmod 755 $(DESTDIR)/usr/bin/hashreport
-"""  # noqa: E501
+\tdh_auto_install
+\tdh_python3
+\tmkdir -p $(DESTDIR)/usr/share/man/man1
+\tcp -p man/man1/hashreport.1 $(DESTDIR)/usr/share/man/man1/
+"""
 
 COPYRIGHT_TEMPLATE = """\
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
@@ -172,24 +173,25 @@ def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
     return sorted(runtime_deps), sorted(build_deps)
 
 
-def format_description(desc: str) -> str:
+def format_description(desc: str) -> tuple[str, str]:
     """Format package description according to Debian standards."""
     lines = desc.split("\n")
-    short_desc = lines[0].strip()
+    # Take first sentence for summary, limit to 60 chars
+    summary = lines[0].split(".")[0].strip()[:60]
 
-    # Format long description with proper indentation and line wrapping
+    # Format long description with proper indentation
     long_desc = []
     for line in lines[1:]:
         if not line.strip():
             long_desc.append(" .")
         else:
-            # Wrap at 72 chars and indent with 2 spaces
+            # Wrap and indent continuation lines
             wrapped = textwrap.fill(
-                line.strip(), width=70, initial_indent=" ", subsequent_indent=" "
+                line.strip(), width=70, initial_indent=" ", subsequent_indent="  "
             )
             long_desc.append(wrapped)
 
-    return short_desc, "\n".join(long_desc)
+    return summary, "\n".join(long_desc)
 
 
 def main() -> None:
