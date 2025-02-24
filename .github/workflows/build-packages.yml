@@ -42,6 +42,7 @@ jobs:
               build-essential debhelper devscripts dh-python
               python3-all python3-setuptools python3-pip python3-venv
               python3-poetry python3-build python3-wheel
+              pybuild-plugin-pyproject
               lintian git
             cmd: apt-get
 

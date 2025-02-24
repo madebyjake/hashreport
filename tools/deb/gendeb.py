@@ -21,6 +21,7 @@ Build-Depends: debhelper-compat (= 13),
                python3-all,
                python3-poetry,
                python3-setuptools,
+               pybuild-plugin-pyproject,
                {build_depends}
 Standards-Version: 4.6.0
 Homepage: {homepage}
