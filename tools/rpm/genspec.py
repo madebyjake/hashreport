@@ -45,9 +45,18 @@ rm -rf %{{buildroot}}
 # Install just our package wheel, dependencies are handled by RPM
 python3 -m pip install --root=%{{buildroot}} --no-deps dist/*.whl
 
-# Ensure correct file permissions and locations
-mkdir -p %{{buildroot}}%{{_bindir}}
-mv %{{buildroot}}/usr/bin/* %{{buildroot}}%{{_bindir}}/
+# Fix script location
+install -d %{{buildroot}}%{{_bindir}}
+if [ -d %{{buildroot}}/usr/local/bin ]; then
+    mv %{{buildroot}}/usr/local/bin/* %{{buildroot}}%{{_bindir}}/
+elif [ -d %{{buildroot}}/usr/bin ]; then
+    mv %{{buildroot}}/usr/bin/* %{{buildroot}}%{{_bindir}}/
+fi
+
+# Clean up empty directories
+rm -rf %{{buildroot}}/usr/local
+
+# Ensure correct permissions
 chmod 755 %{{buildroot}}%{{_bindir}}/*
 
 %files
