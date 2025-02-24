@@ -20,9 +20,9 @@ runs:
         pip install --upgrade pip wheel setuptools poetry
         # Install project and its dependencies without dev dependencies
         poetry config virtualenvs.create false
-        poetry install --no-dev --no-interaction
-        # Install additional build dependencies
-        pip install rich click tomli tqdm typing-extensions
+        poetry install --without dev,docs --no-interaction
+        # Install additional runtime dependencies
+        pip install -e .
 
     - name: Set up Git
       shell: bash
