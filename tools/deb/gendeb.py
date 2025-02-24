@@ -221,15 +221,15 @@ def main() -> None:
         date = datetime.now().strftime("%Y-%m-%d")
         changes = "* Initial release."
 
-    # Write control file
+    # Write package files
     control_content = CONTROL_TEMPLATE.format(
-        name=package_name,
+        name=package_name,  # Use without python3- prefix, it's in the template
         maintainer=maintainer,
         homepage=homepage,
         build_depends=format_build_dependencies(build_deps),
         depends=format_dependencies(runtime_deps),
         description=short_desc,
-        long_description=long_desc,
+        long_description=long_desc.lstrip(),  # Remove leading whitespace
     )
     (debian_dir / "control").write_text(control_content)
 
