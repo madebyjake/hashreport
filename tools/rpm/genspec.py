@@ -126,10 +126,8 @@ def main() -> None:
     config = get_config()
     metadata = config.get_metadata()
 
-    # Extract dependencies from pyproject.toml
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
-    # Add build dependencies but not poetry
-    build_deps = ["black", "flake8", "isort", "pytest"]
+    build_deps = []
 
     # Parse changelog
     changelog_path = Path("CHANGELOG.md")
