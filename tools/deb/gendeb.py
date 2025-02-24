@@ -36,14 +36,16 @@ Description: {description}
 
 RULES_TEMPLATE = """\
 #!/usr/bin/make -f
+
 %:
-    dh $@ --with python3 --buildsystem=pybuild
+\tdh $@ --with python3 --buildsystem=pybuild
 
 override_dh_auto_build:
-    poetry build
+\tpoetry install
+\tpoetry build
 
 override_dh_auto_install:
-    poetry install --no-dev --root debian/python3-{name}
+\tpoetry install --without dev,docs --root debian/python3-{name}
 """
 
 COPYRIGHT_TEMPLATE = """\
