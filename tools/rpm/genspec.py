@@ -25,6 +25,10 @@ BuildRequires:  python3-devel
 BuildRequires:  python3-pip
 BuildRequires:  python3-poetry
 BuildRequires:  python3-setuptools
+BuildRequires:  python3-black
+BuildRequires:  python3-flake8
+BuildRequires:  python3-isort
+BuildRequires:  python3-pytest
 {build_requires}
 
 Requires:       python3
@@ -51,6 +55,7 @@ poetry install --no-dev --root $RPM_BUILD_ROOT
 %{{python3_sitelib}}/hashreport-*.dist-info/
 
 %changelog
+{changelog}
 """
 
 
@@ -114,31 +119,21 @@ def main() -> None:
 
     # Extract dependencies from pyproject.toml
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
-    build_deps = ["pytest", "black", "flake8", "isort"]
+    build_deps = []
 
     # Parse changelog
-    changelog_path = Path(__file__).parent.parent / "CHANGELOG.md"
+    changelog_path = Path("CHANGELOG.md")
     changelog_entries = parse_changelog(changelog_path)
+    if not changelog_entries:
+        changelog_entries = [
+            (
+                metadata["version"],
+                datetime.now().strftime("%Y-%m-%d"),
+                "Initial release",
+            )
+        ]
 
-    # Get the latest date for the current version
-    current_version_entry = next(
-        (entry for entry in changelog_entries if entry[0] == metadata["version"]), None
-    )
-    if current_version_entry:
-        date_str = datetime.strptime(current_version_entry[1], "%Y-%m-%d").strftime(
-            "%a %b %d %Y"
-        )
-    else:
-        date_str = datetime.now().strftime("%a %b %d %Y")
-
-    # Generate changelog content
-    changelog_content = format_changelog_entries(
-        changelog_entries,
-        metadata["authors"][0].split("<")[0].strip(),
-        metadata["version"],
-    )
-
-    # Format the spec file
+    # Format the spec file with changelog
     spec_content = SPEC_TEMPLATE.format(
         name=metadata["name"],
         version=metadata["version"],
@@ -148,12 +143,12 @@ def main() -> None:
         url=metadata["urls"].get("Repository", ""),
         requires=format_dependencies(deps),
         build_requires=format_build_requires(build_deps),
-        date=date_str,
-        packager=metadata["authors"][0].split("<")[0].strip(),
+        changelog=format_changelog_entries(
+            changelog_entries,
+            metadata["authors"][0].split("<")[0].strip(),
+            metadata["version"],
+        ),
     )
-
-    # Append changelog
-    spec_content = spec_content.rstrip() + "\n" + changelog_content
 
     # Write to file
     spec_file = Path(f"{metadata['name']}.spec")
