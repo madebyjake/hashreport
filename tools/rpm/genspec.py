@@ -23,12 +23,8 @@ Source0:        %{{name}}-%{{version}}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python3-devel
 BuildRequires:  python3-pip
-BuildRequires:  python3-poetry
 BuildRequires:  python3-setuptools
-BuildRequires:  python3-black
-BuildRequires:  python3-flake8
-BuildRequires:  python3-isort
-BuildRequires:  python3-pytest
+BuildRequires:  python3-wheel
 {build_requires}
 
 Requires:       python3
@@ -41,11 +37,13 @@ Requires:       python3
 %autosetup
 
 %build
-poetry build
+# Use pip to build instead of poetry
+python3 -m pip install --upgrade pip build
+python3 -m build --wheel --no-isolation
 
 %install
 rm -rf $RPM_BUILD_ROOT
-poetry install --no-dev --root $RPM_BUILD_ROOT
+python3 -m pip install --root=$RPM_BUILD_ROOT dist/*.whl
 
 %files
 %license LICENSE
@@ -119,7 +117,8 @@ def main() -> None:
 
     # Extract dependencies from pyproject.toml
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
-    build_deps = []
+    # Add build dependencies but not poetry
+    build_deps = ["black", "flake8", "isort", "pytest"]
 
     # Parse changelog
     changelog_path = Path("CHANGELOG.md")
