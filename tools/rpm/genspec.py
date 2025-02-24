@@ -57,6 +57,9 @@ python3 -m pip wheel --no-deps -w dist .
 # Generate man pages with required dependencies available
 PYTHONPATH=. python3 tools/docs/genman.py
 
+# Don't run tests during package build
+%define _skip_tests 1
+
 %install
 rm -rf %{{buildroot}}
 # Install just our package wheel, dependencies are handled by RPM

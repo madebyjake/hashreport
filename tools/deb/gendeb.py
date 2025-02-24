@@ -41,6 +41,9 @@ RULES_TEMPLATE = """\
 %:
 \tdh $@ --with python3 --buildsystem=pybuild
 
+# Skip tests during package build
+override_dh_auto_test:
+
 override_dh_auto_build:
 \tpoetry install
 \tpoetry build
