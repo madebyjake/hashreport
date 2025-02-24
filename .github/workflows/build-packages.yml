@@ -30,6 +30,11 @@ jobs:
             rpmdevtools \
             git
 
+      - name: Install project
+        run: |
+          pip3 install tomli
+          pip3 install -e .
+
       - name: Set up RPM build environment
         run: |
           rpmdev-setuptree
@@ -85,6 +90,11 @@ jobs:
             python3-tomli \
             python3-tqdm \
             python3-typing-extensions
+
+      - name: Install project
+        run: |
+          pip3 install tomli
+          pip3 install -e .
 
       - name: Set up Debian package files
         run: |
