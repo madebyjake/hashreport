@@ -41,14 +41,14 @@ Requires:       python3
 python3 -m pip wheel --no-deps -w dist .
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{{buildroot}}
 # Install just our package wheel, dependencies are handled by RPM
-python3 -m pip install --root=$RPM_BUILD_ROOT --no-deps dist/*.whl
+python3 -m pip install --root=%{{buildroot}} --no-deps dist/*.whl
 
 # Ensure correct file permissions and locations
-mkdir -p %{buildroot}%{_bindir}
-mv %{buildroot}/usr/bin/* %{buildroot}%{_bindir}/
-chmod 755 %{buildroot}%{_bindir}/*
+mkdir -p %{{buildroot}}%{{_bindir}}
+mv %{{buildroot}}/usr/bin/* %{{buildroot}}%{{_bindir}}/
+chmod 755 %{{buildroot}}%{{_bindir}}/*
 
 %files
 %license LICENSE
