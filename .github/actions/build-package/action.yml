@@ -20,6 +20,19 @@ runs:
         pip install --upgrade pip wheel setuptools poetry
         poetry install --no-interaction
 
+    - name: Set up Git
+      shell: bash
+      run: |
+        # Configure git
+        git config --global init.defaultBranch main
+        git config --global user.email "ci@example.com"
+        git config --global user.name "CI"
+
+        # Initialize repository and create initial commit
+        git init
+        git add .
+        git commit -m "Build commit"
+
     - name: Generate package files
       shell: bash
       run: |
@@ -39,7 +52,10 @@ runs:
           mkdir -p ~/rpmbuild/SOURCES
           git archive --format=tar.gz \
             --prefix=hashreport-${VERSION}/ \
-            -o ~/rpmbuild/SOURCES/hashreport-${VERSION}.tar.gz HEAD
+            -o ~/rpmbuild/SOURCES/hashreport-${VERSION}.tar.gz HEAD || {
+              echo "Failed to create source archive"
+              exit 1
+            }
         else
           PYTHONPATH=. python3 tools/deb/gendeb.py
         fi
