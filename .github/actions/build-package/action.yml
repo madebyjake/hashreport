@@ -27,6 +27,8 @@ runs:
         git config --global init.defaultBranch main
         git config --global user.email "ci@example.com"
         git config --global user.name "CI"
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        git config --global --add safe.directory "/__w/hashreport/hashreport"
 
         # Initialize repository and create initial commit
         git init
