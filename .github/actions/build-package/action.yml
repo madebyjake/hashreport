@@ -12,13 +12,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up Python
+    - name: Set up Python environment
       shell: bash
       run: |
         python3 -m venv $VENV_PATH
         . $VENV_PATH/bin/activate
         pip install --upgrade pip wheel setuptools poetry
-        poetry install --no-interaction
+        # Install all dependencies including dev dependencies
+        poetry install --with dev --no-interaction
 
     - name: Set up Git
       shell: bash

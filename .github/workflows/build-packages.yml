@@ -33,12 +33,14 @@ jobs:
             deps: >-
               python3 python3-devel python3-pip python3-setuptools
               rpm-build rpmdevtools rpmlint git
+              python3-wheel
             cmd: dnf
           - type: deb
             image: debian:bookworm
             deps: >-
               build-essential debhelper devscripts dh-python python3-all
               python3-pip python3-venv python3-setuptools lintian git
+              python3-wheel
             cmd: apt-get
 
     runs-on: ubuntu-latest
