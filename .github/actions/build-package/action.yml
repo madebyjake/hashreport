@@ -1,0 +1,50 @@
+name: 'Build Package'
+description: 'Build RPM or DEB package from source'
+
+inputs:
+  package-type:
+    description: 'Type of package to build (rpm or deb)'
+    required: true
+  version:
+    description: 'Package version'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      shell: bash
+      run: |
+        python3 -m venv $VENV_PATH
+        . $VENV_PATH/bin/activate
+        pip install --upgrade pip wheel setuptools poetry
+        poetry install --no-interaction
+
+    - name: Generate package files
+      shell: bash
+      run: |
+        . $VENV_PATH/bin/activate
+        if [ "${{ inputs.package-type }}" = "rpm" ]; then
+          rpmdev-setuptree
+          PYTHONPATH=. python3 tools/rpm/genspec.py
+          cp hashreport.spec ~/rpmbuild/SPECS/
+          VERSION=${{ inputs.version }}
+          git archive --format=tar.gz \
+            --prefix=hashreport-${VERSION}/ \
+            -o ~/rpmbuild/SOURCES/hashreport-${VERSION}.tar.gz HEAD
+        else
+          PYTHONPATH=. python3 tools/deb/gendeb.py
+        fi
+
+    - name: Build and verify package
+      shell: bash
+      run: |
+        if [ "${{ inputs.package-type }}" = "rpm" ]; then
+          rpmbuild -ba ~/rpmbuild/SPECS/hashreport.spec
+          rpmlint ~/rpmbuild/RPMS/noarch/*.rpm
+          rpm -qlp ~/rpmbuild/RPMS/noarch/*.rpm
+        else
+          dpkg-buildpackage -us -uc -b
+          lintian ../*.deb
+          dpkg -c ../*.deb
+        fi
