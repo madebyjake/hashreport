@@ -87,7 +87,7 @@ def parse_changelog(changelog_path: Path, version: str) -> Tuple[str, str, str]:
 
     current_version = ""
     current_date = ""
-    current_changes = []
+    changes = []
     in_target_version = False
 
     for line in changelog_path.read_text().splitlines():
@@ -100,9 +100,15 @@ def parse_changelog(changelog_path: Path, version: str) -> Tuple[str, str, str]:
                 in_target_version = True
                 current_date = parts[2].strip("()")
         elif in_target_version and line.strip() and not line.startswith("#"):
-            current_changes.append(line.strip())
+            # Strip Markdown formatting and normalize entry
+            entry = line.strip()
+            if entry.startswith("- "):
+                entry = entry[2:]
+            entry = entry.replace("**", "").replace("`: ", ": ")
+            if entry:
+                changes.append("  * " + entry)
 
-    return current_version, current_date, "\n".join(current_changes)
+    return current_version, current_date, "\n".join(changes)
 
 
 def generate_changelog(
