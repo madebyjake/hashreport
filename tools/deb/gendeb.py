@@ -58,8 +58,6 @@ Copyright: {year} {author}
 License: {license}
 """
 
-COMPAT_CONTENT = "13\n"
-
 
 def format_dependencies(deps: List[str]) -> str:
     """Format dependencies for control file."""
@@ -212,9 +210,9 @@ def main() -> None:
         date = datetime.now().strftime("%Y-%m-%d")
         changes = "* Initial release."
 
-    # Generate and write control file
+    # Write control file
     control_content = CONTROL_TEMPLATE.format(
-        name=package_name,  # This will create python3-hashreport consistently
+        name=package_name,
         maintainer=maintainer,
         homepage=homepage,
         build_depends=format_build_dependencies(build_deps),
@@ -224,7 +222,7 @@ def main() -> None:
     )
     (debian_dir / "control").write_text(control_content)
 
-    # Generate and write changelog
+    # Write changelog
     changelog_content = generate_changelog(
         f"python3-{package_name}",
         version,
@@ -234,13 +232,13 @@ def main() -> None:
     )
     (debian_dir / "changelog").write_text(changelog_content)
 
-    # Generate and write rules file
+    # Write rules file
     rules_content = RULES_TEMPLATE.format(name=metadata["name"])
     rules_file = debian_dir / "rules"
     rules_file.write_text(rules_content)
     rules_file.chmod(0o755)
 
-    # Generate and write copyright file
+    # Write copyright file
     copyright_content = COPYRIGHT_TEMPLATE.format(
         name=metadata["name"],
         homepage=homepage,
@@ -249,9 +247,6 @@ def main() -> None:
         license=metadata["license"],
     )
     (debian_dir / "copyright").write_text(copyright_content)
-
-    # Write compat file
-    (debian_dir / "compat").write_text(COMPAT_CONTENT)
 
     print(f"Generated Debian package files in {debian_dir}")
 
