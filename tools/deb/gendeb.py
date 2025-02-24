@@ -145,14 +145,8 @@ def generate_changelog(
 def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
     """Extract runtime and build dependencies from poetry config."""
     # Get dependencies from pyproject.toml
-    runtime_deps = set()
-    build_deps = set()
-
-    # Add core dependencies
-    runtime_deps.add("python3")
-    build_deps.update(
-        ["setuptools", "poetry", "all"]
-    )  # Remove python3- prefix, handled by formatter
+    runtime_deps = []
+    build_deps = []
 
     # Add project dependencies
     poetry_config = config._load_toml(config.PROJECT_CONFIG_PATH)
@@ -160,14 +154,14 @@ def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
         deps = poetry_config["tool"]["poetry"].get("dependencies", {})
         dev_deps = poetry_config["tool"]["poetry"].get("dev-dependencies", {})
 
-        # Strip python3- prefix if present
-        runtime_deps.update(
+        # Strip python3- prefix if present and exclude python itself
+        runtime_deps.extend(
             dep.split("[")[0].lower().replace("python3-", "")
-            for dep in deps
+            for dep in deps.keys()
             if dep != "python"
         )
-        build_deps.update(
-            dep.split("[")[0].lower().replace("python3-", "") for dep in dev_deps
+        build_deps.extend(
+            dep.split("[")[0].lower().replace("python3-", "") for dep in dev_deps.keys()
         )
 
     return sorted(runtime_deps), sorted(build_deps)
@@ -223,13 +217,13 @@ def main() -> None:
 
     # Write package files
     control_content = CONTROL_TEMPLATE.format(
-        name=package_name,  # Use without python3- prefix, it's in the template
+        name=package_name,
         maintainer=maintainer,
         homepage=homepage,
         build_depends=format_build_dependencies(build_deps),
         depends=format_dependencies(runtime_deps),
         description=short_desc,
-        long_description=long_desc.lstrip(),  # Remove leading whitespace
+        long_description=long_desc.lstrip(),
     )
     (debian_dir / "control").write_text(control_content)
 
