@@ -38,6 +38,8 @@ Description: {description}
 RULES_TEMPLATE = """\
 #!/usr/bin/make -f
 
+export DESTDIR=$(CURDIR)/debian/python3-{name}
+
 %:
 \tdh $@ --with python3 --buildsystem=pybuild
 
@@ -49,8 +51,11 @@ override_dh_auto_build:
 \tpoetry build
 
 override_dh_auto_install:
-\tpoetry install --without dev,docs --root debian/python3-{name}
-"""
+\tpython3 -m pip install --no-deps dist/*.whl --target $(DESTDIR)/usr/lib/python3/dist-packages/
+\tmkdir -p $(DESTDIR)/usr/bin
+\tcp -P .venv/bin/hashreport $(DESTDIR)/usr/bin/
+\tchmod 755 $(DESTDIR)/usr/bin/hashreport
+"""  # noqa: E501
 
 COPYRIGHT_TEMPLATE = """\
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
