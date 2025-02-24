@@ -14,9 +14,9 @@ SPEC_TEMPLATE = """\
 Name:           {name}
 Version:        {version}
 Release:        1%{{?dist}}
-Summary:        {summary}
+Summary:        Generate detailed file hash reports
 
-License:        {license}
+License:        AGPLv3
 URL:            {url}
 Source0:        %{{name}}-%{{version}}.tar.gz
 
@@ -31,7 +31,17 @@ Requires:       python3
 {requires}
 
 %description
-{description}
+A command-line tool that generates comprehensive hash reports for files within
+a directory. Reports can be output in CSV or JSON formats and include detailed
+information such as file name, path, size, hash algorithm, hash value, and
+last modified date.
+
+Features:
+* Support for multiple hash algorithms
+* Multi-threaded processing
+* Configurable output formats
+* File filtering options
+* Email report delivery
 
 %prep
 %autosetup
@@ -39,6 +49,9 @@ Requires:       python3
 %build
 # Build wheel without dependencies (they're handled by RPM)
 python3 -m pip wheel --no-deps -w dist .
+
+# Generate man pages
+python3 tools/docs/genman.py
 
 %install
 rm -rf %{{buildroot}}
@@ -53,6 +66,10 @@ for bindir in %{{buildroot}}/usr/bin %{{buildroot}}/usr/local/bin; do
     fi
 done
 
+# Install man pages
+mkdir -p %{{buildroot}}%{{_mandir}}/man1
+install -p -m 644 man/man1/hashreport.1 %{{buildroot}}%{{_mandir}}/man1/
+
 # Clean up empty directories
 find %{{buildroot}} -type d -empty -delete
 
@@ -62,6 +79,7 @@ find %{{buildroot}} -type d -empty -delete
 %{{_bindir}}/hashreport
 %{{python3_sitelib}}/hashreport/
 %{{python3_sitelib}}/hashreport-*.dist-info/
+%{{_mandir}}/man1/hashreport.1*
 
 %changelog
 {changelog}
