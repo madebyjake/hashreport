@@ -140,7 +140,9 @@ def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
 
     # Add core dependencies
     runtime_deps.add("python3")
-    build_deps.update(["python3-setuptools", "python3-poetry", "python3-all"])
+    build_deps.update(
+        ["setuptools", "poetry", "all"]
+    )  # Remove python3- prefix, handled by formatter
 
     # Add project dependencies
     poetry_config = config._load_toml(config.PROJECT_CONFIG_PATH)
@@ -148,10 +150,15 @@ def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
         deps = poetry_config["tool"]["poetry"].get("dependencies", {})
         dev_deps = poetry_config["tool"]["poetry"].get("dev-dependencies", {})
 
+        # Strip python3- prefix if present
         runtime_deps.update(
-            dep.split("[")[0].lower() for dep in deps if dep != "python"
+            dep.split("[")[0].lower().replace("python3-", "")
+            for dep in deps
+            if dep != "python"
         )
-        build_deps.update(dep.split("[")[0].lower() for dep in dev_deps)
+        build_deps.update(
+            dep.split("[")[0].lower().replace("python3-", "") for dep in dev_deps
+        )
 
     return sorted(runtime_deps), sorted(build_deps)
 
