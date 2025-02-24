@@ -37,13 +37,18 @@ Requires:       python3
 %autosetup
 
 %build
-# Use pip to build instead of poetry
-python3 -m pip install --upgrade pip build
-python3 -m build --wheel --no-isolation
+# Build wheel without dependencies (they're handled by RPM)
+python3 -m pip wheel --no-deps -w dist .
 
 %install
 rm -rf $RPM_BUILD_ROOT
-python3 -m pip install --root=$RPM_BUILD_ROOT dist/*.whl
+# Install just our package wheel, dependencies are handled by RPM
+python3 -m pip install --root=$RPM_BUILD_ROOT --no-deps dist/*.whl
+
+# Ensure correct file permissions and locations
+mkdir -p %{buildroot}%{_bindir}
+mv %{buildroot}/usr/bin/* %{buildroot}%{_bindir}/
+chmod 755 %{buildroot}%{_bindir}/*
 
 %files
 %license LICENSE
