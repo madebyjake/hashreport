@@ -1,0 +1,68 @@
+name: Build Packages
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-rpm:
+    name: Build RPM Package
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          dnf update -y
+          dnf install -y \
+            python3-devel \
+            python3-pip \
+            python3-poetry \
+            python3-setuptools \
+            python3-pytest \
+            python3-black \
+            python3-flake8 \
+            python3-isort \
+            rpm-build \
+            rpmdevtools \
+            git
+
+      - name: Set up RPM build environment
+        run: |
+          rpmdev-setuptree
+          cp tools/genspec.py .
+          python3 genspec.py
+          cp hashreport.spec ~/rpmbuild/SPECS/
+          git archive --format=tar.gz --prefix=hashreport-${GITHUB_REF#refs/tags/v}/ -o ~/rpmbuild/SOURCES/hashreport-${GITHUB_REF#refs/tags/v}.tar.gz HEAD
+
+      - name: Build RPM package
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/hashreport.spec
+
+      - name: Upload RPM package
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm-package
+          path: |
+            ~/rpmbuild/RPMS/noarch/*.rpm
+            ~/rpmbuild/SRPMS/*.rpm
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ~/rpmbuild/RPMS/noarch/*.rpm
+            ~/rpmbuild/SRPMS/*.rpm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Placeholder
+  # build-deb:
+  #   name: Build DEB Package
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     # TODO: Add steps for building .deb package
