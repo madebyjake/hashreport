@@ -12,7 +12,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from hashreport.config import get_config  # noqa: E402
 
 CONTROL_TEMPLATE = """\
-Source: {name}
+Source: python3-{name}
 Section: utils
 Priority: optional
 Maintainer: {maintainer}
@@ -182,6 +182,7 @@ def main() -> None:
     metadata = config.get_metadata()
     maintainer = metadata["authors"][0]
     homepage = metadata["urls"].get("Repository", "")
+    package_name = metadata["name"]  # Original package name without python3- prefix
 
     # Get dependencies
     runtime_deps, build_deps = get_dependencies(config)
@@ -204,7 +205,7 @@ def main() -> None:
 
     # Generate and write control file
     control_content = CONTROL_TEMPLATE.format(
-        name=metadata["name"],
+        name=package_name,  # This will create python3-hashreport consistently
         maintainer=maintainer,
         homepage=homepage,
         build_depends=format_build_dependencies(build_deps),
@@ -216,7 +217,7 @@ def main() -> None:
 
     # Generate and write changelog
     changelog_content = generate_changelog(
-        f"python3-{metadata['name']}",
+        f"python3-{package_name}",
         version,
         changes,
         date,
