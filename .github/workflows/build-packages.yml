@@ -33,7 +33,7 @@ jobs:
       - name: Set up RPM build environment
         run: |
           rpmdev-setuptree
-          cp tools/genspec.py .
+          cp tools/rpm/genspec.py .
           python3 genspec.py
           cp hashreport.spec ~/rpmbuild/SPECS/
           git archive --format=tar.gz --prefix=hashreport-${GITHUB_REF#refs/tags/v}/ -o ~/rpmbuild/SOURCES/hashreport-${GITHUB_REF#refs/tags/v}.tar.gz HEAD
@@ -59,10 +59,50 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Placeholder
-  # build-deb:
-  #   name: Build DEB Package
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     # TODO: Add steps for building .deb package
+  build-deb:
+    name: Build DEB Package
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            build-essential \
+            debhelper \
+            devscripts \
+            dh-python \
+            python3-all \
+            python3-pip \
+            python3-poetry \
+            python3-setuptools \
+            python3-click \
+            python3-rich \
+            python3-tomli \
+            python3-tqdm \
+            python3-typing-extensions
+
+      - name: Set up Debian package files
+        run: |
+          python3 tools/deb/gendeb.py
+
+      - name: Build Debian package
+        run: |
+          dpkg-buildpackage -us -uc -b
+
+      - name: Upload DEB package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-package
+          path: ../*.deb
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ../*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
