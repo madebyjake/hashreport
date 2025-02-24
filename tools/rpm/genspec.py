@@ -47,11 +47,15 @@ Features:
 %autosetup
 
 %build
+# Install build dependencies first
+python3 -m pip install --upgrade pip wheel
+python3 -m pip install rich click tomli tqdm typing-extensions
+
 # Build wheel without dependencies (they're handled by RPM)
 python3 -m pip wheel --no-deps -w dist .
 
-# Generate man pages
-python3 tools/docs/genman.py
+# Generate man pages with required dependencies available
+PYTHONPATH=. python3 tools/docs/genman.py
 
 %install
 rm -rf %{{buildroot}}
@@ -144,6 +148,7 @@ def main() -> None:
     config = get_config()
     metadata = config.get_metadata()
 
+    # Make sure we include all runtime dependencies
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
     build_deps = []
 
