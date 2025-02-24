@@ -39,9 +39,10 @@ jobs:
           - type: deb
             image: debian:bookworm
             deps: >-
-              build-essential debhelper devscripts dh-python python3-all
-              python3-pip python3-venv python3-setuptools lintian git
-              python3-wheel
+              build-essential debhelper devscripts dh-python
+              python3-all python3-setuptools python3-pip python3-venv
+              python3-poetry python3-build python3-wheel
+              lintian git
             cmd: apt-get
 
     runs-on: ubuntu-latest
