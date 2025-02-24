@@ -49,7 +49,7 @@ python3 -m pip install --root=%{{buildroot}} --no-deps dist/*.whl
 mkdir -p %{{buildroot}}%{{_bindir}}
 for bindir in %{{buildroot}}/usr/bin %{{buildroot}}/usr/local/bin; do
     if [ -d "$bindir" ]; then
-        find "$bindir" -type f -exec mv {} %{{buildroot}}%{{_bindir}}/ \\;
+        find "$bindir" -type f -exec mv '{{}}' %{{buildroot}}%{{_bindir}}/ \\;
     fi
 done
 
