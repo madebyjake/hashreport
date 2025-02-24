@@ -25,10 +25,18 @@ runs:
       run: |
         . $VENV_PATH/bin/activate
         if [ "${{ inputs.package-type }}" = "rpm" ]; then
+          # Set up RPM build directories
           rpmdev-setuptree
+          # Extract version from package metadata
+          VERSION=$(python3 -c "from hashreport.config import get_config; print(get_config().get_metadata()['version'])")
+          echo "Building RPM for version: ${VERSION}"
+
+          # Generate and copy spec file
           PYTHONPATH=. python3 tools/rpm/genspec.py
           cp hashreport.spec ~/rpmbuild/SPECS/
-          VERSION=${{ inputs.version }}
+
+          # Create source archive
+          mkdir -p ~/rpmbuild/SOURCES
           git archive --format=tar.gz \
             --prefix=hashreport-${VERSION}/ \
             -o ~/rpmbuild/SOURCES/hashreport-${VERSION}.tar.gz HEAD
