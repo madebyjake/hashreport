@@ -144,25 +144,32 @@ def generate_changelog(
 
 def get_dependencies(config: Any) -> Tuple[List[str], List[str]]:
     """Extract runtime and build dependencies from poetry config."""
-    # Get dependencies from pyproject.toml
     runtime_deps = []
     build_deps = []
 
     # Add project dependencies
     poetry_config = config._load_toml(config.PROJECT_CONFIG_PATH)
     if "tool" in poetry_config and "poetry" in poetry_config["tool"]:
-        deps = poetry_config["tool"]["poetry"].get("dependencies", {})
-        dev_deps = poetry_config["tool"]["poetry"].get("dev-dependencies", {})
+        poetry_section = poetry_config["tool"]["poetry"]
 
-        # Strip python3- prefix if present and exclude python itself
-        runtime_deps.extend(
-            dep.split("[")[0].lower().replace("python3-", "")
-            for dep in deps.keys()
-            if dep != "python"
-        )
-        build_deps.extend(
-            dep.split("[")[0].lower().replace("python3-", "") for dep in dev_deps.keys()
-        )
+        # Handle runtime dependencies
+        if "dependencies" in poetry_section:
+            deps = poetry_section["dependencies"]
+            if isinstance(deps, dict):  # Handle dict format
+                runtime_deps.extend(
+                    name.split("[")[0].lower()
+                    for name in deps.keys()
+                    if name != "python"
+                )
+
+        # Handle build dependencies
+        for group in ["dev-dependencies", "group.dev.dependencies"]:
+            if group in poetry_section:
+                dev_deps = poetry_section[group]
+                if isinstance(dev_deps, dict):
+                    build_deps.extend(
+                        name.split("[")[0].lower() for name in dev_deps.keys()
+                    )
 
     return sorted(runtime_deps), sorted(build_deps)
 
