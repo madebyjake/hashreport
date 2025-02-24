@@ -1,3 +1,10 @@
+## v0.6.0 (2025-02-24)
+
+### Feat
+
+- **tools**: add gendeb for generating deb files
+- **tools**: add genspec for generating rpm spec
+
 ## v0.5.0 (2025-02-18)
 
 ### Feat
