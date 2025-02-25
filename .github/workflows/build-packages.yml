@@ -82,14 +82,29 @@ jobs:
     needs: [prepare, build]
     if: needs.prepare.outputs.is_release == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          name: rpm-packages
+          path: ./rpm-packages
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-rpm
+          path: ./source-rpm
+
+      - name: List artifacts
+        run: |
+          find . -type f -name "*.rpm"
 
       - uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*.rpm
+          files: |
+            ./rpm-packages/*.rpm
+            ./source-rpm/*.rpm
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
