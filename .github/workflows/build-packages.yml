@@ -96,15 +96,22 @@ jobs:
           name: source-rpm
           path: ./source-rpm
 
+      - name: Generate checksums
+        run: |
+          cd rpm-packages && sha256sum *.rpm > ../SHA256SUMS
+          cd ../source-rpm && sha256sum *.rpm >> ../SHA256SUMS
+
       - name: List artifacts
         run: |
           find . -type f -name "*.rpm"
+          cat SHA256SUMS
 
       - uses: softprops/action-gh-release@v1
         with:
           files: |
             ./rpm-packages/*.rpm
             ./source-rpm/*.rpm
+            ./SHA256SUMS
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
