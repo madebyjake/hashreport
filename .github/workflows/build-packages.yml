@@ -1,147 +1,96 @@
 name: Build Packages
 
 on:
-  release:
-    types: [created]
+  push:
+    branches: [build-packages]
+    tags: ['v*']
+  workflow_dispatch:
 
 env:
-  PYTHON_VERSION: '3.10'
-  PACKAGE_NAME: hashreport
-  VENV_PATH: .venv
   PYTHONPATH: ${{ github.workspace }}
 
 jobs:
-  build-rpm:
-    name: Build RPM Package
+  prepare:
     runs-on: ubuntu-latest
-    container:
-      image: fedora:latest
-
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      is_release: ${{ steps.check-release.outputs.is_release }}
     steps:
       - uses: actions/checkout@v4
+
+      - id: check-release
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - id: get-version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            # Get version from Poetry for non-tag builds
+            pip install poetry
+            VERSION=$(poetry version -s)
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install system dependencies
         run: |
           dnf update -y
           dnf install -y \
+            git \
             python3 \
             python3-devel \
             python3-pip \
             python3-setuptools \
+            python3-build \
+            python3-wheel \
             rpm-build \
             rpmdevtools \
-            git
+            rpmlint
 
-      - name: Set up Python environment
-        run: |
-          python3 -m venv $VENV_PATH
-          . $VENV_PATH/bin/activate
-          pip install --upgrade pip wheel setuptools
-          pip install poetry tomli
-          pip install -e .
+      - uses: ./.github/actions/build-package
+        with:
+          version: ${{ needs.prepare.outputs.version }}
 
-      - name: Set up RPM build environment
-        id: rpm-setup
-        run: |
-          echo "Setting up RPM build environment..."
-          rpmdev-setuptree
-          cp tools/rpm/genspec.py .
-          python3 genspec.py || exit 1
-          cp hashreport.spec ~/rpmbuild/SPECS/ || exit 1
-
-          # Initialize git repo for source archive
-          git config --global init.defaultBranch main
-          git init
-          git add .
-          git config --global user.email "ci@example.com"
-          git config --global user.name "CI"
-          git commit -m "Build commit"
-
-          # Create source archive
-          echo "Creating source archive..."
-          git archive --format=tar.gz \
-            --prefix=${PACKAGE_NAME}-${GITHUB_REF#refs/tags/v}/ \
-            -o ~/rpmbuild/SOURCES/${PACKAGE_NAME}-${GITHUB_REF#refs/tags/v}.tar.gz HEAD
-
-      - name: Build RPM package
-        id: rpm-build
-        run: |
-          echo "Building RPM package..."
-          rpmbuild -ba ~/rpmbuild/SPECS/${PACKAGE_NAME}.spec
-          echo "RPM build completed"
-
-      - name: Upload packages as artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rpm-packages
-          path: |
-            ~/rpmbuild/RPMS/noarch/*.rpm
-            ~/rpmbuild/SRPMS/*.rpm
+          path: ~/rpmbuild/RPMS/noarch/*.rpm
+          if-no-files-found: error
 
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ~/rpmbuild/RPMS/noarch/*.rpm
-            ~/rpmbuild/SRPMS/*.rpm
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-deb:
-    name: Build DEB Package
-    runs-on: ubuntu-latest
-    container:
-      image: debian:bookworm
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt-get install -y \
-            build-essential \
-            debhelper \
-            devscripts \
-            dh-python \
-            python3-all \
-            python3-pip \
-            python3-venv \
-            curl \
-            git
-
-      - name: Set up Python environment
-        run: |
-          python3 -m venv $VENV_PATH
-          . $VENV_PATH/bin/activate
-          pip install --upgrade pip wheel setuptools
-          pip install poetry tomli
-          pip install -e .
-
-      - name: Set up Debian package files
-        id: deb-setup
-        run: |
-          echo "Generating Debian package files..."
-          . $VENV_PATH/bin/activate
-          python3 tools/deb/gendeb.py || exit 1
-          echo "Debian package files generated"
-
-      - name: Build Debian package
-        id: deb-build
-        run: |
-          echo "Building Debian package..."
-          dpkg-buildpackage -us -uc -b
-          echo "Debian build completed"
-
-      - name: Upload packages as artifacts
+      - name: Upload source RPM
         uses: actions/upload-artifact@v4
         with:
-          name: deb-packages
-          path: ../*.deb
+          name: source-rpm
+          path: ~/rpmbuild/SRPMS/*.rpm
+          if-no-files-found: error
 
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
+  release:
+    needs: [prepare, build]
+    if: needs.prepare.outputs.is_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
         with:
-          files: ../*.deb
+          path: artifacts
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*.rpm
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
