@@ -267,13 +267,13 @@ files = [
 
 [[package]]
 name = "commitizen"
-version = "4.2.1"
+version = "4.2.2"
 description = "Python commitizen client tool"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "commitizen-4.2.1-py3-none-any.whl", hash = "sha256:a347889e0fe408c3b920a34130d8f35616be3ea8ac6b7b20c5b9aac19762661b"},
-    {file = "commitizen-4.2.1.tar.gz", hash = "sha256:5255416f6d6071068159f0b97605777f3e25d00927ff157b7a8d01efeda7b952"},
+    {file = "commitizen-4.2.2-py3-none-any.whl", hash = "sha256:5b42228178ee999dbdd95c2bf0ea73f8f539e8ed4cad421c2fe0b55b16458d2f"},
+    {file = "commitizen-4.2.2.tar.gz", hash = "sha256:eadf31514d6ce6a12537ccba095d3107f659ff99ae6159212d9de2a9d896dd76"},
 ]
 
 [package.dependencies]
@@ -772,13 +772,13 @@ min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-imp
 
 [[package]]
 name = "mkdocs-autorefs"
-version = "1.3.0"
+version = "1.4.0"
 description = "Automatically link across pages in MkDocs."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "mkdocs_autorefs-1.3.0-py3-none-any.whl", hash = "sha256:d180f9778a04e78b7134e31418f238bba56f56d6a8af97873946ff661befffb3"},
-    {file = "mkdocs_autorefs-1.3.0.tar.gz", hash = "sha256:6867764c099ace9025d6ac24fd07b85a98335fbd30107ef01053697c8f46db61"},
+    {file = "mkdocs_autorefs-1.4.0-py3-none-any.whl", hash = "sha256:bad19f69655878d20194acd0162e29a89c3f7e6365ffe54e72aa3fd1072f240d"},
+    {file = "mkdocs_autorefs-1.4.0.tar.gz", hash = "sha256:a9c0aa9c90edbce302c09d050a3c4cb7c76f8b7b2c98f84a7a05f53d00392156"},
 ]
 
 [package.dependencies]
@@ -829,13 +829,13 @@ test = ["mkdocs-d2-plugin", "mkdocs-include-markdown-plugin", "mkdocs-macros-tes
 
 [[package]]
 name = "mkdocs-material"
-version = "9.6.4"
+version = "9.6.5"
 description = "Documentation that simply works"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mkdocs_material-9.6.4-py3-none-any.whl", hash = "sha256:414e8376551def6d644b8e6f77226022868532a792eb2c9accf52199009f568f"},
-    {file = "mkdocs_material-9.6.4.tar.gz", hash = "sha256:4d1d35e1c1d3e15294cb7fa5d02e0abaee70d408f75027dc7be6e30fb32e6867"},
+    {file = "mkdocs_material-9.6.5-py3-none-any.whl", hash = "sha256:aad3e6fb860c20870f75fb2a69ef901f1be727891e41adb60b753efcae19453b"},
+    {file = "mkdocs_material-9.6.5.tar.gz", hash = "sha256:b714679a8c91b0ffe2188e11ed58c44d2523e9c2ae26a29cc652fa7478faa21f"},
 ]
 
 [package.dependencies]
@@ -869,13 +869,13 @@ files = [
 
 [[package]]
 name = "mkdocstrings"
-version = "0.28.1"
+version = "0.28.2"
 description = "Automatic documentation from sources, for MkDocs."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "mkdocstrings-0.28.1-py3-none-any.whl", hash = "sha256:a5878ae5cd1e26f491ff084c1f9ab995687d52d39a5c558e9b7023d0e4e0b740"},
-    {file = "mkdocstrings-0.28.1.tar.gz", hash = "sha256:fb64576906771b7701e8e962fd90073650ff689e95eb86e86751a66d65ab4489"},
+    {file = "mkdocstrings-0.28.2-py3-none-any.whl", hash = "sha256:57f79c557e2718d217d6f6a81bf75a0de097f10e922e7e5e00f085c3f0ff6895"},
+    {file = "mkdocstrings-0.28.2.tar.gz", hash = "sha256:9b847266d7a588ea76a8385eaebe1538278b4361c0d1ce48ed005be59f053569"},
 ]
 
 [package.dependencies]
@@ -883,7 +883,7 @@ Jinja2 = ">=2.11.1"
 Markdown = ">=3.6"
 MarkupSafe = ">=1.1"
 mkdocs = ">=1.4"
-mkdocs-autorefs = ">=1.3"
+mkdocs-autorefs = ">=1.4"
 mkdocs-get-deps = ">=0.2"
 pymdown-extensions = ">=6.3"
 
@@ -894,19 +894,19 @@ python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
 
 [[package]]
 name = "mkdocstrings-python"
-version = "1.16.0"
+version = "1.16.2"
 description = "A Python handler for mkdocstrings."
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "mkdocstrings_python-1.16.0-py3-none-any.whl", hash = "sha256:80ecbcca67fe29eb5a853ab7be0457231f6eefb5d079bcdf7dbae16962fc3f51"},
-    {file = "mkdocstrings_python-1.16.0.tar.gz", hash = "sha256:546d53c7d559941abc726b2f78a41c0183480a95ba0a87ccc63b9b08740126f9"},
+    {file = "mkdocstrings_python-1.16.2-py3-none-any.whl", hash = "sha256:ff7e719404e59ad1a72f1afbe854769984c889b8fa043c160f6c988e1ad9e966"},
+    {file = "mkdocstrings_python-1.16.2.tar.gz", hash = "sha256:942ec1a2e0481d28f96f93be3d6e343cab92a21e5baf01c37dd2d7236c4d0bd7"},
 ]
 
 [package.dependencies]
 griffe = ">=0.49"
-mkdocs-autorefs = ">=1.2"
-mkdocstrings = ">=0.28"
+mkdocs-autorefs = ">=1.4"
+mkdocstrings = ">=0.28.2"
 typing-extensions = {version = ">=4.0", markers = "python_version < \"3.11\""}
 
 [[package]]
@@ -1644,4 +1644,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.14"
-content-hash = "a71df29c0e6f27450d2e6edf0832b36a625ec9498f3822097b0288450d322a02"
+content-hash = "d03b1ca33a6c94da6abead1420d5537f3676cd98906e10ac3b3bcb490cdb4624"
