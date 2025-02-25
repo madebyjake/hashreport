@@ -17,21 +17,23 @@ Section: utils
 Priority: optional
 Maintainer: {maintainer}
 Build-Depends: debhelper-compat (= 13),
-               dh-python,
-               python3-all,
-               python3-setuptools,
-               pybuild-plugin-pyproject,
-               {build_depends}
+ dh-python,
+ python3-all,
+ python3-setuptools,
+ pybuild-plugin-pyproject,
+{build_depends}
 Standards-Version: 4.6.0
 Homepage: {homepage}
 Rules-Requires-Root: no
 
 Package: python3-hashreport
 Architecture: all
-Depends: python3,
-         python3-pkg-resources,
-         ${{python3:Depends}},
-         {depends}
+Multi-Arch: foreign
+Section: python
+Depends: ${python3:Depends},
+ ${misc:Depends},
+ python3-pkg-resources,
+{depends}
 Description: {description}
 {long_description}
 """
@@ -71,12 +73,12 @@ License: {license}
 
 def format_dependencies(deps: List[str]) -> str:
     """Format dependencies for control file."""
-    return ",\n         ".join(f"python3-{dep}" for dep in deps)
+    return "\n".join(f" python3-{dep}," for dep in deps).rstrip(",")
 
 
 def format_build_dependencies(deps: List[str]) -> str:
     """Format build dependencies for control file."""
-    return ",\n               ".join(f"python3-{dep}" for dep in deps)
+    return "\n".join(f" python3-{dep}," for dep in deps).rstrip(",")
 
 
 def wrap_description(desc: str) -> str:
