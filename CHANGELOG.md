@@ -2,8 +2,7 @@
 
 ### Feat
 
-- **tools**: add gendeb for generating deb files
-- **tools**: add genspec for generating rpm spec
+- add package build and release scripts for RPM
 
 ## v0.5.0 (2025-02-18)
 
