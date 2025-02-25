@@ -60,6 +60,7 @@ isort = "^6.0.0"
 pre-commit = "^4.1.0"
 pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
+flake8-pyproject = "^1.2.3"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
@@ -96,6 +97,12 @@ addopts = "-ra -q"
 testpaths = [
     "tests",
 ]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503", "D202"]
+import-order-style = "google"
+application-import-names = ["hashreport", "tests"]
 
 [build-system]
 requires = ["poetry-core"]

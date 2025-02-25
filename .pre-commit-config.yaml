@@ -26,6 +26,7 @@ repos:
           - flake8-docstrings
           - flake8-builtins
           - flake8-comprehensions
+          - flake8-pyproject
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.2

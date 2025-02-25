@@ -64,6 +64,11 @@ jobs:
         with:
           version: ${{ needs.prepare.outputs.version }}
 
+      - name: Generate checksums
+        run: |
+          cd ~/rpmbuild/RPMS/noarch && sha256sum *.rpm > ~/SHA256SUMS
+          cd ~/rpmbuild/SRPMS && sha256sum *.rpm >> ~/SHA256SUMS
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -76,6 +81,13 @@ jobs:
         with:
           name: source-rpm
           path: ~/rpmbuild/SRPMS/*.rpm
+          if-no-files-found: error
+
+      - name: Upload checksums
+        uses: actions/upload-artifact@v4
+        with:
+          name: checksums
+          path: ~/SHA256SUMS
           if-no-files-found: error
 
   release:
@@ -96,15 +108,27 @@ jobs:
           name: source-rpm
           path: ./source-rpm
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: checksums
+          path: ./
+
+      - name: Generate checksums
+        run: |
+          cd rpm-packages && sha256sum *.rpm > ../SHA256SUMS
+          cd ../source-rpm && sha256sum *.rpm >> ../SHA256SUMS
+
       - name: List artifacts
         run: |
           find . -type f -name "*.rpm"
+          cat SHA256SUMS
 
       - uses: softprops/action-gh-release@v1
         with:
           files: |
             ./rpm-packages/*.rpm
             ./source-rpm/*.rpm
+            ./SHA256SUMS
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

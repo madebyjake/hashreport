@@ -5,8 +5,23 @@
 - [Python 3](https://www.python.org/downloads/) (tested with 3.10+)
 - [Git](https://git-scm.com/downloads) (optional)
 
+## **Installing RPM Package**
 
-## 1. **Download the Repository**
+Download the latest RPM package from the [Releases](https://github.com/madebyjake/hashreport/releases) page and install it using `dnf` or `yum`:
+
+```bash
+sudo dnf install hashreport-*.noarch.rpm
+```
+
+Verify the installation by running the `hashreport` command:
+
+```bash
+hashreport --version
+```
+
+## **Installing from Source**
+
+### 1. **Download the Repository**
 
 Clone the repository to your local machine using Git and navigate to the project directory:
 
@@ -16,7 +31,7 @@ git clone https://github.com/madebyjake/hashreport.git && cd hashreport
 
 Alternatively, you can download the repository as a ZIP file and extract it to a folder on your machine.
 
-## 2. **Install Dependencies**
+### 2. **Install Dependencies**
 
 First we'll install Poetry, a Python packaging and dependency management tool. There are a few ways to do this, but the recommended method is to use the installer script:
 
@@ -30,10 +45,10 @@ Next, install the project dependencies using Poetry:
 poetry install
 ```
 
-## 3. **Run the Application**
+### 3. **Run the Application**
 
 You can now run the application using Poetry:
 
 ```bash
-poetry run hashreport --help
+poetry run hashreport --version
 ```
