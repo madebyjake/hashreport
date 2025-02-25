@@ -55,7 +55,7 @@ python3 -m pip install rich click tomli tqdm typing-extensions
 python3 -m pip wheel --no-deps -w dist .
 
 # Generate man pages with required dependencies available
-PYTHONPATH=. python3 tools/docs/genman.py
+PYTHONPATH=. python3 tools/gen_man.py
 
 # Don't run tests during package build
 %define _skip_tests 1
