@@ -169,3 +169,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Debian package build files
+debian/
+
+# Man pages
+man/
