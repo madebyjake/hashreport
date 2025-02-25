@@ -2,55 +2,45 @@ name: Build Packages
 
 on:
   push:
-    branches:
-      - build-packages
-  #release:
-    #types: [created]
+    branches: [build-packages]
+    tags: ['v*']
+  workflow_dispatch:
 
 env:
-  PACKAGE_NAME: python3-hashreport
-  VENV_PATH: .venv
   PYTHONPATH: ${{ github.workspace }}
-  VERSION: ${{ github.event.release.tag_name }}
 
 jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.version }}
+      is_release: ${{ steps.check-release.outputs.is_release }}
     steps:
       - uses: actions/checkout@v4
+
+      - id: check-release
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+
       - id: get-version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            # Get version from Poetry for non-tag builds
+            pip install poetry
+            VERSION=$(poetry version -s)
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          fi
 
   build:
     needs: prepare
-    strategy:
-      matrix:
-        include:
-          - type: rpm
-            image: fedora:latest
-            deps: >-
-              python3 python3-devel python3-pip python3-setuptools
-              python3-build python3-wheel rpm-build rpmdevtools rpmlint
-              python3-black python3-flake8 python3-isort python3-pytest
-              git
-            cmd: dnf
-          - type: deb
-            image: debian:bookworm
-            deps: >-
-              build-essential debhelper devscripts dh-python
-              python3-all python3-setuptools python3-pip python3-venv
-              python3-poetry python3-build python3-wheel
-              pybuild-plugin-pyproject
-              lintian git
-            cmd: apt-get
-
     runs-on: ubuntu-latest
-    container:
-      image: ${{ matrix.image }}
-    timeout-minutes: 15
-
+    container: fedora:latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,43 +48,49 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          ${{ matrix.cmd }} update -y
-          ${{ matrix.cmd }} install -y ${{ matrix.deps }}
+          dnf update -y
+          dnf install -y \
+            git \
+            python3 \
+            python3-devel \
+            python3-pip \
+            python3-setuptools \
+            python3-build \
+            python3-wheel \
+            rpm-build \
+            rpmdevtools \
+            rpmlint
 
       - uses: ./.github/actions/build-package
         with:
-          package-type: ${{ matrix.type }}
           version: ${{ needs.prepare.outputs.version }}
 
-      - name: Collect packages
-        run: |
-          mkdir -p packages
-          if [ "${{ matrix.type }}" = "rpm" ]; then
-            cp ~/rpmbuild/RPMS/noarch/*.rpm packages/
-            cp ~/rpmbuild/SRPMS/*.rpm packages/
-          else
-            cp ../*.deb packages/
-          fi
-
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.type }}-packages
-          path: packages/*
+          name: rpm-packages
+          path: ~/rpmbuild/RPMS/noarch/*.rpm
           if-no-files-found: error
-          retention-days: 7
+
+      - name: Upload source RPM
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-rpm
+          path: ~/rpmbuild/SRPMS/*.rpm
+          if-no-files-found: error
 
   release:
     needs: [prepare, build]
+    if: needs.prepare.outputs.is_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
 
-      - name: Update release
-        uses: softprops/action-gh-release@v1
+      - uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*
+          files: artifacts/**/*.rpm
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
