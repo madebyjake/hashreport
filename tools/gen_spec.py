@@ -14,34 +14,71 @@ SPEC_TEMPLATE = """\
 Name:           {name}
 Version:        {version}
 Release:        1%{{?dist}}
-Summary:        {summary}
+Summary:        Generate detailed file hash reports
 
-License:        {license}
+License:        AGPLv3
 URL:            {url}
 Source0:        %{{name}}-%{{version}}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
 BuildRequires:  python3-pip
-BuildRequires:  python3-poetry
 BuildRequires:  python3-setuptools
+BuildRequires:  python3-wheel
 {build_requires}
 
 Requires:       python3
 {requires}
 
 %description
-{description}
+A command-line tool that generates comprehensive hash reports for files within
+a directory. Reports can be output in CSV or JSON formats and include detailed
+information such as file name, path, size, hash algorithm, hash value, and
+last modified date.
+
+Features:
+* Support for multiple hash algorithms
+* Multi-threaded processing
+* Configurable output formats
+* File filtering options
+* Email report delivery
 
 %prep
 %autosetup
 
 %build
-poetry build
+# Install build dependencies first
+python3 -m pip install --upgrade pip wheel
+python3 -m pip install rich click tomli tqdm typing-extensions
+
+# Build wheel without dependencies (they're handled by RPM)
+python3 -m pip wheel --no-deps -w dist .
+
+# Generate man pages with required dependencies available
+PYTHONPATH=. python3 tools/gen_man.py
+
+# Don't run tests during package build
+%define _skip_tests 1
 
 %install
-rm -rf $RPM_BUILD_ROOT
-poetry install --no-dev --root $RPM_BUILD_ROOT
+rm -rf %{{buildroot}}
+# Install just our package wheel, dependencies are handled by RPM
+python3 -m pip install --root=%{{buildroot}} --no-deps dist/*.whl
+
+# Fix permissions and move binaries to standard location
+mkdir -p %{{buildroot}}%{{_bindir}}
+for bindir in %{{buildroot}}/usr/bin %{{buildroot}}/usr/local/bin; do
+    if [ -d "$bindir" ]; then
+        find "$bindir" -type f -exec mv '{{}}' %{{buildroot}}%{{_bindir}}/ \\;
+    fi
+done
+
+# Install man pages
+mkdir -p %{{buildroot}}%{{_mandir}}/man1
+install -p -m 644 man/man1/hashreport.1 %{{buildroot}}%{{_mandir}}/man1/
+
+# Clean up empty directories
+find %{{buildroot}} -type d -empty -delete
 
 %files
 %license LICENSE
@@ -49,8 +86,10 @@ poetry install --no-dev --root $RPM_BUILD_ROOT
 %{{_bindir}}/hashreport
 %{{python3_sitelib}}/hashreport/
 %{{python3_sitelib}}/hashreport-*.dist-info/
+%{{_mandir}}/man1/hashreport.1*
 
 %changelog
+{changelog}
 """
 
 
@@ -112,33 +151,23 @@ def main() -> None:
     config = get_config()
     metadata = config.get_metadata()
 
-    # Extract dependencies from pyproject.toml
+    # Make sure we include all runtime dependencies
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
-    build_deps = ["pytest", "black", "flake8", "isort"]
+    build_deps = []
 
     # Parse changelog
-    changelog_path = Path(__file__).parent.parent / "CHANGELOG.md"
+    changelog_path = Path("CHANGELOG.md")
     changelog_entries = parse_changelog(changelog_path)
+    if not changelog_entries:
+        changelog_entries = [
+            (
+                metadata["version"],
+                datetime.now().strftime("%Y-%m-%d"),
+                "Initial release",
+            )
+        ]
 
-    # Get the latest date for the current version
-    current_version_entry = next(
-        (entry for entry in changelog_entries if entry[0] == metadata["version"]), None
-    )
-    if current_version_entry:
-        date_str = datetime.strptime(current_version_entry[1], "%Y-%m-%d").strftime(
-            "%a %b %d %Y"
-        )
-    else:
-        date_str = datetime.now().strftime("%a %b %d %Y")
-
-    # Generate changelog content
-    changelog_content = format_changelog_entries(
-        changelog_entries,
-        metadata["authors"][0].split("<")[0].strip(),
-        metadata["version"],
-    )
-
-    # Format the spec file
+    # Format the spec file with changelog
     spec_content = SPEC_TEMPLATE.format(
         name=metadata["name"],
         version=metadata["version"],
@@ -148,12 +177,12 @@ def main() -> None:
         url=metadata["urls"].get("Repository", ""),
         requires=format_dependencies(deps),
         build_requires=format_build_requires(build_deps),
-        date=date_str,
-        packager=metadata["authors"][0].split("<")[0].strip(),
+        changelog=format_changelog_entries(
+            changelog_entries,
+            metadata["authors"][0].split("<")[0].strip(),
+            metadata["version"],
+        ),
     )
-
-    # Append changelog
-    spec_content = spec_content.rstrip() + "\n" + changelog_content
 
     # Write to file
     spec_file = Path(f"{metadata['name']}.spec")

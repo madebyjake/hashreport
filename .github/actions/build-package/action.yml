@@ -1,0 +1,61 @@
+name: 'Build Package'
+description: 'Build RPM package from source'
+
+inputs:
+  version:
+    description: 'Package version'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup build environment
+      shell: bash
+      run: |
+        python3 -m venv .venv
+        . .venv/bin/activate
+        pip install --upgrade pip wheel setuptools poetry
+        poetry config virtualenvs.create false
+        poetry install --without dev,docs --no-interaction
+        pip install -e .
+
+    - name: Configure Git
+      shell: bash
+      run: |
+        # Configure git safety and identity first
+        git config --global init.defaultBranch main
+        git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+        git config --global --add safe.directory "/__w/hashreport/hashreport"
+        git config --global user.email "ci@example.com"
+        git config --global user.name "CI"
+
+        # Now initialize repository
+        git init
+        git add .
+        git commit -m "Build commit"
+
+    - name: Prepare build files
+      shell: bash
+      run: |
+        . .venv/bin/activate
+        rpmdev-setuptree
+
+        # Generate spec file
+        PYTHONPATH=. python3 tools/gen_spec.py || exit 1
+        cp hashreport.spec ~/rpmbuild/SPECS/
+
+        # Create source archive
+        git archive --format=tar.gz \
+          --prefix=hashreport-${{ inputs.version }}/ \
+          -o ~/rpmbuild/SOURCES/hashreport-${{ inputs.version }}.tar.gz \
+          HEAD || exit 1
+
+    - name: Build and verify RPM
+      shell: bash
+      run: |
+        # Build RPM packages
+        rpmbuild -ba ~/rpmbuild/SPECS/hashreport.spec || exit 1
+
+        # Verify packages
+        rpmlint ~/rpmbuild/RPMS/noarch/*.rpm
+        rpm -qlp ~/rpmbuild/RPMS/noarch/*.rpm
