@@ -22,13 +22,16 @@ runs:
     - name: Configure Git
       shell: bash
       run: |
-        git init
-        git add .
+        # Configure git safety and identity first
+        git config --global init.defaultBranch main
         git config --global --add safe.directory "${GITHUB_WORKSPACE}"
         git config --global --add safe.directory "/__w/hashreport/hashreport"
         git config --global user.email "ci@example.com"
         git config --global user.name "CI"
-        # Create initial commit to enable archive
+
+        # Now initialize repository
+        git init
+        git add .
         git commit -m "Build commit"
 
     - name: Prepare build files
