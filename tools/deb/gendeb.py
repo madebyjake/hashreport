@@ -12,7 +12,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from hashreport.config import get_config  # noqa: E402
 
 CONTROL_TEMPLATE = """\
-Source: {name}
+Source: hashreport
 Section: utils
 Priority: optional
 Maintainer: {maintainer}
@@ -26,7 +26,7 @@ Standards-Version: 4.6.0
 Homepage: {homepage}
 Rules-Requires-Root: no
 
-Package: {name}
+Package: python3-hashreport
 Architecture: all
 Depends: python3,
          python3-pkg-resources,
@@ -201,7 +201,7 @@ def main() -> None:
     metadata = config.get_metadata()
     maintainer = metadata["authors"][0]
     homepage = metadata["urls"].get("Repository", "")
-    package_name = f"python3-{metadata['name']}"  # Add python3- prefix here
+    package_name = metadata["name"]  # Remove python3- prefix here
 
     # Get dependencies
     runtime_deps, build_deps = get_dependencies(config)
@@ -223,7 +223,6 @@ def main() -> None:
 
     # Write package files
     control_content = CONTROL_TEMPLATE.format(
-        name=package_name,
         maintainer=maintainer,
         homepage=homepage,
         build_depends=format_build_dependencies(build_deps),
