@@ -2,6 +2,7 @@
 name = "hashreport"
 version = "0.6.0"
 description = "Generate detailed file hash reports quickly and efficiently. Process large numbers of files with multiple filtering options."
+readme = "README.md"
 license = "AGPL-3.0"
 authors = ["Jake Wells <hashreport@fastmail.com>"]
 keywords = [
