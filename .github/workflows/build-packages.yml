@@ -56,6 +56,7 @@ jobs:
             python3-setuptools \
             python3-build \
             python3-wheel \
+            python3-psutil \
             rpm-build \
             rpmdevtools \
             rpmlint
