@@ -1,3 +1,23 @@
+## v0.7.0 (2025-03-04)
+
+### Feat
+
+- **config**: add mmap_threshold
+- **utils**: implement mmap for large files
+- **config**: add new resource management settings
+- **utils**: rework thread_pool module
+- **utils**: add timing and improve formatting
+- **utils**: add input validation and sanitization
+
+### Fix
+
+- **utils**: fix result assignment
+- **utils**: update to properly close progress bar
+
+### Refactor
+
+- **utils**: move filter logic into helper
+
 ## v0.6.0 (2025-02-24)
 
 ### Feat
