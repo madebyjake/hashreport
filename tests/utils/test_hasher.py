@@ -1,5 +1,6 @@
 """Tests for hasher utility."""
 
+import mmap
 from unittest.mock import patch
 
 import pytest
@@ -85,3 +86,39 @@ def test_show_available_options(mock_print):
     show_available_options()
     if not mock_print.called:
         pytest.fail("Expected print to be called")
+
+
+def test_get_file_reader_respects_mmap_threshold(tmp_path):
+    """Test that get_file_reader respects mmap threshold configuration."""
+    from hashreport.config import HashReportConfig
+
+    # Create a test file just under the threshold
+    test_file = tmp_path / "small.txt"
+    test_file.write_bytes(b"x" * (HashReportConfig.mmap_threshold - 1))
+
+    with get_file_reader(str(test_file)) as reader:
+        assert not isinstance(reader, mmap.mmap), "Should not use mmap for small files"
+
+    # Create a test file over the threshold
+    large_file = tmp_path / "large.txt"
+    large_file.write_bytes(b"x" * (HashReportConfig.mmap_threshold + 1))
+
+    with get_file_reader(str(large_file)) as reader:
+        assert isinstance(reader, mmap.mmap), "Should use mmap for large files"
+
+
+def test_calculate_hash_with_different_sizes(tmp_path):
+    """Test hash calculation with files of different sizes."""
+    from hashreport.config import HashReportConfig
+
+    # Test with small file
+    small_file = tmp_path / "small.txt"
+    small_file.write_bytes(b"x" * 1024)  # 1KB
+    small_result = calculate_hash(str(small_file))
+    assert small_result[1] is not None, "Small file hash should succeed"
+
+    # Test with file just at threshold
+    threshold_file = tmp_path / "threshold.txt"
+    threshold_file.write_bytes(b"x" * HashReportConfig.mmap_threshold)
+    threshold_result = calculate_hash(str(threshold_file))
+    assert threshold_result[1] is not None, "Threshold file hash should succeed"
