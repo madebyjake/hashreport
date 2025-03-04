@@ -21,6 +21,7 @@ progress_update_interval = 0.1  # seconds
 # File processing settings
 min_file_size = "0B"
 max_file_size = ""  # Empty string = No limit
+mmap_threshold = 10485760  # 10MB - Use mmap for files larger than this
 default_recursive = true
 ignore_hidden_files = true
 ignore_system_files = true

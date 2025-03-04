@@ -36,6 +36,7 @@ class HashReportConfig:
     default_format: str = "csv"
     supported_formats: List[str] = field(default_factory=lambda: ["csv", "json"])
     chunk_size: int = 4096
+    mmap_threshold: int = 10485760  # 10MB default threshold for mmap usage
     max_workers: Optional[int] = None
     timestamp_format: str = "%y%m%d-%H%M"
     show_progress: bool = True
