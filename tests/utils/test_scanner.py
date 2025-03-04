@@ -45,14 +45,19 @@ def test_walk_directory_and_log(
     """Test a simplified walk_directory_and_log."""
     # Create test files
     test_file = tmp_path / "file1.txt"
+    test_file2 = tmp_path / "file2.txt"
     test_file.touch()
+    test_file2.touch()
 
     mock_walk.return_value = [
         (str(tmp_path), ["dir1"], ["file1.txt", "file2.txt"]),
     ]
     mock_handler = MagicMock()
     mock_handlers.return_value = [mock_handler]
-    mock_hash.return_value = (str(test_file), "abc123", "2025-01-01 00:00:00")
+    mock_hash.side_effect = [
+        (str(test_file), "abc123", "2025-01-01 00:00:00"),
+        (str(test_file2), "def456", "2025-01-01 00:00:00"),
+    ]
 
     walk_directory_and_log(str(tmp_path), str(tmp_path / "out_report.csv"))
 
