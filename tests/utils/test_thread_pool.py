@@ -6,14 +6,55 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from hashreport.utils.thread_pool import ThreadPoolManager
+from hashreport.utils.thread_pool import ResourceMonitor, ThreadPoolManager
 
 
 def test_thread_pool_initialization():
     """Test thread pool initialization."""
     pool = ThreadPoolManager(initial_workers=2)
-    if pool.initial_workers != 2:
-        pytest.fail("Expected initial_workers to be 2")
+    assert pool.initial_workers == 2
+    assert pool.current_workers == 2
+    assert isinstance(pool.resource_monitor, ResourceMonitor)
+
+
+def test_resource_monitor():
+    """Test resource monitor initialization and control."""
+    pool = ThreadPoolManager(initial_workers=2)
+    monitor = pool.resource_monitor
+
+    assert not monitor._stop_event.is_set()
+    monitor.start()
+    assert monitor._monitor_thread.is_alive()
+
+    monitor.stop()
+    assert monitor._stop_event.is_set()
+    assert not monitor._monitor_thread.is_alive()
+
+
+def test_worker_adjustment():
+    """Test worker count adjustment."""
+    with ThreadPoolManager(initial_workers=4) as pool:
+        initial = pool.current_workers
+        pool.reduce_workers()
+        assert pool.current_workers == initial - 1
+
+        pool.increase_workers()
+        assert pool.current_workers == initial
+
+
+def test_batch_processing():
+    """Test batch processing with retries."""
+    items = list(range(5))
+
+    def process_func(x):
+        if x == 2 and not hasattr(process_func, "retried"):
+            process_func.retried = True
+            raise ValueError("Simulate failure")
+        return x * 2
+
+    with ThreadPoolManager(initial_workers=2) as pool:
+        results = pool.process_items(items, process_func)
+        assert sorted(results) == [0, 2, 4, 6, 8]
 
 
 def test_context_manager():
@@ -86,10 +127,27 @@ def test_shutdown_during_processing(mock_submit):
 def test_progress_tracking(mock_progress):
     """Test progress bar updates during processing."""
     items = [1, 2, 3]
-    mock_progress.return_value.finish = MagicMock()
+    mock_bar = MagicMock()
+    mock_progress.return_value = mock_bar
 
-    with ThreadPoolManager(progress_bar=mock_progress.return_value) as pool:
+    with ThreadPoolManager(progress_bar=mock_bar) as pool:
         pool.process_items(items, lambda x: x)
 
-    assert mock_progress.return_value.update.call_count == len(items)
-    mock_progress.return_value.finish.assert_called_once()
+    assert mock_bar.update.call_count == len(items)
+    assert mock_bar.close.call_count == 1  # Changed from finish to close
+
+
+@patch("psutil.Process")
+def test_resource_monitoring(mock_process):
+    """Test resource monitoring and worker adjustment."""
+    mock_process.return_value.memory_percent.return_value = 90.0
+
+    with ThreadPoolManager(initial_workers=4) as pool:
+        time.sleep(0.1)  # Allow monitor to run
+        assert pool.current_workers < 4  # Should reduce workers due to high memory
+
+    mock_process.return_value.memory_percent.return_value = 50.0
+
+    with ThreadPoolManager(initial_workers=2) as pool:
+        time.sleep(0.1)  # Allow monitor to run
+        assert pool.current_workers >= 2  # Should maintain or increase workers
