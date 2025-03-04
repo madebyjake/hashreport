@@ -86,6 +86,8 @@ class ThreadPoolManager:
         """Clean up resources on context exit."""
         self._shutdown_event.set()
         self.resource_monitor.stop()
+        if self.progress_bar:
+            self.progress_bar.close()
         if self.executor:
             self.executor.shutdown(wait=True)
             self.executor = None
