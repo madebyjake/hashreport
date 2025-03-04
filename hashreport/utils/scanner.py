@@ -172,6 +172,9 @@ def walk_directory_and_log(
                             max_size=max_size,
                         )
                     ]
+                    results = pool.process_items(
+                        files_to_process, lambda x: calculate_hash(x, algorithm)
+                    )
                 else:
                     files_to_process = [
                         os.path.join(root, file_name)
@@ -187,7 +190,6 @@ def walk_directory_and_log(
                             max_size=max_size,
                         )
                     ][:limit]
-
                     results = pool.process_items(
                         files_to_process, lambda x: calculate_hash(x, algorithm)
                     )
