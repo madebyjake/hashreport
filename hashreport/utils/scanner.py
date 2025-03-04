@@ -65,22 +65,47 @@ def get_report_filename(
     return str(path.with_suffix(ext))
 
 
-def count_files(directory: Path, recursive: bool) -> int:
-    """
-    Count the total number of files in the directory.
+def should_process_file(
+    file_path: str,
+    exclude_paths: Optional[Set[str]] = None,
+    file_extension: Optional[str] = None,
+    file_names: Optional[Set[str]] = None,
+    min_size: Optional[str] = None,
+    max_size: Optional[str] = None,
+) -> bool:
+    """Check if a file should be processed based on filters."""
+    if exclude_paths and file_path in exclude_paths:
+        return False
 
-    Args:
-        directory (Path): The directory to scan.
-        recursive (bool): Whether to recurse into subdirectories.
+    file_name = os.path.basename(file_path)
+    if file_extension and not file_name.endswith(file_extension):
+        return False
+    if file_names and file_name not in file_names:
+        return False
 
-    Returns:
-        int: The total number of files found.
-    """
+    # Size checks
+    try:
+        size = os.path.getsize(file_path)
+        if min_size and size < min_size:
+            return False
+        if max_size and size > max_size:
+            return False
+    except OSError:
+        return False
+
+    return True
+
+
+def count_files(directory: Path, recursive: bool, **filter_kwargs) -> int:
+    """Count files matching filter criteria."""
     total = 0
-    for _root, dirs, files in os.walk(directory):
+    for root, dirs, files in os.walk(directory):
         if not recursive:
             dirs[:] = []
-        total += len(files)
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            if should_process_file(file_path, **filter_kwargs):
+                total += 1
     return total
 
 
@@ -118,7 +143,16 @@ def walk_directory_and_log(
         )
         final_results: List[Dict[str, str]] = []
 
-        total_files = count_files(directory, recursive)
+        # Count only files that match filters
+        total_files = count_files(
+            directory,
+            recursive,
+            exclude_paths=exclude_paths,
+            file_extension=file_extension,
+            file_names=file_names,
+            min_size=min_size,
+            max_size=max_size,
+        )
         progress_bar = ProgressBar(total=total_files)
 
         try:
@@ -126,27 +160,31 @@ def walk_directory_and_log(
                 initial_workers=config.max_workers, progress_bar=progress_bar
             ) as pool:
                 if specific_files:
-                    results = pool.process_items(
-                        specific_files,
-                        lambda x: calculate_hash(x, algorithm),
-                    )
+                    files_to_process = [
+                        f
+                        for f in specific_files
+                        if should_process_file(
+                            f,
+                            exclude_paths=exclude_paths,
+                            file_extension=file_extension,
+                            file_names=file_names,
+                            min_size=min_size,
+                            max_size=max_size,
+                        )
+                    ]
                 else:
-                    # Build list of files to process
                     files_to_process = [
                         os.path.join(root, file_name)
                         for root, dirs, files in os.walk(directory)
                         if recursive or not dirs.clear()
                         for file_name in files
-                        if not (
-                            (
-                                exclude_paths
-                                and os.path.join(root, file_name) in exclude_paths
-                            )
-                            or (
-                                file_extension
-                                and not file_name.endswith(file_extension)
-                            )
-                            or (file_names and file_name not in file_names)
+                        if should_process_file(
+                            os.path.join(root, file_name),
+                            exclude_paths=exclude_paths,
+                            file_extension=file_extension,
+                            file_names=file_names,
+                            min_size=min_size,
+                            max_size=max_size,
                         )
                     ][:limit]
 
