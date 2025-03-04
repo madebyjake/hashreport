@@ -153,7 +153,13 @@ def main() -> None:
 
     # Make sure we include all runtime dependencies
     deps = ["click", "rich", "tomli", "tqdm", "typing-extensions", "psutil"]
-    build_deps = ["psutil"]  # Add psutil as build dependency
+
+    # These are needed during build but not included as runtime deps
+    build_deps = [
+        "pip",
+        "setuptools",
+        "wheel",
+    ]
 
     # Parse changelog
     changelog_path = Path("CHANGELOG.md")
