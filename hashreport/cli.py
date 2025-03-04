@@ -90,9 +90,6 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 @click.version_option(
     version=get_config().version,
     prog_name=get_config().name,
-    message="%(prog)s version %(version)s\n"
-    f"Author: {', '.join(get_config().authors)}\n"
-    f"License: {get_config().project_license}",
 )
 def cli():
     r"""
