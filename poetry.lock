@@ -70,25 +70,6 @@ files = [
 extras = ["regex"]
 
 [[package]]
-name = "backrefs"
-version = "5.8"
-description = "A wrapper around re and regex that adds additional back references."
-optional = false
-python-versions = ">=3.9"
-groups = ["docs"]
-files = [
-    {file = "backrefs-5.8-py310-none-any.whl", hash = "sha256:c67f6638a34a5b8730812f5101376f9d41dc38c43f1fdc35cb54700f6ed4465d"},
-    {file = "backrefs-5.8-py311-none-any.whl", hash = "sha256:2e1c15e4af0e12e45c8701bd5da0902d326b2e200cafcd25e49d9f06d44bb61b"},
-    {file = "backrefs-5.8-py312-none-any.whl", hash = "sha256:bbef7169a33811080d67cdf1538c8289f76f0942ff971222a16034da88a73486"},
-    {file = "backrefs-5.8-py313-none-any.whl", hash = "sha256:e3a63b073867dbefd0536425f43db618578528e3896fb77be7141328642a1585"},
-    {file = "backrefs-5.8-py39-none-any.whl", hash = "sha256:a66851e4533fb5b371aa0628e1fee1af05135616b86140c9d787a2ffdf4b8fdc"},
-    {file = "backrefs-5.8.tar.gz", hash = "sha256:2cab642a205ce966af3dd4b38ee36009b31fa9502a35fd61d59ccc116e40a6bd"},
-]
-
-[package.extras]
-extras = ["regex"]
-
-[[package]]
 name = "bandit"
 version = "1.8.3"
 description = "Security oriented static analyser for python code."
@@ -1726,4 +1707,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.14"
-content-hash = "98ec9f49acc664c59b925079b4462d0616f6193a6ff0214b323a3ee17bb54c20"
+content-hash = "9e03fbb33b12fc5c053e99da0d17698811319edd7b14f05e43c6cdd4015dfd38"
