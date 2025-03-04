@@ -49,7 +49,7 @@ Features:
 %build
 # Install build dependencies first
 python3 -m pip install --upgrade pip wheel
-python3 -m pip install rich click tomli tqdm typing-extensions
+python3 -m pip install rich click tomli tqdm typing-extensions psutil
 
 # Build wheel without dependencies (they're handled by RPM)
 python3 -m pip wheel --no-deps -w dist .
@@ -152,8 +152,8 @@ def main() -> None:
     metadata = config.get_metadata()
 
     # Make sure we include all runtime dependencies
-    deps = ["click", "rich", "tomli", "tqdm", "typing-extensions"]
-    build_deps = []
+    deps = ["click", "rich", "tomli", "tqdm", "typing-extensions", "psutil"]
+    build_deps = ["psutil"]  # Add psutil as build dependency
 
     # Parse changelog
     changelog_path = Path("CHANGELOG.md")
