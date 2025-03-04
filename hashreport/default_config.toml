@@ -9,9 +9,19 @@ timestamp_format = "%y%m%d-%H%M"
 show_progress = true
 max_errors_shown = 10
 
+# Resource monitoring settings
+memory_threshold = 0.85  # % of total memory
+min_workers = 2
+batch_size = 1000
+max_retries = 3
+retry_delay = 1.0
+resource_check_interval = 1.0  # seconds
+progress_update_interval = 0.1  # seconds
+
 # File processing settings
 min_file_size = "0B"
 max_file_size = ""  # Empty string = No limit
+mmap_threshold = 10485760  # 10MB - Use mmap for files larger than this
 default_recursive = true
 ignore_hidden_files = true
 ignore_system_files = true

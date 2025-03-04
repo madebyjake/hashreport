@@ -30,11 +30,23 @@ class EmailSender:
             password (Optional[str]): SMTP server password.
             use_tls (bool): Whether to use TLS for the connection.
         """
-        self.host = host or os.environ.get("SMTP_HOST", "localhost")
+        if host:
+            self.host = self._validate_hostname(host)
+        else:
+            self.host = os.environ.get("SMTP_HOST", "localhost")
         self.port = port or int(os.environ.get("SMTP_PORT", 587))
         self.username = username or os.environ.get("SMTP_USERNAME")
         self.password = password or os.environ.get("SMTP_PASSWORD")
         self.use_tls = use_tls
+
+    @staticmethod
+    def _validate_hostname(hostname: str) -> str:
+        """Validate and sanitize hostname."""
+        import re
+
+        if not re.match(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", hostname):
+            raise ValueError("Invalid hostname format")
+        return hostname
 
     def send_report(
         self,

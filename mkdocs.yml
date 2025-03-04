@@ -5,11 +5,10 @@ copyright: Copyright © 2025 Jake Wells
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Installation: getting-started/install.md
-    - Basic Usage: getting-started/basic.md
-    - Advanced Usage: getting-started/advanced.md
-    - Command Reference: getting-started/commands.md
+  - Installation: install.md
+  - Basic Usage: basic.md
+  - Advanced Usage: advanced.md
+  - Command Reference: commands.md
   - Development:
     - Project Scripts: development/scripts.md
 

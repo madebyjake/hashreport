@@ -30,13 +30,13 @@
 
 ## **Installation**
 
-See the [Installation](getting-started/install.md) page for detailed instructions on how to install **hashreport**.
+See the [Installation](install.md) page for detailed instructions on how to install **hashreport**.
 
 ## **Getting Started**
 
-- [Basic Usage](getting-started/basic.md)
-- [Advanced Usage](getting-started/advanced.md)
-- [Command Reference](getting-started/commands.md)
+- [Basic Usage](basic.md)
+- [Advanced Usage](advanced.md)
+- [Command Reference](commands.md)
 
 ## **License**
 

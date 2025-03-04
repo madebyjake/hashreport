@@ -31,7 +31,9 @@ def get_file_reader(file_path: str, use_mmap: bool = True):
     file_size = path.stat().st_size
 
     with path.open("rb") as f:
-        if use_mmap and file_size > 0:  # mmap doesn't work with empty files
+        if (
+            use_mmap and file_size > 0 and file_size >= config.mmap_threshold
+        ):  # Only use mmap for files over threshold
             try:
                 with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as mm:
                     yield mm
@@ -45,24 +47,24 @@ def get_file_reader(file_path: str, use_mmap: bool = True):
 def calculate_hash(
     filepath: str, algorithm: str = None
 ) -> Tuple[str, Optional[str], str]:
-    """Calculate hash for a file.
-
-    Args:
-        filepath: Path to the file
-        algorithm: Hash algorithm to use
-
-    Returns:
-        Tuple containing (filepath, hash_value, modification_time)
-        If hashing fails, hash_value will be None
-    """
+    """Calculate hash for a file."""
     algorithm = algorithm or config.default_algorithm
     try:
         hasher = hashlib.new(algorithm)
-        with open(filepath, "rb") as f:
-            for chunk in iter(lambda: f.read(config.chunk_size), b""):
-                hasher.update(chunk)
 
-        # Get file modification time
+        # Use mmap for large files
+        file_size = os.path.getsize(filepath)
+        use_mmap = file_size > config.mmap_threshold  # e.g., 10MB
+
+        with get_file_reader(filepath, use_mmap=use_mmap) as f:
+            # For mmap objects, read directly
+            if isinstance(f, mmap.mmap):
+                hasher.update(f)
+            else:
+                # For regular files, read in chunks
+                for chunk in iter(lambda: f.read(config.chunk_size), b""):
+                    hasher.update(chunk)
+
         mod_time = datetime.datetime.fromtimestamp(os.path.getmtime(filepath)).strftime(
             "%Y-%m-%d %H:%M:%S"
         )

@@ -36,18 +36,31 @@ class HashReportConfig:
     default_format: str = "csv"
     supported_formats: List[str] = field(default_factory=lambda: ["csv", "json"])
     chunk_size: int = 4096
+    mmap_threshold: int = 10485760  # 10MB default threshold for mmap usage
     max_workers: Optional[int] = None
     timestamp_format: str = "%y%m%d-%H%M"
     show_progress: bool = True
     max_errors_shown: int = 10
     email_defaults: Dict[str, Any] = field(default_factory=dict)
 
+    # Settings for resource management
+    batch_size: int = 1000
+    max_retries: int = 3
+    retry_delay: float = 1.0
+    memory_limit: Optional[int] = None  # in MB
+    min_workers: int = 2
+    max_workers: Optional[int] = None
+    worker_adjust_interval: int = 60  # seconds
+    progress_update_interval: float = 0.1  # seconds
+    resource_check_interval: float = 1.0  # seconds
+    memory_threshold: float = 0.85  # 85% memory usage threshold
+
     # Project metadata - loaded dynamically from pyproject.toml
     name: str = field(init=False)
     version: str = field(init=False)
     description: str = field(init=False, default="")
     authors: List[str] = field(init=False, default_factory=list)
-    project_license: str = field(init=False, default="")  # Renamed from license
+    project_license: str = field(init=False, default="")
     urls: Dict[str, str] = field(init=False, default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -56,6 +69,20 @@ class HashReportConfig:
             self.email_defaults = self.DEFAULT_EMAIL_CONFIG.copy()
         if self.max_workers is None:
             self.max_workers = os.cpu_count() or 4
+
+        if not self.memory_limit:
+            import psutil
+
+            total_memory = psutil.virtual_memory().total
+            self.memory_limit = int(
+                total_memory * 0.75 / (1024 * 1024)
+            )  # 75% of total RAM
+
+        if self.max_workers is None:
+            self.max_workers = os.cpu_count() or 4
+
+        # Ensure min_workers doesn't exceed max_workers
+        self.min_workers = min(self.min_workers, self.max_workers)
 
     @classmethod
     def _validate_metadata(cls, data: Dict[str, Any]) -> None:
@@ -96,7 +123,7 @@ class HashReportConfig:
             "version": poetry_config["version"],
             "description": poetry_config.get("description", ""),
             "authors": poetry_config.get("authors", []),
-            "project_license": poetry_config.get("license", ""),  # Renamed from license
+            "project_license": poetry_config.get("license", ""),
             "urls": poetry_config.get("urls", {}),
         }
 
@@ -214,7 +241,7 @@ class HashReportConfig:
             "version": self.version,
             "description": self.description,
             "authors": self.authors,
-            "license": self.project_license,  # Map back to license in output
+            "license": self.project_license,
             "urls": self.urls,
         }
 

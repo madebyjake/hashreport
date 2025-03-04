@@ -1,5 +1,6 @@
 """Progress bar implementation for tracking file processing."""
 
+import time
 from threading import Lock
 from typing import Optional
 
@@ -12,10 +13,16 @@ class ProgressBar:
     def __init__(self, total: int = 0, desc: str = "Processing"):
         """Initialize the progress bar."""
         self._lock = Lock()
+        self._start_time = time.time()
+        self._processed = 0
+
         self._bar = tqdm(
             total=total,
             desc=desc,
             unit="files",
+            unit_scale=True,
+            miniters=1,
+            bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]",  # noqa: E501
         )
         self.pbar: Optional[tqdm] = None
 
