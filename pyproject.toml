@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-Documentation = "https://github.com/madebyjake/hashreport"
+Documentation = "https://madebyjake.github.io/hashreport/"
 Repository = "https://github.com/madebyjake/hashreport"
 Issues = "https://github.com/madebyjake/hashreport/issues"
 
