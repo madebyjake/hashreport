@@ -26,12 +26,17 @@
 
 ## Installation
 
-### Prerequisites
+There are a few different ways to install **hashreport** on your system. Choose the option that works best for you:
 
-- [Python 3](https://www.python.org/downloads/) (tested with 3.10+)
-- [Git](https://git-scm.com/downloads) (optional)
+### Install with Pip
 
-### Installing RPM Package
+You can install **hashreport** using `pip` from the Python Package Index ([PyPI](https://pypi.org/project/hashreport/)):
+
+```bash
+pip install hashreport
+```
+
+### Install RPM Package
 
 Download the latest RPM package from the [Releases](https://github.com/madebyjake/hashreport/releases) page and install it using `dnf` or `yum`:
 
@@ -45,7 +50,12 @@ Verify the installation by running the `hashreport` command:
 hashreport --version
 ```
 
-### Installing from Source
+### Install from Source
+
+#### Prerequisites
+
+- [Python 3](https://www.python.org/downloads/) (tested with 3.10+)
+- [Git](https://git-scm.com/downloads) (optional)
 
 #### 1. Download the Repository
 

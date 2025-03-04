@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "hashreport"
-version = "0.7.0"
+version = "0.7.1"
 description = "Generate detailed file hash reports quickly and efficiently. Process large numbers of files with multiple filtering options."
+readme = "README.md"
 license = "AGPL-3.0"
 authors = ["Jake Wells <hashreport@fastmail.com>"]
 keywords = [
@@ -33,7 +34,7 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-Documentation = "https://github.com/madebyjake/hashreport"
+Documentation = "https://madebyjake.github.io/hashreport/"
 Repository = "https://github.com/madebyjake/hashreport"
 Issues = "https://github.com/madebyjake/hashreport/issues"
 

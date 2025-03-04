@@ -14,7 +14,7 @@ runs:
       run: |
         python3 -m venv .venv
         . .venv/bin/activate
-        pip install --upgrade pip wheel setuptools poetry
+        pip install --upgrade pip wheel setuptools poetry psutil
         poetry config virtualenvs.create false
         poetry install --without dev,docs --no-interaction
         pip install -e .

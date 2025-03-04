@@ -1,3 +1,10 @@
+## v0.7.1 (2025-03-04)
+
+### Fix
+
+- **tools**: update build deps
+- **tools**: add psutil to build
+
 ## v0.7.0 (2025-03-04)
 
 ### Feat
