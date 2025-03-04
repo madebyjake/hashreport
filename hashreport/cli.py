@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 import click
 from rich.console import Console
 
-from hashreport.config import get_config
+from hashreport.config import get_config, get_version
 from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
@@ -87,26 +87,10 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(
-    version=get_config().version,
-    prog_name=get_config().name,
-)
+@click.version_option(version=get_version(), prog_name="hashreport")
 def cli():
-    r"""
-    Generate hash reports for files in a directory.
-
-    {name} {version} - {description}
-
-    {license} License
-
-    {docs}
-    """.format(
-        name=get_config().name.title(),
-        version=get_config().version,
-        description=get_config().description,
-        license=get_config().project_license,
-        docs=get_config().urls.get("documentation", ""),
-    )
+    """Generate hash reports for files in a directory."""
+    pass
 
 
 @cli.command()
