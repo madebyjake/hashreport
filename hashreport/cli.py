@@ -17,6 +17,7 @@ from hashreport.utils.exceptions import ConfigError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 from hashreport.utils.viewer import ReportViewer
+from hashreport.version import __version__
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 100}
 
@@ -87,26 +88,10 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(
-    version=get_config().version,
-    prog_name=get_config().name,
-)
+@click.version_option(version=__version__, prog_name="hashreport")
 def cli():
-    r"""
-    Generate hash reports for files in a directory.
-
-    {name} {version} - {description}
-
-    {license} License
-
-    {docs}
-    """.format(
-        name=get_config().name.title(),
-        version=get_config().version,
-        description=get_config().description,
-        license=get_config().project_license,
-        docs=get_config().urls.get("documentation", ""),
-    )
+    """Generate hash reports for files in a directory."""
+    pass
 
 
 @cli.command()

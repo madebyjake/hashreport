@@ -8,3 +8,10 @@ exclude_dirs:
 
 skips:
   - B101  # Skip assert statements in all test files
+
+# Minimum severity level
+show_progress_every: 0
+verbose: true
+targets_include: '*.py'
+level: LOW
+confidence_level: LOW

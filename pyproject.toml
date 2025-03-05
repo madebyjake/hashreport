@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hashreport"
-version = "0.7.1"
+version = "0.0.0" # replaced by poetry-dynamic-versioning
 description = "Generate detailed file hash reports quickly and efficiently. Process large numbers of files with multiple filtering options."
 readme = "README.md"
 license = "AGPL-3.0"
@@ -59,6 +59,7 @@ flake8-bugbear = "^24.12.12"
 flake8-docstrings = "^1.7.0"
 flake8-isort = "^6.1.2"
 isort = "^6.0.1"
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 pre-commit = "^4.1.0"
 pytest = "^8.3.5"
 pytest-cov = "^6.0.0"
@@ -106,6 +107,21 @@ extend-ignore = ["E203", "W503", "D202"]
 import-order-style = "google"
 application-import-names = ["hashreport", "tests"]
 
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+pattern = "^v(?P<base>\\d+\\.\\d+\\.\\d+)$"
+strict = true
+dirty = true
+format-jinja = """
+{%- if distance == 0 -%}
+    {{ base }}
+{%- else -%}
+    {{ base }}.dev{{ distance }}+{{ revision }}
+{%- endif -%}
+"""
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning[plugin]>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
