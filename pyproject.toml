@@ -41,9 +41,6 @@ Issues = "https://github.com/madebyjake/hashreport/issues"
 [tool.poetry.scripts]
 hashreport = "hashreport.cli:cli"
 
-[tool.poetry.requires-plugins]
-poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
-
 [tool.poetry.dependencies]
 click = "^8.1.8"
 psutil = "^7.0.0"
@@ -62,6 +59,7 @@ flake8-bugbear = "^24.12.12"
 flake8-docstrings = "^1.7.0"
 flake8-isort = "^6.1.2"
 isort = "^6.0.1"
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 pre-commit = "^4.1.0"
 pytest = "^8.3.5"
 pytest-cov = "^6.0.0"
