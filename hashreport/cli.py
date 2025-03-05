@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 import click
 from rich.console import Console
 
-from hashreport.config import get_config, get_version
+from hashreport.config import get_config
 from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
@@ -17,6 +17,7 @@ from hashreport.utils.exceptions import ConfigError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 from hashreport.utils.viewer import ReportViewer
+from hashreport.version import __version__
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 100}
 
@@ -87,7 +88,7 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version=get_version(), prog_name="hashreport")
+@click.version_option(version=__version__, prog_name="hashreport")
 def cli():
     """Generate hash reports for files in a directory."""
     pass
