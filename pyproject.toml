@@ -113,7 +113,7 @@ enable = true
 vcs = "git"
 style = "pep440"
 pattern = "^v(?P<base>\\d+\\.\\d+\\.\\d+)$"
-strict = true
+strict = false
 dirty = true
 format-jinja = """
 {%- if distance == 0 -%}

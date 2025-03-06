@@ -16,8 +16,6 @@ runs:
         . .venv/bin/activate
         pip install --upgrade pip wheel setuptools poetry psutil
         poetry config virtualenvs.create false
-        poetry install --without dev,docs --no-interaction
-        pip install -e .
 
     - name: Configure Git
       shell: bash
@@ -29,10 +27,18 @@ runs:
         git config --global user.email "ci@example.com"
         git config --global user.name "CI"
 
-        # Now initialize repository
+        # Initialize git repository
         git init
         git add .
         git commit -m "Build commit"
+        git tag "v${{ inputs.version }}"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        . .venv/bin/activate
+        poetry install --without dev,docs --no-interaction
+        pip install -e .
 
     - name: Prepare build files
       shell: bash
