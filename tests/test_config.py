@@ -3,9 +3,7 @@
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
-from hashreport.config import ConfigError, HashReportConfig, get_config
+from hashreport.config import HashReportConfig, get_config
 
 
 def test_hashreport_config_defaults():
@@ -27,36 +25,9 @@ def test_hashreport_config_max_workers(monkeypatch):
     assert cfg.max_workers == 8, "Expected max_workers to match the mock CPU count"
 
 
-def test_get_config_metadata():
-    """Test that config metadata is properly loaded."""
-    cfg = HashReportConfig()
-    # Initialize required metadata fields
-    cfg.name = "test"
-    cfg.version = "0.1.0"
-    cfg.description = "Test description"
-    cfg.authors = ["Test Author"]
-    cfg.project_license = "AGPL-3.0"
-    cfg.urls = {"repository": "https://example.com"}
-
-    metadata = cfg.get_metadata()
-    assert metadata["name"] == "test"
-    assert metadata["version"] == "0.1.0"
-    assert metadata["description"] == "Test description"
-    assert metadata["authors"] == ["Test Author"]
-    assert metadata["license"] == "AGPL-3.0"
-    assert metadata["urls"] == {"repository": "https://example.com"}
-
-
 def test_config_from_file(tmp_path):
     """Test loading config from file."""
     config_content = """
-[tool.poetry]
-name = "hashreport"
-version = "0.1.0"
-description = "Test project"
-authors = ["Test Author"]
-license = "AGPL-3.0"
-
 [tool.hashreport]
 default_algorithm = "sha256"
 """
@@ -64,7 +35,6 @@ default_algorithm = "sha256"
     config_file.write_text(config_content)
 
     cfg = HashReportConfig.from_file(config_file)
-    assert cfg.name == "hashreport"
     assert cfg.default_algorithm == "sha256"
 
 
@@ -73,42 +43,10 @@ def test_invalid_config_file(tmp_path):
     config_file = tmp_path / "pyproject.toml"
     config_file.write_text("invalid toml content")
 
-    with pytest.raises(ConfigError):
-        HashReportConfig.from_file(config_file)
-
-
-def test_missing_required_metadata(tmp_path):
-    """Test handling of missing required metadata."""
-    config_content = """
-[tool.poetry]
-# Missing required name and version fields
-description = "Test project"
-"""
-    config_file = tmp_path / "pyproject.toml"
-    config_file.write_text(config_content)
-
-    with pytest.raises(ConfigError):
-        HashReportConfig.from_file(config_file)
-
-
-def test_load_metadata():
-    """Test metadata loading from poetry config."""
-    poetry_config = {
-        "name": "test-project",
-        "version": "1.0.0",
-        "description": "Test Description",
-        "authors": ["Test Author"],
-        "license": "MIT",
-        "urls": {"repository": "https://example.com"},
-    }
-
-    metadata = HashReportConfig._load_metadata(poetry_config)
-    assert metadata["name"] == "test-project"
-    assert metadata["version"] == "1.0.0"
-    assert metadata["description"] == "Test Description"
-    assert metadata["authors"] == ["Test Author"]
-    assert metadata["project_license"] == "MIT"
-    assert metadata["urls"] == {"repository": "https://example.com"}
+    # Should return default config instead of raising error
+    cfg = HashReportConfig.from_file(config_file)
+    assert isinstance(cfg, HashReportConfig)
+    assert cfg.default_algorithm == "md5"  # default value
 
 
 def test_find_valid_config(tmp_path):
@@ -118,15 +56,14 @@ def test_find_valid_config(tmp_path):
     config_file = tmp_path / "pyproject.toml"
 
     config_content = """
-[tool.poetry]
-name = "test-project"
-version = "1.0.0"
+[tool.hashreport]
+default_algorithm = "sha256"
 """
     config_file.write_text(config_content)
 
     config = HashReportConfig._find_valid_config(nested_dir)
     assert config is not None
-    assert config["tool"]["poetry"]["name"] == "test-project"
+    assert config["tool"]["hashreport"]["default_algorithm"] == "sha256"
 
 
 def test_get_config_singleton():
@@ -149,8 +86,8 @@ def test_get_config_fallback():
 
     try:
         config = get_config()
-        assert config.name == "hashreport"
-        assert config.version == "0.0.0"
+        assert isinstance(config, HashReportConfig)
+        assert config.default_algorithm == "md5"  # default value
     finally:
         # Restore original path
         HashReportConfig.PROJECT_CONFIG_PATH = original_path
