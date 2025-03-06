@@ -33,3 +33,24 @@ class ReportError(HashReportError):
     - Report generation failures
     - Report parsing errors
     """
+
+
+class EmailError(HashReportError):
+    """Exception raised for email-related errors.
+
+    This includes:
+    - SMTP connection failures
+    - Authentication errors
+    - Invalid email configuration
+    - Send failures
+    """
+
+
+class ValidationError(HashReportError):
+    """Exception raised for validation errors.
+
+    This includes:
+    - Invalid input parameters
+    - Data format validation failures
+    - Business rule violations
+    """
