@@ -17,6 +17,7 @@ on:
 env:
   POETRY_VIRTUALENVS_CREATE: false
   POETRY_CACHE_DIR: ~/.cache/pypoetry
+  POETRY_VERSION: 1.7.1
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for dynamic versioning
 
       - uses: actions/setup-python@v5
         with:
@@ -35,16 +38,20 @@ jobs:
           cache: 'pip'
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry --version
 
-      - name: Cache Poetry virtualenv
+      - name: Cache Poetry dependencies
         uses: actions/cache@v4
         with:
           path: ~/.cache/pypoetry
-          key: poetry-${{ hashFiles('**/poetry.lock') }}
+          key: poetry-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ runner.os }}-
 
       - name: Install dependencies
         run: poetry install --with dev
 
       - name: Run flake8
-        run: poetry run flake8 .
+        run: poetry run flake8
