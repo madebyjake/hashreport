@@ -1,3 +1,9 @@
+## v0.8.1 (2025-03-06)
+
+### Fix
+
+- **config**: fix no valid config found message
+
 ## v0.8.0 (2025-03-06)
 
 ### Feat
