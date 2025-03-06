@@ -4,34 +4,32 @@
 class HashReportError(Exception):
     """Base exception for hashreport."""
 
-    pass
-
 
 class ConfigError(HashReportError):
-    """Raised when there's an error with configuration."""
+    """Exception raised for configuration errors.
 
-    pass
+    This includes:
+    - Invalid configuration files
+    - Missing required settings
+    - Invalid setting values
+    """
 
 
 class FileAccessError(HashReportError):
-    """Raised when there's an error accessing a file."""
+    """Exception raised for file access errors.
 
-    pass
+    This includes:
+    - Permission denied
+    - File not found
+    - Path not accessible
+    """
 
 
 class ReportError(HashReportError):
-    """Raised when there's an error with report operations."""
+    """Exception raised for report operation errors.
 
-    pass
-
-
-class EmailError(HashReportError):
-    """Raised when there's an error with email operations."""
-
-    pass
-
-
-class ValidationError(HashReportError):
-    """Raised when there's an error with validation."""
-
-    pass
+    This includes:
+    - Invalid report format
+    - Report generation failures
+    - Report parsing errors
+    """
