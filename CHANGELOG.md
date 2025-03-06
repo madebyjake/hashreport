@@ -1,3 +1,25 @@
+## v0.8.1 (2025-03-06)
+
+### Fix
+
+- **config**: fix no valid config found message
+
+## v0.8.0 (2025-03-06)
+
+### Feat
+
+- **cli**: update cli to use version module
+- **version**: add version module
+
+### Fix
+
+- poetry-dynamic-versioning to dev
+
+### Refactor
+
+- **cli**: use dynamic version
+- **cli**: simplify version message
+
 ## v0.7.1 (2025-03-04)
 
 ### Fix

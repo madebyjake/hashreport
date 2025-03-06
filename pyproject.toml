@@ -80,7 +80,7 @@ line-length = 88
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version_provider = "poetry"
+version = "0.8.1"
 tag_format = "v$version"
 update_changelog_on_bump = true
 
@@ -113,8 +113,8 @@ enable = true
 vcs = "git"
 style = "pep440"
 pattern = "^v(?P<base>\\d+\\.\\d+\\.\\d+)$"
-strict = false
-dirty = true
+strict = true
+dirty = false
 format-jinja = """
 {%- if distance == 0 -%}
     {{ base }}
