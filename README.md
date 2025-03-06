@@ -26,7 +26,7 @@
 
 ## Installation
 
-There are a few different ways to install **hashreport** on your system. Choose the option that works best for you:
+There are a two ways to install **hashreport** on your system. Choose the option that works best for you:
 
 ### Install with Pip
 
@@ -34,20 +34,6 @@ You can install **hashreport** using `pip` from the Python Package Index ([PyPI]
 
 ```bash
 pip install hashreport
-```
-
-### Install RPM Package
-
-Download the latest RPM package from the [Releases](https://github.com/madebyjake/hashreport/releases) page and install it using `dnf` or `yum`:
-
-```bash
-sudo dnf install hashreport-*.noarch.rpm
-```
-
-Verify the installation by running the `hashreport` command:
-
-```bash
-hashreport --version
 ```
 
 ### Install from Source
