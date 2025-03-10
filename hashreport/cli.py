@@ -13,7 +13,6 @@ from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
 )
-from hashreport.utils.exceptions import ConfigError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 from hashreport.utils.viewer import ReportViewer
@@ -182,6 +181,15 @@ def scan(
         if not output:
             output = os.getcwd()
 
+        # Handle email test mode
+        if test_email:
+            if not all([email, smtp_host]):
+                raise click.BadParameter(
+                    "Email and SMTP host are required for email testing"
+                )
+            # Test email configuration without processing files
+            return
+
         # Create output files with explicit formats
         output_files = [
             (
@@ -232,6 +240,8 @@ def filelist(
             output = os.getcwd()
 
         output_file = get_filelist_filename(output)
+        output_dir = Path(output_file).parent
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         list_files_in_directory(
             directory,
@@ -247,9 +257,9 @@ def filelist(
 @click.option("-f", "--filter", "filter_text", help="Filter report entries")
 def view(report: str, filter_text: Optional[str]) -> None:
     """View report contents with optional filtering."""
-    viewer = ReportViewer()
     try:
-        viewer.display_report(report, filter_text)
+        viewer = ReportViewer()
+        viewer.view_report(report, filter_text)
     except Exception as e:
         handle_error(e)
 
@@ -262,12 +272,9 @@ def view(report: str, filter_text: Optional[str]) -> None:
 )
 def compare(report1: str, report2: str, output: Optional[str]) -> None:
     """Compare two reports and show differences."""
-    viewer = ReportViewer()
     try:
-        changes = viewer.compare_reports(report1, report2)
-        viewer.display_comparison(changes)
-        if output:
-            viewer.save_comparison(changes, output, report1, report2)
+        viewer = ReportViewer()
+        viewer.compare_reports(report1, report2, output)
     except Exception as e:
         handle_error(e)
 
@@ -288,92 +295,45 @@ def config():
 
 
 @config.command()
-@click.argument("output_path", type=click.Path(), required=False)
-def init(output_path: Optional[str]):
-    """Generate a default settings file."""
-    return _create_default_settings(output_path)
-
-
-def _create_default_settings(output_path: Optional[str] = None) -> Optional[Path]:
-    """Create a default settings file.
-
-    Args:
-        output_path: Optional custom path for settings file
-
-    Returns:
-        Path to created settings file or None if creation failed
-    """
-    try:
-        default_config = Path(__file__).parent / "default_config.toml"
-        target_path = Path(
-            output_path if output_path else get_config().get_settings_path()
-        )
-
-        # Create parent directories if they don't exist
-        target_path.parent.mkdir(parents=True, exist_ok=True)
-
-        with default_config.open("r") as src, target_path.open("w") as dst:
-            dst.write(src.read())
-
-        click.echo(f"Created default settings at {target_path}")
-        return target_path
-    except Exception as e:
-        handle_error(e)
-
-
-@config.command()
 def edit():
-    """Edit user settings using system default editor."""
+    """Edit configuration file in default editor."""
     try:
-        config_path = get_config().get_settings_path()
-
-        if not config_path.exists():
-            if click.confirm("Settings file not found. Create one?"):
-                config_path = _create_default_settings()
-            else:
-                return
-
-        if not config_path or not config_path.exists():
-            click.echo("No settings file available to edit.", err=True)
-            return
-
-        click.edit(filename=str(config_path))
-
-        # Reload config to verify changes
-        try:
-            get_config()
-            click.echo("Settings updated successfully.")
-        except ConfigError as e:
-            click.echo(f"Warning: The edited settings may have errors: {e}", err=True)
-
+        settings_path = get_config().get_settings_path()
+        if not settings_path.exists():
+            # Create parent directories if they don't exist
+            settings_path.parent.mkdir(parents=True, exist_ok=True)
+            # Create empty config file
+            settings_path.touch()
+        click.edit(filename=str(settings_path))
     except Exception as e:
         handle_error(e)
 
 
 @config.command()
 def show():
-    """Show all active configuration settings."""
+    """Show current configuration settings."""
     try:
-        cfg = get_config()
-        settings_path = cfg.get_settings_path()
         console = Console()
-
-        console.print("\n[bold blue]Current Configuration:[/bold blue]")
-        console.print(f"[dim]Settings file: {settings_path}[/dim]\n")
-
-        def print_section(data: Dict[str, Any], indent: int = 0) -> None:
-            for key, value in sorted(data.items()):
-                prefix = "  " * indent
-                if isinstance(value, dict):
-                    console.print(f"{prefix}[yellow]{key}:[/yellow]")
-                    print_section(value, indent + 1)
-                else:
-                    console.print(f"{prefix}{key} = {value}")
-
-        print_section(cfg.get_all_settings())
-
+        config_data = get_config().get_all_settings()
+        console.print("\n[bold]Current Configuration[/bold]\n")
+        print_section(config_data)
     except Exception as e:
         handle_error(e)
+
+
+def print_section(data: Dict[str, Any], indent: int = 0) -> None:
+    """Print configuration section with proper indentation."""
+    try:
+        for key, value in data.items():
+            if isinstance(value, dict):
+                console = Console()
+                console.print(" " * indent + f"[bold]{key}[/bold]")
+                print_section(value, indent + 2)
+            else:
+                console = Console()
+                console.print(" " * indent + f"{key}: {value}")
+    except Exception as e:
+        raise Exception(f"Failed to print configuration: {e}")
 
 
 # Add config commands to CLI
