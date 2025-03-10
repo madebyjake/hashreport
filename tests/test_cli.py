@@ -172,27 +172,11 @@ def test_scan_with_options(tmp_path):
         assert kwargs.get("algorithm") == "sha256"
 
 
-@patch("hashreport.cli._create_default_settings")
-def test_config_init(mock_create, tmp_path):
-    """Test config init command."""
-    runner = CliRunner()
-    result = runner.invoke(cli, ["config", "init"])
-    assert result.exit_code == 0
-    mock_create.assert_called_once_with(None)
-
-    # Test with custom path
-    custom_path = tmp_path / "config.toml"
-    result = runner.invoke(cli, ["config", "init", str(custom_path)])
-    assert result.exit_code == 0
-    mock_create.assert_called_with(str(custom_path))
-
-
 @patch("hashreport.cli.click.edit")
-@patch("hashreport.cli._create_default_settings")
-def test_config_edit(mock_create, mock_edit, tmp_path):
+def test_config_edit(mock_edit, tmp_path):
     """Test config edit command."""
     config_path = tmp_path / "settings.toml"
-    config_path.touch()
+    config_path.parent.mkdir(parents=True, exist_ok=True)
 
     with patch("hashreport.config.HashReportConfig.get_settings_path") as mock_path:
         mock_path.return_value = config_path
@@ -200,8 +184,8 @@ def test_config_edit(mock_create, mock_edit, tmp_path):
         result = runner.invoke(cli, ["config", "edit"])
 
         assert result.exit_code == 0
+        assert config_path.exists()  # Verify file was created
         mock_edit.assert_called_once_with(filename=str(config_path))
-        mock_create.assert_not_called()
 
 
 @patch("hashreport.cli.Console")
@@ -216,3 +200,145 @@ def test_config_show(mock_console, tmp_path):
     # Verify section headers were printed
     calls = console.print.call_args_list
     assert any("Current Configuration" in str(c) for c in calls)
+
+
+def test_scan_error_handling(tmp_path):
+    """Test error handling in scan command."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.side_effect = Exception("Test error")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 1
+        assert "Error: Test error" in result.output
+
+
+def test_scan_email_configuration(tmp_path):
+    """Test email configuration in scan command."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    # Test with email options
+    command = [
+        "scan",
+        str(input_dir),
+        "--email",
+        "test@example.com",
+        "--smtp-host",
+        "smtp.example.com",
+        "--smtp-port",
+        "587",
+        "--smtp-user",
+        "user",
+        "--smtp-password",
+        "pass",
+    ]
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, command)
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+
+
+def test_scan_test_email(tmp_path):
+    """Test email configuration testing."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    command = [
+        "scan",
+        str(input_dir),
+        "--test-email",
+        "--email",
+        "test@example.com",
+        "--smtp-host",
+        "smtp.example.com",
+    ]
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, command)
+        assert result.exit_code == 0
+        mock_walk.assert_not_called()
+
+
+@patch("hashreport.cli.list_files_in_directory")
+def test_filelist_command(mock_list, tmp_path):
+    """Test filelist command."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+
+    result = runner.invoke(cli, ["filelist", str(input_dir), "-o", str(output_dir)])
+    assert result.exit_code == 0
+    mock_list.assert_called_once_with(str(input_dir), str(output_dir), recursive=True)
+
+
+@patch("hashreport.cli.ReportViewer")
+def test_view_command(mock_viewer, tmp_path):
+    """Test view command."""
+    runner = CliRunner()
+    report_file = tmp_path / "report.json"
+    report_file.touch()
+
+    # Test without filter
+    result = runner.invoke(cli, ["view", str(report_file)])
+    assert result.exit_code == 0
+    mock_viewer.return_value.view_report.assert_called_once_with(str(report_file), None)
+
+    # Test with filter
+    result = runner.invoke(cli, ["view", str(report_file), "--filter", "test"])
+    assert result.exit_code == 0
+    mock_viewer.return_value.view_report.assert_called_with(str(report_file), "test")
+
+
+@patch("hashreport.cli.ReportViewer")
+def test_compare_command(mock_viewer, tmp_path):
+    """Test compare command."""
+    runner = CliRunner()
+    report1 = tmp_path / "report1.json"
+    report2 = tmp_path / "report2.json"
+    output_dir = tmp_path / "output"
+    report1.touch()
+    report2.touch()
+    output_dir.mkdir()
+
+    # Test without output directory
+    result = runner.invoke(cli, ["compare", str(report1), str(report2)])
+    assert result.exit_code == 0
+    mock_viewer.return_value.compare_reports.assert_called_once_with(
+        str(report1), str(report2), None
+    )
+
+    # Test with output directory
+    result = runner.invoke(
+        cli, ["compare", str(report1), str(report2), "-o", str(output_dir)]
+    )
+    assert result.exit_code == 0
+    mock_viewer.return_value.compare_reports.assert_called_with(
+        str(report1), str(report2), str(output_dir)
+    )
+
+
+@patch("hashreport.cli.click.edit")
+def test_config_edit_error_handling(mock_edit, tmp_path):
+    """Test error handling in config edit command."""
+    mock_edit.side_effect = Exception("Test error")
+    runner = CliRunner()
+    result = runner.invoke(cli, ["config", "edit"])
+    assert result.exit_code == 1
+    assert "Error: Test error" in result.output
+
+
+@patch("hashreport.cli.Console")
+def test_config_show_error_handling(mock_console, tmp_path):
+    """Test error handling in config show command."""
+    mock_console.return_value.print.side_effect = Exception("Test error")
+    runner = CliRunner()
+    result = runner.invoke(cli, ["config", "show"])
+    assert result.exit_code == 1
+    assert "Error: Test error" in result.output
