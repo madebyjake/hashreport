@@ -153,11 +153,14 @@ def walk_directory_and_log(
             min_size=min_size,
             max_size=max_size,
         )
-        progress_bar = ProgressBar(total=total_files)
+        progress_bar = ProgressBar(
+            total=total_files, show_file_names=config.progress["show_file_names"]
+        )
 
         try:
             with ThreadPoolManager(
-                initial_workers=config.max_workers, progress_bar=progress_bar
+                initial_workers=config.max_workers,
+                progress_bar=None,  # Don't let thread pool handle progress
             ) as pool:
                 if specific_files:
                     files_to_process = [
@@ -172,9 +175,6 @@ def walk_directory_and_log(
                             max_size=max_size,
                         )
                     ]
-                    results = pool.process_items(
-                        files_to_process, lambda x: calculate_hash(x, algorithm)
-                    )
                 else:
                     files_to_process = [
                         os.path.join(root, file_name)
@@ -190,28 +190,42 @@ def walk_directory_and_log(
                             max_size=max_size,
                         )
                     ][:limit]
+
+                # Process files in batches
+                batch_size = min(100, len(files_to_process))
+                for i in range(0, len(files_to_process), batch_size):
+                    batch = files_to_process[i : i + batch_size]
+
+                    # Update progress bar with first file in batch
+                    if batch:
+                        progress_bar.update(0, file_name=os.path.basename(batch[0]))
+
+                    # Process the batch
                     results = pool.process_items(
-                        files_to_process, lambda x: calculate_hash(x, algorithm)
+                        batch, lambda x: calculate_hash(x, algorithm)
                     )
 
-                for result in results:
-                    path, hash_val, mod_time = result
-                    if hash_val:  # Only add if hash was successful
-                        file_path = Path(path)
-                        file_size = os.path.getsize(path)
-                        final_results.append(
-                            {
-                                "File Name": file_path.name,
-                                "File Path": str(file_path),
-                                "Size": format_size(file_size),
-                                "Hash Algorithm": algorithm,
-                                "Hash Value": hash_val,
-                                "Last Modified Date": mod_time,
-                                "Created Date": datetime.fromtimestamp(
-                                    os.path.getctime(path)
-                                ).strftime("%Y-%m-%d %H:%M:%S"),
-                            }
-                        )
+                    # Handle results and update progress
+                    for result in results:
+                        path, hash_val, mod_time = result
+                        if hash_val:  # Only add if hash was successful
+                            file_path = Path(path)
+                            file_size = os.path.getsize(path)
+                            final_results.append(
+                                {
+                                    "File Name": file_path.name,
+                                    "File Path": str(file_path),
+                                    "Size": format_size(file_size),
+                                    "Hash Algorithm": algorithm,
+                                    "Hash Value": hash_val,
+                                    "Last Modified Date": mod_time,
+                                    "Created Date": datetime.fromtimestamp(
+                                        os.path.getctime(path)
+                                    ).strftime("%Y-%m-%d %H:%M:%S"),
+                                }
+                            )
+                            # Update progress bar with current file name
+                            progress_bar.update(1, file_name=file_path.name)
 
             reports = []
             for handler in handlers:

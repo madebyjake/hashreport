@@ -1,6 +1,7 @@
 """Thread pool management utilities."""
 
 import logging
+import os
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -132,12 +133,14 @@ class ThreadPoolManager:
                 result = future.result()
                 results.append(result)
                 if self.progress_bar:
-                    self.progress_bar.update()
+                    # Pass the file name to the progress bar update
+                    file_name = os.path.basename(item) if isinstance(item, str) else ""
+                    self.progress_bar.update(1, file_name=file_name)
             except Exception as e:
                 logger.error(f"Error processing item: {e}")
                 retry_items.append(item)
                 if self.progress_bar:
-                    self.progress_bar.update()
+                    self.progress_bar.update(1)
 
         # Handle retries if needed
         if retry_items and retries < config.max_retries:
