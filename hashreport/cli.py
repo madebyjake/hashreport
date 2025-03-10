@@ -1,4 +1,13 @@
-"""CLI module for hashreport."""
+"""CLI module for hashreport.
+
+This module provides the command-line interface for the hashreport tool.
+It includes commands for scanning directories, generating reports, and managing configuration.
+
+Example:
+    $ hashreport scan /path/to/dir -o output.json
+    $ hashreport view report.json --filter "*.txt"
+    $ hashreport config show
+"""  # noqa: E501
 
 import os
 import sys
@@ -35,7 +44,15 @@ def validate_size(
         Valid size string or None if no value provided
 
     Raises:
-        click.BadParameter: If size format is invalid
+        click.BadParameter: If size format is invalid or size is not positive
+
+    Example:
+        >>> validate_size(None, None, "1MB")
+        '1MB'
+        >>> validate_size(None, None, "invalid")
+        Traceback (most recent call last):
+            ...
+            click.BadParameter: Invalid size format: Size must include unit...
     """
     if not value:
         return None
@@ -81,7 +98,14 @@ def validate_size(
 
 
 def handle_error(e: Exception, exit_code: int = 1) -> None:
-    """Handle errors for CLI commands."""
+    """Handle errors for CLI commands.
+
+    Args:
+        e: The exception that occurred
+        exit_code: The exit code to use (default: 1)
+
+    This function prints the error message to stderr and exits with the specified code.
+    """
     click.echo(f"Error: {str(e)}", err=True)
     sys.exit(exit_code)
 
@@ -89,7 +113,16 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__, prog_name="hashreport")
 def cli():
-    """Generate hash reports for files in a directory."""
+    """Generate hash reports for files in a directory.
+
+    This tool helps you generate and manage hash reports for files in a directory.
+    It supports multiple hash algorithms, output formats, and filtering options.
+
+    Example:
+        $ hashreport scan /path/to/dir -o output.json
+        $ hashreport view report.json --filter "*.txt"
+        $ hashreport config show
+    """
     pass
 
 
@@ -171,11 +204,34 @@ def scan(
     test_email: bool,
     recursive: bool,
 ):
-    """
-    Scan directory and generate hash report.
+    """Scan directory and generate hash report.
 
-    DIRECTORY is the path to scan for files.
-    """
+    This command scans the specified directory and generates a hash report for all files.
+    The report can be output in multiple formats and can be filtered by various criteria.
+
+    Args:
+        directory: Path to scan for files
+        output: Output directory path (default: current directory)
+        algorithm: Hash algorithm to use
+        output_formats: List of output formats to generate
+        min_size: Minimum file size to include
+        max_size: Maximum file size to include
+        include: List of patterns to include
+        exclude: List of patterns to exclude
+        regex: Whether to use regex for pattern matching
+        limit: Maximum number of files to process
+        email: Email address to send report to
+        smtp_host: SMTP server host
+        smtp_port: SMTP server port
+        smtp_user: SMTP username
+        smtp_password: SMTP password
+        test_email: Whether to test email configuration only
+        recursive: Whether to process subdirectories
+
+    Example:
+        $ hashreport scan /path/to/dir -o output.json -a sha256 -f json
+        $ hashreport scan /path/to/dir --min-size 1MB --max-size 1GB --include "*.txt"
+    """  # noqa: E501
     try:
         # Set default output path if none provided
         if not output:
@@ -229,10 +285,20 @@ def filelist(
     output: str,
     recursive: bool,
 ):
-    """
-    List files in the directory without generating hashes.
+    """List files in the directory without generating hashes.
 
-    DIRECTORY is the path to scan for files.
+    This command generates a list of files in the specified directory without
+    calculating their hashes. This is useful for quick directory analysis or
+    when you only need a file listing.
+
+    Args:
+        directory: Path to scan for files
+        output: Output file path (default: current directory)
+        recursive: Whether to process subdirectories
+
+    Example:
+        $ hashreport filelist /path/to/dir -o files.txt
+        $ hashreport filelist /path/to/dir --no-recursive
     """
     try:
         # Set default output path if none provided
@@ -256,7 +322,19 @@ def filelist(
 @click.argument("report", type=click.Path(exists=True))
 @click.option("-f", "--filter", "filter_text", help="Filter report entries")
 def view(report: str, filter_text: Optional[str]) -> None:
-    """View report contents with optional filtering."""
+    """View report contents with optional filtering.
+
+    This command displays the contents of a hash report with optional filtering.
+    The report can be filtered using glob patterns or regular expressions.
+
+    Args:
+        report: Path to the report file
+        filter_text: Optional filter pattern to apply
+
+    Example:
+        $ hashreport view report.json
+        $ hashreport view report.json --filter "*.txt"
+    """
     try:
         viewer = ReportViewer()
         viewer.view_report(report, filter_text)
@@ -271,7 +349,20 @@ def view(report: str, filter_text: Optional[str]) -> None:
     "-o", "--output", type=click.Path(), help="Output directory for comparison report"
 )
 def compare(report1: str, report2: str, output: Optional[str]) -> None:
-    """Compare two reports and show differences."""
+    """Compare two reports and show differences.
+
+    This command compares two hash reports and shows the differences between them.
+    It can be useful for detecting changes in file hashes over time.
+
+    Args:
+        report1: Path to the first report file
+        report2: Path to the second report file
+        output: Optional output directory for the comparison report
+
+    Example:
+        $ hashreport compare report1.json report2.json
+        $ hashreport compare report1.json report2.json -o diff/
+    """
     try:
         viewer = ReportViewer()
         viewer.compare_reports(report1, report2, output)
@@ -279,24 +370,43 @@ def compare(report1: str, report2: str, output: Optional[str]) -> None:
         handle_error(e)
 
 
-cli.add_command(filelist)
-
-
 @cli.command()
 def algorithms():
-    """Show available hash algorithms."""
+    """Show available hash algorithms.
+
+    This command displays a list of all available hash algorithms that can be used
+    for generating reports.
+
+    Example:
+        $ hashreport algorithms
+    """
     show_available_options()
 
 
 @cli.group()
 def config():
-    """Manage configuration settings."""
+    """Manage configuration settings.
+
+    This command group provides tools for managing the hashreport configuration.
+    You can view, edit, and customize various settings.
+
+    Example:
+        $ hashreport config show
+        $ hashreport config edit
+    """
     pass
 
 
 @config.command()
 def edit():
-    """Edit configuration file in default editor."""
+    """Edit configuration file in default editor.
+
+    This command opens the configuration file in your default text editor.
+    If the file doesn't exist, it will be created with default settings.
+
+    Example:
+        $ hashreport config edit
+    """
     try:
         settings_path = get_config().get_settings_path()
         if not settings_path.exists():
@@ -311,26 +421,43 @@ def edit():
 
 @config.command()
 def show():
-    """Show current configuration settings."""
+    """Show current configuration settings.
+
+    This command displays all current configuration settings in a formatted way.
+    It shows both default and custom settings.
+
+    Example:
+        $ hashreport config show
+    """
     try:
         console = Console()
         config_data = get_config().get_all_settings()
         console.print("\n[bold]Current Configuration[/bold]\n")
-        print_section(config_data)
+        print_section(console, config_data)
     except Exception as e:
         handle_error(e)
 
 
-def print_section(data: Dict[str, Any], indent: int = 0) -> None:
-    """Print configuration section with proper indentation."""
+def print_section(console: Console, data: Dict[str, Any], indent: int = 0) -> None:
+    """Print configuration section with proper indentation.
+
+    This function recursively prints configuration data with proper formatting
+    and indentation using the Rich console.
+
+    Args:
+        console: Rich console instance for output
+        data: Configuration data to print
+        indent: Current indentation level
+
+    Raises:
+        Exception: If there's an error printing the configuration
+    """
     try:
         for key, value in data.items():
             if isinstance(value, dict):
-                console = Console()
                 console.print(" " * indent + f"[bold]{key}[/bold]")
-                print_section(value, indent + 2)
+                print_section(console, value, indent + 2)
             else:
-                console = Console()
                 console.print(" " * indent + f"{key}: {value}")
     except Exception as e:
         raise Exception(f"Failed to print configuration: {e}")
