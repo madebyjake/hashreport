@@ -11,7 +11,10 @@ from hashreport.utils.exceptions import ReportError
 @pytest.fixture
 def sample_data():
     """Sample data fixture."""
-    return [{"name": "test1", "value": 1}, {"name": "test2", "value": 2}]
+    return [
+        {"file": "test1.txt", "name": "test1", "value": 1},
+        {"file": "test2.txt", "name": "test2", "value": 2},
+    ]
 
 
 def test_json_read_write(tmp_path, sample_data):
@@ -33,7 +36,7 @@ def test_json_append(tmp_path):
     filepath = tmp_path / "test.json"
     handler = JSONReportHandler(filepath)
 
-    entry = {"name": "test1", "value": 1}
+    entry = {"file": "test1.txt", "name": "test1", "value": 1}
     handler.append(entry)
 
     read_data = handler.read()
@@ -46,8 +49,7 @@ def test_json_append(tmp_path):
 def test_json_read_invalid(tmp_path, monkeypatch):
     """Test reading invalid or nonexistent paths."""
     handler = JSONReportHandler("nonexistent.json")
-    with pytest.raises(ReportError):
-        handler.read()
+    assert handler.read() == []  # Should return empty list for nonexistent file
 
     def mock_mkdir():
         raise PermissionError("Access denied")
@@ -56,13 +58,13 @@ def test_json_read_invalid(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "mkdir", mock_mkdir)
 
     with pytest.raises(ReportError):
-        handler.write([{"test": "data"}])
+        handler.write([{"file": "test.txt", "test": "data"}])
 
 
 def test_json_single_object(tmp_path):
     """Test writing and reading a single JSON object."""
     handler = JSONReportHandler(tmp_path / "test.json")
-    single_entry = {"name": "test"}
+    single_entry = {"file": "test.txt", "name": "test"}
 
     handler.write([single_entry])
     read_data = handler.read()
