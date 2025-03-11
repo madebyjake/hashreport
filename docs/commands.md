@@ -1,150 +1,165 @@
 # **Command Reference**
 
+This document provides detailed information about all available commands in hashreport.
+
 ## **Global Options**
 
-These options are available for all commands:
-
 | Option | Description |
 |--------|-------------|
-| `-h`, `--help` | Show help message and exit |
-| `--version` | Show version information |
+| `--help` | Show help message and exit |
+| `--version` | Show version and exit |
 
-## **Scan Command Options**
+## **Commands**
 
-The `scan` command is the primary command for generating hash reports. Here are all available options:
+### **scan**
+
+Generate a hash report for files in a directory.
+
+```bash
+hashreport scan [OPTIONS] DIRECTORY
+```
+
+#### **Options**
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `DIRECTORY` | Required | Path to scan for files |
-| `-o`, `--output` | Current directory | Output directory or file path |
-| `-a`, `--algorithm` | md5 | Hash algorithm to use |
-| `-f`, `--format` | csv | Output format(s) (csv, json) |
-| `--min-size` | None | Minimum file size (e.g., 1MB) |
-| `--max-size` | None | Maximum file size (e.g., 1GB) |
-| `--include` | None | Include files matching pattern |
-| `--exclude` | None | Exclude files matching pattern |
-| `--regex` | False | Use regex for pattern matching |
-| `--limit` | None | Limit number of files to process |
-| `--recursive/--no-recursive` | True | Process subdirectories recursively |
-| `--email` | None | Email address to send report to |
-| `--smtp-host` | None | SMTP server host |
-| `--smtp-port` | 587 | SMTP server port |
-| `--smtp-user` | None | SMTP username |
-| `--smtp-password` | None | SMTP password |
-| `--test-email` | False | Test email configuration |
+| `DIRECTORY` | - | Directory to scan |
+| `-a, --algorithm` | `sha256` | Hash algorithm to use |
+| `-f, --format` | `csv` | Output format (csv, json) |
+| `-o, --output` | - | Output directory |
+| `-r, --recursive` | `True` | Scan directories recursively |
+| `-i, --include` | - | Include files matching pattern |
+| `-e, --exclude` | - | Exclude files matching pattern |
+| `--regex` | `False` | Use regex patterns |
+| `--min-size` | - | Minimum file size |
+| `--max-size` | - | Maximum file size |
+| `--limit` | - | Limit number of files |
+| `--email` | - | Email address for report |
+| `--smtp-host` | - | SMTP server host |
+| `--smtp-port` | - | SMTP server port |
+| `--smtp-user` | - | SMTP username |
+| `--smtp-password` | - | SMTP password |
+| `--smtp-tls` | `False` | Use TLS for SMTP |
+| `--test-email` | `False` | Test email configuration |
 
-## **Filelist Command Options**
+### **filelist**
 
-The `filelist` command generates a list of all files in a directory. Here are all available options:
+Generate a list of files in a directory.
+
+```bash
+hashreport filelist [OPTIONS] DIRECTORY
+```
+
+#### **Options**
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `DIRECTORY` | Required | Path to scan for files |
-| `-o`, `--output` | Current directory | Output file path |
-| `--recursive/--no-recursive` | True | Process subdirectories recursively |
-| `--include` | None | Include files matching pattern |
-| `--exclude` | None | Exclude files matching pattern |
-| `--regex` | False | Use regex for pattern matching |
+| `DIRECTORY` | - | Directory to scan |
+| `-r, --recursive` | `True` | Scan directories recursively |
+| `-i, --include` | - | Include files matching pattern |
+| `-e, --exclude` | - | Exclude files matching pattern |
+| `--regex` | `False` | Use regex patterns |
+| `--min-size` | - | Minimum file size |
+| `--max-size` | - | Maximum file size |
+| `--limit` | - | Limit number of files |
 
-## **View Command Options**
+### **view**
 
-| Option | Description |
-|--------|-------------|
-| `REPORT` | Report file to view |
-| `-f`, `--filter` | Filter report entries |
+View report contents.
 
-## **Compare Command Options**
+```bash
+hashreport view [OPTIONS] REPORT_FILE
+```
 
-| Option | Description |
-|--------|-------------|
-| `REPORT1` | First report file to compare |
-| `REPORT2` | Second report file to compare |
-| `-o`, `--output` | Output directory for comparison report |
+#### **Options**
 
-## **Config Command Options**
+| Option | Default | Description |
+|--------|---------|-------------|
+| `REPORT_FILE` | - | Report file to view |
+| `-f, --filter` | - | Filter entries by pattern |
 
-The `config` command manages user settings:
+### **compare**
+
+Compare two report files.
+
+```bash
+hashreport compare [OPTIONS] OLD_REPORT NEW_REPORT
+```
+
+#### **Options**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `OLD_REPORT` | - | First report file |
+| `NEW_REPORT` | - | Second report file |
+| `-o, --output` | - | Output directory |
+
+### **config**
+
+Manage configuration settings.
+
+```bash
+hashreport config [OPTIONS] COMMAND
+```
+
+#### **Commands**
 
 | Command | Description |
 |---------|-------------|
-| `config init [PATH]` | Generate default settings file at optional PATH |
-| `config show` | Display current settings |
-| `config edit` | Edit settings in system default editor |
+| `show` | Display current configuration |
+| `edit` | Edit configuration file |
 
-Default settings location: `~/.config/hashreport/settings.toml`
+### **algorithms**
 
-## **Size Format**
+List available hash algorithms.
 
-When using `--min-size` or `--max-size`, the following formats are supported:
-
-| Unit | Example | Description |
-|------|---------|-------------|
-| B | 1024B | Bytes |
-| KB | 500KB | Kilobytes |
-| MB | 10MB | Megabytes |
-| GB | 1GB | Gigabytes |
-
-## **Pattern Matching**
-
-### Glob Patterns (Default)
-- `*` matches any characters
-- `?` matches single character
-- `[seq]` matches any character in seq
-- `[!seq]` matches any character not in seq
-
-### Regex Patterns
-When using `--regex`:
-- `.*` matches any characters
-- `\.` matches literal dot
-- `$` matches end of string
-- `^` matches start of string
-- `[0-9]` matches any digit
+```bash
+hashreport algorithms
+```
 
 ## **Examples**
 
+### **Basic Usage**
+
 ```bash
-# Basic scan with defaults
+# Scan directory with default settings
 hashreport scan /path/to/directory
 
-# Complex scan with multiple options
-hashreport scan /path/to/directory \
-  --algorithm sha256 \
-  -f csv -f json \
-  --min-size 1MB \
-  --max-size 1GB \
+# Scan with specific algorithm
+hashreport scan --algorithm sha512 /path/to/directory
+
+# Generate multiple formats
+hashreport scan -f csv -f json /path/to/directory
+```
+
+### **Advanced Usage**
+
+```bash
+# Scan with filters
+hashreport scan \
   --include "*.pdf" \
   --exclude "*.tmp" \
-  --limit 1000 \
-  -o /path/to/output/report.csv
+  --min-size 1MB \
+  --max-size 1GB \
+  /path/to/directory
 
-# Using regex pattern matching
-hashreport scan /path/to/directory \
+# Use regex patterns
+hashreport scan \
   --regex \
-  --include ".*\d{8}.*\.txt$" \
-  --exclude "^temp_.*"
+  --include ".*\d{8}.*" \
+  /path/to/directory
 
-# View report contents
-hashreport view report.csv
-
-# Filter report entries
-hashreport view report.csv -f "*.txt"
-
-# Compare two reports
-hashreport compare old_report.csv new_report.csv
-
-# Compare and save results
-hashreport compare old_report.csv new_report.csv -o /path/to/output/
-
-# Initialize default settings
-hashreport config init
-
-# Create settings file in specific location
-hashreport config init ./my-settings.toml
-
-# View current settings
-hashreport config show
-
-# Edit settings in default editor
-hashreport config edit
+# Email report
+hashreport scan \
+  --email user@example.com \
+  --smtp-host smtp.example.com \
+  --smtp-user username \
+  --smtp-password password \
+  /path/to/directory
 ```
-````
+
+For more information, see:
+- [Basic Usage](basic.md)
+- [Advanced Usage](advanced.md)
+- [Configuration Guide](configuration.md)
+- [Troubleshooting](troubleshooting.md)

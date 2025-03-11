@@ -14,15 +14,23 @@
 
 ## Features
 
-- Bulk hash generation for large directories
-- Support for multiple hash algorithms using [hashlib](https://docs.python.org/3/library/hashlib.html)
-- Multi-threaded processing for faster performance
-- Output reports in CSV and JSON formats
-- Filter files by size, type, and name patterns
-- Option to provide a file list for inclusion or exclusion
-- Recursive directory traversal to process nested folders
+### Core Features
+- Multi-threaded processing for fast bulk hash generation
+- Support for multiple hash algorithms (MD5, SHA-256, etc.)
+- Recursive directory traversal
+- Comprehensive file information in reports
+
+### Output Options
+- CSV and JSON report formats
+- Customizable output location
 - Report viewer and comparison tool
-- Email report upon completion using SMTP
+- Email report delivery via SMTP
+
+### Filtering Capabilities
+- Filter by file size (min/max)
+- Filter by file type and name patterns
+- Include/exclude file lists
+- Processing limits and controls
 
 ## Installation
 
