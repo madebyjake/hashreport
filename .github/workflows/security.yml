@@ -47,9 +47,14 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
+      - name: Ensure bandit is installed
+        run: |
+          pip install bandit
+          bandit --version
+
       - name: Run bandit
         run: |
-          poetry run bandit --recursive \
+          bandit --recursive \
             --format txt \
             --configfile .bandit.yaml \
             --verbose \
