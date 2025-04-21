@@ -16,8 +16,7 @@ on:
 
 env:
   POETRY_VIRTUALENVS_CREATE: false
-  POETRY_CACHE_DIR: ~/.cache/pypoetry
-  POETRY_VERSION: 1.7.1
+  POETRY_VERSION: 1.6.1
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,9 +37,10 @@ jobs:
           cache: 'pip'
 
       - name: Install Poetry
-        run: |
-          pip install poetry==${{ env.POETRY_VERSION }}
-          poetry --version
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+          virtualenvs-create: false
 
       - name: Cache Poetry dependencies
         uses: actions/cache@v4
@@ -51,12 +51,7 @@ jobs:
             poetry-${{ runner.os }}-
 
       - name: Install dependencies
-        run: |
-          poetry install --with dev
-          # Verify flake8 is installed
-          poetry run pip list | grep flake8
+        run: poetry install --with dev
 
       - name: Run flake8
-        run: |
-          # Run with explicit path if needed
-          poetry run python -m flake8
+        run: poetry run python -m flake8
