@@ -50,11 +50,11 @@ jobs:
       - name: Ensure bandit is installed
         run: |
           pip install bandit
-          bandit --version
+          python -m bandit --version
 
       - name: Run bandit
         run: |
-          bandit --recursive \
+          python -m bandit --recursive \
             --format txt \
             --configfile .bandit.yaml \
             --verbose \
