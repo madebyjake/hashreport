@@ -8,6 +8,10 @@ on:
   schedule:
     - cron: '0 0 * * 0'  # Weekly
 
+env:
+  POETRY_VIRTUALENVS_CREATE: false
+  POETRY_VERSION: 1.6.1
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -27,6 +31,9 @@ jobs:
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+          virtualenvs-create: false
 
       - name: Cache Poetry virtualenv
         uses: actions/cache@v4
@@ -40,9 +47,14 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
+      - name: Ensure bandit is installed
+        run: |
+          pip install bandit
+          python -m bandit --version
+
       - name: Run bandit
         run: |
-          poetry run bandit --recursive \
+          python -m bandit --recursive \
             --format txt \
             --configfile .bandit.yaml \
             --verbose \

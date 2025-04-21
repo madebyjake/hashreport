@@ -1,5 +1,7 @@
 """Tests for filters utility."""
 
+from unittest.mock import patch
+
 import pytest
 
 from hashreport.utils.filters import (
@@ -112,3 +114,103 @@ def test_pattern_error_handling():
 
     # Invalid glob pattern
     assert not matches_pattern("test.txt", ["["], use_regex=False)
+
+
+def test_compile_patterns_empty():
+    """Test pattern compilation with empty patterns."""
+    result = compile_patterns([])
+    assert result == []
+
+    result = compile_patterns(None)
+    assert result == []
+
+
+def test_compile_patterns_invalid_regex():
+    """Test pattern compilation with invalid regex patterns."""
+    patterns = ["[invalid", "(*invalid)", "invalid*"]
+    result = compile_patterns(patterns, use_regex=True)
+    assert len(result) == 0
+
+
+def test_matches_pattern_regex_edge_cases():
+    """Test regex pattern matching edge cases."""
+    # Test with empty pattern
+    assert not matches_pattern("test.txt", [], use_regex=True)
+
+    # Test with invalid regex pattern
+    assert not matches_pattern("test.txt", ["[invalid"], use_regex=True)
+
+    # Test with complex regex pattern
+    patterns = compile_patterns([r"^[a-z]+\.(txt|json)$"], use_regex=True)
+    assert matches_pattern("test.txt", patterns, use_regex=True)
+    assert matches_pattern("data.json", patterns, use_regex=True)
+    assert not matches_pattern("123.txt", patterns, use_regex=True)
+
+
+def test_should_process_file_size_edge_cases(tmp_path):
+    """Test file size filter edge cases."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test content")
+
+    # Test with zero size
+    assert not should_process_file(str(test_file), min_size=1000)
+    assert should_process_file(str(test_file), max_size=1000)
+
+    # Test with negative size
+    assert not should_process_file(str(test_file), min_size=-1)
+    assert not should_process_file(str(test_file), max_size=-1)
+
+    # Test with equal min and max size
+    file_size = test_file.stat().st_size
+    assert should_process_file(str(test_file), min_size=file_size, max_size=file_size)
+    assert not should_process_file(
+        str(test_file), min_size=file_size + 1, max_size=file_size + 1
+    )
+
+
+def test_should_process_file_pattern_combinations(tmp_path):
+    """Test combinations of include and exclude patterns."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test content")
+
+    # Test with both include and exclude patterns
+    assert should_process_file(
+        str(test_file), include_patterns=["*.txt"], exclude_patterns=["*.tmp"]
+    )
+
+    # Test with conflicting patterns
+    assert not should_process_file(
+        str(test_file), include_patterns=["*.txt"], exclude_patterns=["*.txt"]
+    )
+
+    # Test with multiple patterns
+    assert should_process_file(
+        str(test_file), include_patterns=["*.txt", "test.*"], exclude_patterns=["*.tmp"]
+    )
+
+    # Test with regex patterns
+    assert should_process_file(
+        str(test_file),
+        include_patterns=[r"\.txt$"],
+        exclude_patterns=[r"\.tmp$"],
+        use_regex=True,
+    )
+
+
+def test_should_process_file_error_handling(tmp_path):
+    """Test error handling in file processing."""
+    # Test with invalid file path
+    assert not should_process_file("invalid/path/file.txt")
+
+    # Test with permission error
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test content")
+
+    with patch("pathlib.Path.stat") as mock_stat:
+        mock_stat.side_effect = PermissionError("Permission denied")
+        assert not should_process_file(str(test_file))
+
+    # Test with other file system errors
+    with patch("pathlib.Path.stat") as mock_stat:
+        mock_stat.side_effect = OSError("File system error")
+        assert not should_process_file(str(test_file))

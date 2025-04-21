@@ -38,7 +38,7 @@ def matches_pattern(
 ) -> bool:
     """Check if path matches any pattern."""
     if not patterns:
-        return True
+        return False
 
     # Only match against filename
     filename = Path(path).name
@@ -84,9 +84,9 @@ def should_process_file(
 
         # Check size constraints
         size = path.stat().st_size
-        if min_size is not None and size < min_size:
+        if min_size is not None and (min_size < 0 or size < min_size):
             return False
-        if max_size is not None and size > max_size:
+        if max_size is not None and (max_size < 0 or size > max_size):
             return False
 
         # Check patterns

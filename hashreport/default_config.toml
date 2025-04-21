@@ -49,7 +49,7 @@ backup_count = 5
 [hashreport.progress]
 refresh_rate = 0.1
 show_eta = true
-show_file_names = true
+show_file_names = false
 show_speed = true
 
 # Report settings
