@@ -39,8 +39,7 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          pip install poetry==${{ env.POETRY_VERSION }}
           poetry --version
 
       - name: Cache Poetry dependencies
@@ -52,7 +51,12 @@ jobs:
             poetry-${{ runner.os }}-
 
       - name: Install dependencies
-        run: poetry install --with dev
+        run: |
+          poetry install --with dev
+          # Verify flake8 is installed
+          poetry run pip list | grep flake8
 
       - name: Run flake8
-        run: poetry run flake8
+        run: |
+          # Run with explicit path if needed
+          poetry run python -m flake8
