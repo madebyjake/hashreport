@@ -4,13 +4,17 @@ repo_url: https://github.com/madebyjake/hashreport
 copyright: Copyright © 2025 Jake Wells
 
 nav:
-  - Home: index.md
+  - Overview: index.md
   - Installation: install.md
-  - Basic Usage: basic.md
-  - Advanced Usage: advanced.md
-  - Command Reference: commands.md
+  - Usage:
+    - Basic Usage: basic.md
+    - Advanced Usage: advanced.md
+    - Command Reference: commands.md
+    - Configuration: configuration.md
+    - Troubleshooting: troubleshooting.md
   - Development:
-    - Project Scripts: development/scripts.md
+    - Contributing: contributing.md
+    - Project Scripts: scripts.md
 
 theme:
   name: material
@@ -21,6 +25,11 @@ theme:
   features:
     - navigation.footer
     - navigation.indexes
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
@@ -55,8 +64,24 @@ plugins:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      preserve_tabs: true
   - pymdownx.emoji
+  - pymdownx.tasklist
+  - pymdownx.tabbed
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.progressbar
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
 
 extra:
   consent:
@@ -66,3 +91,10 @@ extra:
       as to measure the effectiveness of our documentation and whether users
       find what they're searching for. With your consent, you're helping us to
       make our documentation better.
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/madebyjake/hashreport
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/hashreport/
+  version:
+    provider: mike

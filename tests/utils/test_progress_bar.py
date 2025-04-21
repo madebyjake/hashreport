@@ -15,6 +15,17 @@ def test_progress_bar_init():
     assert pbar._bar.total == 5
     assert pbar._bar.desc == "Testing"
     assert isinstance(pbar._bar, tqdm)
+    assert not pbar._show_file_names  # Verify default is False
+
+
+def test_progress_bar_init_with_file_names():
+    """Test creating a ProgressBar instance with show_file_names enabled."""
+    pbar = ProgressBar(total=5, desc="Testing", show_file_names=True)
+    assert pbar._bar.total == 5
+    assert pbar._bar.desc == "Testing"
+    assert isinstance(pbar._bar, tqdm)
+    assert pbar._show_file_names
+    assert "- {postfix}" in pbar._bar.bar_format  # Verify format includes postfix
 
 
 def test_progress_bar_update():
@@ -23,6 +34,15 @@ def test_progress_bar_update():
     pbar.update()
     pbar.update()
     assert pbar._bar.n == 2
+
+
+def test_progress_bar_update_with_file_name():
+    """Test updating the progress bar with file name."""
+    pbar = ProgressBar(total=2, show_file_names=True)
+    pbar.update(1, file_name="test.txt")
+    assert pbar._bar.n == 1
+    assert pbar._current_file == "test.txt"
+    assert pbar._bar.postfix == "test.txt"
 
 
 def test_progress_bar_finish():

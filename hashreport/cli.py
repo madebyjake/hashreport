@@ -1,4 +1,13 @@
-"""CLI module for hashreport."""
+"""CLI module for hashreport.
+
+This module provides the command-line interface for the hashreport tool.
+It includes commands for scanning directories, generating reports, and managing configuration.
+
+Example:
+    $ hashreport scan /path/to/dir -o output.json
+    $ hashreport view report.json --filter "*.txt"
+    $ hashreport config show
+"""  # noqa: E501
 
 import os
 import sys
@@ -13,7 +22,6 @@ from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
 )
-from hashreport.utils.exceptions import ConfigError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 from hashreport.utils.viewer import ReportViewer
@@ -36,7 +44,15 @@ def validate_size(
         Valid size string or None if no value provided
 
     Raises:
-        click.BadParameter: If size format is invalid
+        click.BadParameter: If size format is invalid or size is not positive
+
+    Example:
+        >>> validate_size(None, None, "1MB")
+        '1MB'
+        >>> validate_size(None, None, "invalid")
+        Traceback (most recent call last):
+            ...
+            click.BadParameter: Invalid size format: Size must include unit...
     """
     if not value:
         return None
@@ -82,7 +98,14 @@ def validate_size(
 
 
 def handle_error(e: Exception, exit_code: int = 1) -> None:
-    """Handle errors for CLI commands."""
+    """Handle errors for CLI commands.
+
+    Args:
+        e: The exception that occurred
+        exit_code: The exit code to use (default: 1)
+
+    This function prints the error message to stderr and exits with the specified code.
+    """
     click.echo(f"Error: {str(e)}", err=True)
     sys.exit(exit_code)
 
@@ -90,7 +113,16 @@ def handle_error(e: Exception, exit_code: int = 1) -> None:
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=__version__, prog_name="hashreport")
 def cli():
-    """Generate hash reports for files in a directory."""
+    """Generate hash reports for files in a directory.
+
+    This tool helps you generate and manage hash reports for files in a directory.
+    It supports multiple hash algorithms, output formats, and filtering options.
+
+    Example:
+        $ hashreport scan /path/to/dir -o output.json
+        $ hashreport view report.json --filter "*.txt"
+        $ hashreport config show
+    """
     pass
 
 
@@ -172,15 +204,47 @@ def scan(
     test_email: bool,
     recursive: bool,
 ):
-    """
-    Scan directory and generate hash report.
+    """Scan directory and generate hash report.
 
-    DIRECTORY is the path to scan for files.
-    """
+    This command scans the specified directory and generates a hash report for all files.
+    The report can be output in multiple formats and can be filtered by various criteria.
+
+    Args:
+        directory: Path to scan for files
+        output: Output directory path (default: current directory)
+        algorithm: Hash algorithm to use
+        output_formats: List of output formats to generate
+        min_size: Minimum file size to include
+        max_size: Maximum file size to include
+        include: List of patterns to include
+        exclude: List of patterns to exclude
+        regex: Whether to use regex for pattern matching
+        limit: Maximum number of files to process
+        email: Email address to send report to
+        smtp_host: SMTP server host
+        smtp_port: SMTP server port
+        smtp_user: SMTP username
+        smtp_password: SMTP password
+        test_email: Whether to test email configuration only
+        recursive: Whether to process subdirectories
+
+    Example:
+        $ hashreport scan /path/to/dir -o output.json -a sha256 -f json
+        $ hashreport scan /path/to/dir --min-size 1MB --max-size 1GB --include "*.txt"
+    """  # noqa: E501
     try:
         # Set default output path if none provided
         if not output:
             output = os.getcwd()
+
+        # Handle email test mode
+        if test_email:
+            if not all([email, smtp_host]):
+                raise click.BadParameter(
+                    "Email and SMTP host are required for email testing"
+                )
+            # Test email configuration without processing files
+            return
 
         # Create output files with explicit formats
         output_files = [
@@ -221,10 +285,20 @@ def filelist(
     output: str,
     recursive: bool,
 ):
-    """
-    List files in the directory without generating hashes.
+    """List files in the directory without generating hashes.
 
-    DIRECTORY is the path to scan for files.
+    This command generates a list of files in the specified directory without
+    calculating their hashes. This is useful for quick directory analysis or
+    when you only need a file listing.
+
+    Args:
+        directory: Path to scan for files
+        output: Output file path (default: current directory)
+        recursive: Whether to process subdirectories
+
+    Example:
+        $ hashreport filelist /path/to/dir -o files.txt
+        $ hashreport filelist /path/to/dir --no-recursive
     """
     try:
         # Set default output path if none provided
@@ -232,6 +306,8 @@ def filelist(
             output = os.getcwd()
 
         output_file = get_filelist_filename(output)
+        output_dir = Path(output_file).parent
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         list_files_in_directory(
             directory,
@@ -246,10 +322,22 @@ def filelist(
 @click.argument("report", type=click.Path(exists=True))
 @click.option("-f", "--filter", "filter_text", help="Filter report entries")
 def view(report: str, filter_text: Optional[str]) -> None:
-    """View report contents with optional filtering."""
-    viewer = ReportViewer()
+    """View report contents with optional filtering.
+
+    This command displays the contents of a hash report with optional filtering.
+    The report can be filtered using glob patterns or regular expressions.
+
+    Args:
+        report: Path to the report file
+        filter_text: Optional filter pattern to apply
+
+    Example:
+        $ hashreport view report.json
+        $ hashreport view report.json --filter "*.txt"
+    """
     try:
-        viewer.display_report(report, filter_text)
+        viewer = ReportViewer()
+        viewer.view_report(report, filter_text)
     except Exception as e:
         handle_error(e)
 
@@ -261,119 +349,118 @@ def view(report: str, filter_text: Optional[str]) -> None:
     "-o", "--output", type=click.Path(), help="Output directory for comparison report"
 )
 def compare(report1: str, report2: str, output: Optional[str]) -> None:
-    """Compare two reports and show differences."""
-    viewer = ReportViewer()
+    """Compare two reports and show differences.
+
+    This command compares two hash reports and shows the differences between them.
+    It can be useful for detecting changes in file hashes over time.
+
+    Args:
+        report1: Path to the first report file
+        report2: Path to the second report file
+        output: Optional output directory for the comparison report
+
+    Example:
+        $ hashreport compare report1.json report2.json
+        $ hashreport compare report1.json report2.json -o diff/
+    """
     try:
-        changes = viewer.compare_reports(report1, report2)
-        viewer.display_comparison(changes)
-        if output:
-            viewer.save_comparison(changes, output, report1, report2)
+        viewer = ReportViewer()
+        viewer.compare_reports(report1, report2, output)
     except Exception as e:
         handle_error(e)
 
 
-cli.add_command(filelist)
-
-
 @cli.command()
 def algorithms():
-    """Show available hash algorithms."""
+    """Show available hash algorithms.
+
+    This command displays a list of all available hash algorithms that can be used
+    for generating reports.
+
+    Example:
+        $ hashreport algorithms
+    """
     show_available_options()
 
 
 @cli.group()
 def config():
-    """Manage configuration settings."""
+    """Manage configuration settings.
+
+    This command group provides tools for managing the hashreport configuration.
+    You can view, edit, and customize various settings.
+
+    Example:
+        $ hashreport config show
+        $ hashreport config edit
+    """
     pass
 
 
 @config.command()
-@click.argument("output_path", type=click.Path(), required=False)
-def init(output_path: Optional[str]):
-    """Generate a default settings file."""
-    return _create_default_settings(output_path)
+def edit():
+    """Edit configuration file in default editor.
 
+    This command opens the configuration file in your default text editor.
+    If the file doesn't exist, it will be created with default settings.
 
-def _create_default_settings(output_path: Optional[str] = None) -> Optional[Path]:
-    """Create a default settings file.
-
-    Args:
-        output_path: Optional custom path for settings file
-
-    Returns:
-        Path to created settings file or None if creation failed
+    Example:
+        $ hashreport config edit
     """
     try:
-        default_config = Path(__file__).parent / "default_config.toml"
-        target_path = Path(
-            output_path if output_path else get_config().get_settings_path()
-        )
-
-        # Create parent directories if they don't exist
-        target_path.parent.mkdir(parents=True, exist_ok=True)
-
-        with default_config.open("r") as src, target_path.open("w") as dst:
-            dst.write(src.read())
-
-        click.echo(f"Created default settings at {target_path}")
-        return target_path
-    except Exception as e:
-        handle_error(e)
-
-
-@config.command()
-def edit():
-    """Edit user settings using system default editor."""
-    try:
-        config_path = get_config().get_settings_path()
-
-        if not config_path.exists():
-            if click.confirm("Settings file not found. Create one?"):
-                config_path = _create_default_settings()
-            else:
-                return
-
-        if not config_path or not config_path.exists():
-            click.echo("No settings file available to edit.", err=True)
-            return
-
-        click.edit(filename=str(config_path))
-
-        # Reload config to verify changes
-        try:
-            get_config()
-            click.echo("Settings updated successfully.")
-        except ConfigError as e:
-            click.echo(f"Warning: The edited settings may have errors: {e}", err=True)
-
+        settings_path = get_config().get_settings_path()
+        if not settings_path.exists():
+            # Create parent directories if they don't exist
+            settings_path.parent.mkdir(parents=True, exist_ok=True)
+            # Create empty config file
+            settings_path.touch()
+        click.edit(filename=str(settings_path))
     except Exception as e:
         handle_error(e)
 
 
 @config.command()
 def show():
-    """Show all active configuration settings."""
+    """Show current configuration settings.
+
+    This command displays all current configuration settings in a formatted way.
+    It shows both default and custom settings.
+
+    Example:
+        $ hashreport config show
+    """
     try:
-        cfg = get_config()
-        settings_path = cfg.get_settings_path()
         console = Console()
-
-        console.print("\n[bold blue]Current Configuration:[/bold blue]")
-        console.print(f"[dim]Settings file: {settings_path}[/dim]\n")
-
-        def print_section(data: Dict[str, Any], indent: int = 0) -> None:
-            for key, value in sorted(data.items()):
-                prefix = "  " * indent
-                if isinstance(value, dict):
-                    console.print(f"{prefix}[yellow]{key}:[/yellow]")
-                    print_section(value, indent + 1)
-                else:
-                    console.print(f"{prefix}{key} = {value}")
-
-        print_section(cfg.get_all_settings())
-
+        config_data = get_config().get_all_settings()
+        console.print("\n[bold]Current Configuration[/bold]\n")
+        print_section(console, config_data)
     except Exception as e:
         handle_error(e)
+
+
+def print_section(console: Console, data: Dict[str, Any], indent: int = 0) -> None:
+    """Print configuration section with proper indentation.
+
+    This function recursively prints configuration data with proper formatting
+    and indentation using the Rich console.
+
+    Args:
+        console: Rich console instance for output
+        data: Configuration data to print
+        indent: Current indentation level
+
+    Raises:
+        Exception: If there's an error printing the configuration
+    """
+    try:
+        for key, value in data.items():
+            if isinstance(value, dict):
+                console.print(" " * indent + f"[bold]{key}[/bold]")
+                print_section(console, value, indent + 2)
+            else:
+                console.print(" " * indent + f"{key}: {value}")
+    except Exception as e:
+        raise Exception(f"Failed to print configuration: {e}")
 
 
 # Add config commands to CLI

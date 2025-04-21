@@ -1,5 +1,41 @@
 # **Basic Usage**
 
+## **Quick Start**
+
+Here are some common use cases to get you started quickly:
+
+### **1. Basic Directory Scan**
+
+Generate a hash report for all files in a directory:
+
+```bash
+hashreport scan /path/to/directory
+```
+
+### **2. Scan with Specific Hash Algorithm**
+
+Use SHA-256 for better security:
+
+```bash
+hashreport scan --algorithm sha256 /path/to/directory
+```
+
+### **3. Filter by File Type**
+
+Scan only PDF files:
+
+```bash
+hashreport scan --include "*.pdf" /path/to/directory
+```
+
+### **4. Generate Multiple Formats**
+
+Create both CSV and JSON reports:
+
+```bash
+hashreport scan -f csv -f json /path/to/directory
+```
+
 ## **Command Structure**
 
 The basic command structure is:
@@ -125,10 +161,10 @@ Compare two reports to identify changes:
 
 ```bash
 # View differences between reports
-hashreport compare hashreport_<old>.csv hashreport_<new>.csv
+hashreport compare old_report.csv new_report.csv
 
 # Save comparison results
-hashreport compare hashreport_<old>.csv hashreport_<new>.csv -o /path/to/output/
+hashreport compare old_report.csv new_report.csv -o /path/to/output/
 ```
 
 The comparison will show:
@@ -141,18 +177,6 @@ The comparison will show:
 ## **Configuration Management**
 
 hashreport settings can be managed using the `config` command:
-
-### Initialize Settings
-
-Create a default settings file:
-
-```bash
-# Create in default location (~/.config/hashreport/settings.toml)
-hashreport config init
-
-# Create in custom location
-hashreport config init ./my-settings.toml
-```
 
 ### View Settings
 
@@ -185,3 +209,17 @@ For detailed information about available options:
 hashreport --help
 hashreport scan --help
 ```
+
+## **Related Topics**
+
+### **Advanced Features**
+- [Resource Management](advanced.md#resource-management) - Optimize memory and thread usage
+- [Email Notifications](advanced.md#email-notifications) - Send reports via email
+- [Pattern Matching](advanced.md#pattern-matching) - Advanced file filtering options
+- [Report Generation](advanced.md#report-generation) - Customize report formats and behavior
+- [Report Comparison](advanced.md#report-comparison) - Advanced comparison features
+
+### **Additional Resources**
+- [Command Reference](commands.md) - Detailed command documentation
+- [Configuration Guide](configuration.md) - Customize hashreport settings
+- [Troubleshooting](troubleshooting.md) - Common issues and solutions

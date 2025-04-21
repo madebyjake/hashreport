@@ -49,7 +49,17 @@ class HashReportConfig:
     worker_adjust_interval: int = 60  # seconds
     progress_update_interval: float = 0.1  # seconds
     resource_check_interval: float = 1.0  # seconds
-    memory_threshold: float = 0.85  # 85% memory usage threshold
+    memory_threshold: float = 0.85
+
+    # Progress display settings
+    progress: Dict[str, Any] = field(
+        default_factory=lambda: {
+            "refresh_rate": 0.1,
+            "show_eta": True,
+            "show_file_names": False,
+            "show_speed": True,
+        }
+    )
 
     def __post_init__(self) -> None:
         """Initialize computed values."""

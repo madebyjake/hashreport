@@ -1,7 +1,6 @@
 """Handler for generating file lists."""
 
 import os
-from datetime import datetime
 from pathlib import Path
 
 import click
@@ -14,20 +13,18 @@ config = get_config()
 
 
 def get_filelist_filename(output_path: str) -> str:
-    """Generate filelist filename with timestamp.
+    """Get the output filename for the filelist.
 
     Args:
-        output_path: Base output path
+        output_path: The output directory or file path
+
+    Returns:
+        The full path to the output file
     """
-    timestamp = datetime.now().strftime(config.timestamp_format)
-    path = Path(output_path)
-
-    # If path is a directory, create new timestamped file
-    if path.is_dir():
-        return str(path / f"filelist_{timestamp}.txt")
-
-    # For explicit paths, replace extension with .txt
-    return str(path.with_suffix(".txt"))
+    output = Path(output_path)
+    if output.is_dir():
+        return str(output / "filelist.txt")
+    return str(output)
 
 
 def list_files_in_directory(
