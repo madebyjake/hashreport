@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../advanced/">
+        <link rel="prev" href="../configuration/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../contributing/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Command Reference - hashreport</title>
+        <title>Troubleshooting - hashreport</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#command-reference" class="md-skip">
+        <a href="#troubleshooting-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Command Reference
+              Troubleshooting
             
           </span>
         </div>
@@ -416,32 +416,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Command Reference
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
         
   
   
@@ -452,212 +430,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Global Options
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#scan" class="md-nav__link">
-    <span class="md-ellipsis">
-      scan
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="scan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#filelist" class="md-nav__link">
-    <span class="md-ellipsis">
-      filelist
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="filelist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view" class="md-nav__link">
-    <span class="md-ellipsis">
-      view
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="view">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare" class="md-nav__link">
-    <span class="md-ellipsis">
-      compare
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="compare">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    <span class="md-ellipsis">
-      config
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      algorithms
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Examples
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Advanced Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -690,10 +462,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -704,6 +498,134 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python Version Compatibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poetry-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Poetry Installation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-access-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Access Issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Access Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#permission-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      Permission Denied
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Path Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Error Messages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Error Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      "File not found"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-hash-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Invalid hash algorithm"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-more-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting More Help
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -847,148 +769,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
+  <a href="#installation-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Global Options
+      Installation Issues
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Commands">
+    <nav class="md-nav" aria-label="Installation Issues">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scan" class="md-nav__link">
+  <a href="#python-version-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      scan
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="scan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
+      Python Version Compatibility
     </span>
   </a>
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
-  <a href="#filelist" class="md-nav__link">
+  <a href="#poetry-installation" class="md-nav__link">
     <span class="md-ellipsis">
-      filelist
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="filelist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view" class="md-nav__link">
-    <span class="md-ellipsis">
-      view
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="view">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare" class="md-nav__link">
-    <span class="md-ellipsis">
-      compare
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="compare">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    <span class="md-ellipsis">
-      config
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      algorithms
+      Poetry Installation
     </span>
   </a>
   
@@ -1000,28 +802,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#file-access-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Examples
+      File Access Issues
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
+    <nav class="md-nav" aria-label="File Access Issues">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#permission-denied" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Permission Denied
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
+  <a href="#path-issues" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Usage
+      Path Issues
     </span>
   </a>
   
@@ -1029,6 +831,48 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-error-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Error Messages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Error Messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      "File not found"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-hash-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Invalid hash algorithm"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-more-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting More Help
+    </span>
+  </a>
   
 </li>
       
@@ -1051,313 +895,91 @@
   
 
 
-<h1 id="command-reference"><strong>Command Reference</strong></h1>
-<p>This document provides detailed information about all available commands in hashreport.</p>
-<h2 id="global-options"><strong>Global Options</strong></h2>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--help</code></td>
-<td>Show help message and exit</td>
-</tr>
-<tr>
-<td><code>--version</code></td>
-<td>Show version and exit</td>
-</tr>
-</tbody>
-</table>
-<h2 id="commands"><strong>Commands</strong></h2>
-<h3 id="scan"><strong>scan</strong></h3>
-<p>Generate a hash report for files in a directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
+<h1 id="troubleshooting-guide"><strong>Troubleshooting Guide</strong></h1>
+<p>This guide helps you resolve common issues with hashreport. If you're still experiencing problems, please check the <a href="https://github.com/madebyjake/hashreport/issues">GitHub Issues</a> or create a new issue.</p>
+<h2 id="installation-issues"><strong>Installation Issues</strong></h2>
+<h3 id="python-version-compatibility"><strong>Python Version Compatibility</strong></h3>
+<p><strong>Problem</strong>: Error about Python version compatibility
+<strong>Solution</strong>: Ensure you're using Python 3.10 or higher</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check Python version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python3<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Install Python 3.10 or higher on macOS</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>brew<span class="w"> </span>install<span class="w"> </span>python@3.10
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Install Python 3.10 or higher on Ubuntu/Debian</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3.10
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Install Python 3.10 or higher on Fedora/CentOS/RHEL</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>python3.10
 </code></pre></div>
-<h4 id="options"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DIRECTORY</code></td>
-<td>-</td>
-<td>Directory to scan</td>
-</tr>
-<tr>
-<td><code>-a, --algorithm</code></td>
-<td><code>sha256</code></td>
-<td>Hash algorithm to use</td>
-</tr>
-<tr>
-<td><code>-f, --format</code></td>
-<td><code>csv</code></td>
-<td>Output format (csv, json)</td>
-</tr>
-<tr>
-<td><code>-o, --output</code></td>
-<td>-</td>
-<td>Output directory</td>
-</tr>
-<tr>
-<td><code>-r, --recursive</code></td>
-<td><code>True</code></td>
-<td>Scan directories recursively</td>
-</tr>
-<tr>
-<td><code>-i, --include</code></td>
-<td>-</td>
-<td>Include files matching pattern</td>
-</tr>
-<tr>
-<td><code>-e, --exclude</code></td>
-<td>-</td>
-<td>Exclude files matching pattern</td>
-</tr>
-<tr>
-<td><code>--regex</code></td>
-<td><code>False</code></td>
-<td>Use regex patterns</td>
-</tr>
-<tr>
-<td><code>--min-size</code></td>
-<td>-</td>
-<td>Minimum file size</td>
-</tr>
-<tr>
-<td><code>--max-size</code></td>
-<td>-</td>
-<td>Maximum file size</td>
-</tr>
-<tr>
-<td><code>--limit</code></td>
-<td>-</td>
-<td>Limit number of files</td>
-</tr>
-<tr>
-<td><code>--email</code></td>
-<td>-</td>
-<td>Email address for report</td>
-</tr>
-<tr>
-<td><code>--smtp-host</code></td>
-<td>-</td>
-<td>SMTP server host</td>
-</tr>
-<tr>
-<td><code>--smtp-port</code></td>
-<td>-</td>
-<td>SMTP server port</td>
-</tr>
-<tr>
-<td><code>--smtp-user</code></td>
-<td>-</td>
-<td>SMTP username</td>
-</tr>
-<tr>
-<td><code>--smtp-password</code></td>
-<td>-</td>
-<td>SMTP password</td>
-</tr>
-<tr>
-<td><code>--smtp-tls</code></td>
-<td><code>False</code></td>
-<td>Use TLS for SMTP</td>
-</tr>
-<tr>
-<td><code>--test-email</code></td>
-<td><code>False</code></td>
-<td>Test email configuration</td>
-</tr>
-</tbody>
-</table>
-<h3 id="filelist"><strong>filelist</strong></h3>
-<p>Generate a list of files in a directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hashreport<span class="w"> </span>filelist<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
+<h3 id="poetry-installation"><strong>Poetry Installation</strong></h3>
+<p><strong>Problem</strong>: Poetry installation fails
+<strong>Solution</strong>: Try alternative installation methods</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install with pip</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>poetry
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Or use pipx (recommended)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>pipx
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>python3<span class="w"> </span>-m<span class="w"> </span>pipx<span class="w"> </span>ensurepath
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>pipx<span class="w"> </span>install<span class="w"> </span>poetry
 </code></pre></div>
-<h4 id="options_1"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DIRECTORY</code></td>
-<td>-</td>
-<td>Directory to scan</td>
-</tr>
-<tr>
-<td><code>-r, --recursive</code></td>
-<td><code>True</code></td>
-<td>Scan directories recursively</td>
-</tr>
-<tr>
-<td><code>-i, --include</code></td>
-<td>-</td>
-<td>Include files matching pattern</td>
-</tr>
-<tr>
-<td><code>-e, --exclude</code></td>
-<td>-</td>
-<td>Exclude files matching pattern</td>
-</tr>
-<tr>
-<td><code>--regex</code></td>
-<td><code>False</code></td>
-<td>Use regex patterns</td>
-</tr>
-<tr>
-<td><code>--min-size</code></td>
-<td>-</td>
-<td>Minimum file size</td>
-</tr>
-<tr>
-<td><code>--max-size</code></td>
-<td>-</td>
-<td>Maximum file size</td>
-</tr>
-<tr>
-<td><code>--limit</code></td>
-<td>-</td>
-<td>Limit number of files</td>
-</tr>
-</tbody>
-</table>
-<h3 id="view"><strong>view</strong></h3>
-<p>View report contents.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hashreport<span class="w"> </span>view<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>REPORT_FILE
+<h2 id="file-access-issues"><strong>File Access Issues</strong></h2>
+<h3 id="permission-denied"><strong>Permission Denied</strong></h3>
+<p><strong>Problem</strong>: Cannot access files or directories
+<strong>Solution</strong>: Check file permissions</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check directory permissions</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/path/to/directory
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check file permissions</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/path/to/file
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Fix permissions if needed</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/path/to/file
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>/path/to/directory
 </code></pre></div>
-<h4 id="options_2"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>REPORT_FILE</code></td>
-<td>-</td>
-<td>Report file to view</td>
-</tr>
-<tr>
-<td><code>-f, --filter</code></td>
-<td>-</td>
-<td>Filter entries by pattern</td>
-</tr>
-</tbody>
-</table>
-<h3 id="compare"><strong>compare</strong></h3>
-<p>Compare two report files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hashreport<span class="w"> </span>compare<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OLD_REPORT<span class="w"> </span>NEW_REPORT
+<h3 id="path-issues"><strong>Path Issues</strong></h3>
+<p><strong>Problem</strong>: Invalid or inaccessible paths
+<strong>Solution</strong>: Verify path format and existence</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Use absolute paths</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/absolute/path/to/directory
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check path existence</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>/path/to/directory
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Handle spaces in paths</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="s2">&quot;/path/with spaces/directory&quot;</span>
 </code></pre></div>
-<h4 id="options_3"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>OLD_REPORT</code></td>
-<td>-</td>
-<td>First report file</td>
-</tr>
-<tr>
-<td><code>NEW_REPORT</code></td>
-<td>-</td>
-<td>Second report file</td>
-</tr>
-<tr>
-<td><code>-o, --output</code></td>
-<td>-</td>
-<td>Output directory</td>
-</tr>
-</tbody>
-</table>
-<h3 id="config"><strong>config</strong></h3>
-<p>Manage configuration settings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND
-</code></pre></div>
-<h4 id="commands_1"><strong>Commands</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>show</code></td>
-<td>Display current configuration</td>
-</tr>
-<tr>
-<td><code>edit</code></td>
-<td>Edit configuration file</td>
-</tr>
-</tbody>
-</table>
-<h3 id="algorithms"><strong>algorithms</strong></h3>
-<p>List available hash algorithms.</p>
+<h2 id="common-error-messages"><strong>Common Error Messages</strong></h2>
+<h3 id="file-not-found"><strong>"File not found"</strong></h3>
+<p><strong>Solution</strong>: Verify file path and permissions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>/path/to/file
+</code></pre></div></p>
+<h3 id="invalid-hash-algorithm"><strong>"Invalid hash algorithm"</strong></h3>
+<p><strong>Solution</strong>: Check available algorithms
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hashreport<span class="w"> </span>algorithms
-</code></pre></div>
-<h2 id="examples"><strong>Examples</strong></h2>
-<h3 id="basic-usage"><strong>Basic Usage</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Scan directory with default settings</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Scan with specific algorithm</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--algorithm<span class="w"> </span>sha512<span class="w"> </span>/path/to/directory
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Generate multiple formats</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
-</code></pre></div>
-<h3 id="advanced-usage"><strong>Advanced Usage</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Scan with filters</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--exclude<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--min-size<span class="w"> </span>1MB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--max-size<span class="w"> </span>1GB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>/path/to/directory
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Use regex patterns</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--regex<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{8}.*&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>/path/to/directory
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Email report</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>--email<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span>/path/to/directory
-</code></pre></div>
-<p>For more information, see:
-- <a href="../basic/">Basic Usage</a>
-- <a href="../advanced/">Advanced Usage</a>
-- <a href="../configuration/">Configuration Guide</a>
-- <a href="../troubleshooting/">Troubleshooting</a></p>
+</code></pre></div></p>
+<h2 id="getting-more-help"><strong>Getting More Help</strong></h2>
+<p>If you're still experiencing issues:</p>
+<ol>
+<li>
+<p><strong>Check Logs</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable debug logging</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--debug<span class="w"> </span>/path/to/directory
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create Issue</strong></p>
+<p>You can create an issue on <a href="https://github.com/madebyjake/hashreport/issues">GitHub</a>.</p>
+<p>Issues should include:</p>
+<ul>
+<li>Any error messages</li>
+<li>Any relevant logs</li>
+<li>System information</li>
+<li>Steps to reproduce</li>
+</ul>
+</li>
+</ol>
 
 
 
@@ -1393,7 +1015,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../advanced/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Advanced Usage">
+          <a href="../configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1403,20 +1025,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Advanced Usage
+                Configuration
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+          <a href="../contributing/" class="md-footer__link md-footer__link--next" aria-label="Next: Contributing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration
+                Contributing
               </div>
             </div>
             <div class="md-footer__button md-icon">

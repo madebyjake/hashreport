@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../advanced/">
+        <link rel="prev" href="../commands/">
       
       
-        <link rel="next" href="../configuration/">
+        <link rel="next" href="../troubleshooting/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Command Reference - hashreport</title>
+        <title>Configuration - hashreport</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#command-reference" class="md-skip">
+        <a href="#configuration-options" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Command Reference
+              Configuration
             
           </span>
         </div>
@@ -416,6 +416,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Command Reference
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -433,7 +456,7 @@
   
   
   <span class="md-ellipsis">
-    Command Reference
+    Configuration
     
   </span>
   
@@ -446,7 +469,7 @@
   
   
   <span class="md-ellipsis">
-    Command Reference
+    Configuration
     
   </span>
   
@@ -469,148 +492,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
+  <a href="#core-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Global Options
+      Core Settings
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Commands">
+    <nav class="md-nav" aria-label="Core Settings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scan" class="md-nav__link">
+  <a href="#core-settings_1" class="md-nav__link">
     <span class="md-ellipsis">
-      scan
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="scan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#filelist" class="md-nav__link">
-    <span class="md-ellipsis">
-      filelist
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="filelist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view" class="md-nav__link">
-    <span class="md-ellipsis">
-      view
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="view">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare" class="md-nav__link">
-    <span class="md-ellipsis">
-      compare
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="compare">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    <span class="md-ellipsis">
-      config
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      algorithms
+      Core Settings
     </span>
   </a>
   
@@ -622,28 +516,181 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#resource-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Examples
+      Resource Management
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
+    <nav class="md-nav" aria-label="Resource Management">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#resource-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Resource Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Processing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Processing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-processing-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Processing Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Email Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progress-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progress Display
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Progress Display">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progress Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#report-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-current-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      View Current Settings
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
+  <a href="#edit-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Usage
+      Edit Settings
     </span>
   </a>
   
@@ -658,29 +705,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Configuration
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -847,148 +871,19 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#global-options" class="md-nav__link">
+  <a href="#core-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Global Options
+      Core Settings
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Commands">
+    <nav class="md-nav" aria-label="Core Settings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#scan" class="md-nav__link">
+  <a href="#core-settings_1" class="md-nav__link">
     <span class="md-ellipsis">
-      scan
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="scan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#filelist" class="md-nav__link">
-    <span class="md-ellipsis">
-      filelist
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="filelist">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#view" class="md-nav__link">
-    <span class="md-ellipsis">
-      view
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="view">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare" class="md-nav__link">
-    <span class="md-ellipsis">
-      compare
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="compare">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    <span class="md-ellipsis">
-      config
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="config">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#commands_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Commands
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#algorithms" class="md-nav__link">
-    <span class="md-ellipsis">
-      algorithms
+      Core Settings
     </span>
   </a>
   
@@ -1000,28 +895,181 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#resource-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Examples
+      Resource Management
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
+    <nav class="md-nav" aria-label="Resource Management">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#resource-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Usage
+      Resource Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Processing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Processing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-processing-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Processing Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Email Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logging-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logging Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progress-display" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progress Display
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Progress Display">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progress Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#report-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#report-settings_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-current-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      View Current Settings
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#advanced-usage" class="md-nav__link">
+  <a href="#edit-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      Advanced Usage
+      Edit Settings
     </span>
   </a>
   
@@ -1051,313 +1099,172 @@
   
 
 
-<h1 id="command-reference"><strong>Command Reference</strong></h1>
-<p>This document provides detailed information about all available commands in hashreport.</p>
-<h2 id="global-options"><strong>Global Options</strong></h2>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--help</code></td>
-<td>Show help message and exit</td>
-</tr>
-<tr>
-<td><code>--version</code></td>
-<td>Show version and exit</td>
-</tr>
-</tbody>
-</table>
-<h2 id="commands"><strong>Commands</strong></h2>
-<h3 id="scan"><strong>scan</strong></h3>
-<p>Generate a hash report for files in a directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
+<h1 id="configuration-options"><strong>Configuration Options</strong></h1>
+<p>hashreport uses a TOML configuration file to store user settings. The default location is <code>~/.config/hashreport/settings.toml</code>.</p>
+<h2 id="core-settings"><strong>Core Settings</strong></h2>
+<p>Basic application settings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[hashreport]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Hash algorithm and output settings</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">default_algorithm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;md5&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">default_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;csv&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">supported_formats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># File processing settings</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">chunk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4096</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">mmap_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10485760</span><span class="w">  </span><span class="c1"># 10MB - Use mmap for files larger than this</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">timestamp_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;%y%m%d-%H%M&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">show_progress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">max_errors_shown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span>
 </code></pre></div>
-<h4 id="options"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DIRECTORY</code></td>
-<td>-</td>
-<td>Directory to scan</td>
-</tr>
-<tr>
-<td><code>-a, --algorithm</code></td>
-<td><code>sha256</code></td>
-<td>Hash algorithm to use</td>
-</tr>
-<tr>
-<td><code>-f, --format</code></td>
-<td><code>csv</code></td>
-<td>Output format (csv, json)</td>
-</tr>
-<tr>
-<td><code>-o, --output</code></td>
-<td>-</td>
-<td>Output directory</td>
-</tr>
-<tr>
-<td><code>-r, --recursive</code></td>
-<td><code>True</code></td>
-<td>Scan directories recursively</td>
-</tr>
-<tr>
-<td><code>-i, --include</code></td>
-<td>-</td>
-<td>Include files matching pattern</td>
-</tr>
-<tr>
-<td><code>-e, --exclude</code></td>
-<td>-</td>
-<td>Exclude files matching pattern</td>
-</tr>
-<tr>
-<td><code>--regex</code></td>
-<td><code>False</code></td>
-<td>Use regex patterns</td>
-</tr>
-<tr>
-<td><code>--min-size</code></td>
-<td>-</td>
-<td>Minimum file size</td>
-</tr>
-<tr>
-<td><code>--max-size</code></td>
-<td>-</td>
-<td>Maximum file size</td>
-</tr>
-<tr>
-<td><code>--limit</code></td>
-<td>-</td>
-<td>Limit number of files</td>
-</tr>
-<tr>
-<td><code>--email</code></td>
-<td>-</td>
-<td>Email address for report</td>
-</tr>
-<tr>
-<td><code>--smtp-host</code></td>
-<td>-</td>
-<td>SMTP server host</td>
-</tr>
-<tr>
-<td><code>--smtp-port</code></td>
-<td>-</td>
-<td>SMTP server port</td>
-</tr>
-<tr>
-<td><code>--smtp-user</code></td>
-<td>-</td>
-<td>SMTP username</td>
-</tr>
-<tr>
-<td><code>--smtp-password</code></td>
-<td>-</td>
-<td>SMTP password</td>
-</tr>
-<tr>
-<td><code>--smtp-tls</code></td>
-<td><code>False</code></td>
-<td>Use TLS for SMTP</td>
-</tr>
-<tr>
-<td><code>--test-email</code></td>
-<td><code>False</code></td>
-<td>Test email configuration</td>
-</tr>
-</tbody>
-</table>
-<h3 id="filelist"><strong>filelist</strong></h3>
-<p>Generate a list of files in a directory.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hashreport<span class="w"> </span>filelist<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
+<h3 id="core-settings_1"><strong>Core Settings</strong></h3>
+<ul>
+<li><code>default_algorithm</code>: Default hash algorithm to use (default: "md5")</li>
+<li><code>default_format</code>: Default output format (default: "csv")</li>
+<li><code>supported_formats</code>: List of supported output formats (default: ["csv", "json"])</li>
+<li><code>chunk_size</code>: Size of chunks for file reading in bytes (default: 4096)</li>
+<li><code>mmap_threshold</code>: Size threshold for memory-mapped files in bytes (default: 10485760)</li>
+<li><code>timestamp_format</code>: Format for timestamps in report filenames (default: "%y%m%d-%H%M")</li>
+<li><code>show_progress</code>: Show progress bar during processing (default: true)</li>
+<li><code>max_errors_shown</code>: Maximum number of errors to display (default: 10)</li>
+</ul>
+<h2 id="resource-management"><strong>Resource Management</strong></h2>
+<p>Control system resource usage:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[hashreport]</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Resource monitoring settings</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">memory_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.85</span><span class="w">  </span><span class="c1"># % of total memory</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">min_workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">max_workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="c1"># 0 = Use CPU count</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">worker_adjust_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span><span class="w">  </span><span class="c1"># seconds</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">memory_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="c1"># 0 = 75% of total RAM</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">batch_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">max_retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">retry_delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">resource_check_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w">  </span><span class="c1"># seconds</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">progress_update_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="w">  </span><span class="c1"># seconds</span>
 </code></pre></div>
-<h4 id="options_1"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DIRECTORY</code></td>
-<td>-</td>
-<td>Directory to scan</td>
-</tr>
-<tr>
-<td><code>-r, --recursive</code></td>
-<td><code>True</code></td>
-<td>Scan directories recursively</td>
-</tr>
-<tr>
-<td><code>-i, --include</code></td>
-<td>-</td>
-<td>Include files matching pattern</td>
-</tr>
-<tr>
-<td><code>-e, --exclude</code></td>
-<td>-</td>
-<td>Exclude files matching pattern</td>
-</tr>
-<tr>
-<td><code>--regex</code></td>
-<td><code>False</code></td>
-<td>Use regex patterns</td>
-</tr>
-<tr>
-<td><code>--min-size</code></td>
-<td>-</td>
-<td>Minimum file size</td>
-</tr>
-<tr>
-<td><code>--max-size</code></td>
-<td>-</td>
-<td>Maximum file size</td>
-</tr>
-<tr>
-<td><code>--limit</code></td>
-<td>-</td>
-<td>Limit number of files</td>
-</tr>
-</tbody>
-</table>
-<h3 id="view"><strong>view</strong></h3>
-<p>View report contents.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hashreport<span class="w"> </span>view<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>REPORT_FILE
+<h3 id="resource-settings"><strong>Resource Settings</strong></h3>
+<ul>
+<li><code>memory_threshold</code>: Memory usage threshold as percentage of total RAM (default: 0.85)</li>
+<li><code>min_workers</code>: Minimum number of worker threads (default: 2)</li>
+<li><code>max_workers</code>: Maximum number of worker threads (default: 0 - uses CPU count)</li>
+<li><code>worker_adjust_interval</code>: Interval for adjusting worker count in seconds (default: 60)</li>
+<li><code>memory_limit</code>: Memory limit in MB (default: 0 - uses 75% of total RAM)</li>
+<li><code>batch_size</code>: Number of files to process in each batch (default: 1000)</li>
+<li><code>max_retries</code>: Maximum number of retry attempts (default: 3)</li>
+<li><code>retry_delay</code>: Delay between retries in seconds (default: 1.0)</li>
+<li><code>resource_check_interval</code>: Interval for resource checks in seconds (default: 1.0)</li>
+<li><code>progress_update_interval</code>: Interval for progress updates in seconds (default: 0.1)</li>
+</ul>
+<h2 id="file-processing"><strong>File Processing</strong></h2>
+<p>Configure file processing behavior:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">[hashreport]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># File processing settings</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">min_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0B&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">max_file_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w">  </span><span class="c1"># Empty string = No limit</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">default_recursive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">ignore_hidden_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">ignore_system_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">excluded_directories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;.git&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;__pycache__&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;node_modules&quot;</span><span class="p">]</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">excluded_extensions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
 </code></pre></div>
-<h4 id="options_2"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>REPORT_FILE</code></td>
-<td>-</td>
-<td>Report file to view</td>
-</tr>
-<tr>
-<td><code>-f, --filter</code></td>
-<td>-</td>
-<td>Filter entries by pattern</td>
-</tr>
-</tbody>
-</table>
-<h3 id="compare"><strong>compare</strong></h3>
-<p>Compare two report files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hashreport<span class="w"> </span>compare<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>OLD_REPORT<span class="w"> </span>NEW_REPORT
+<h3 id="file-processing-settings"><strong>File Processing Settings</strong></h3>
+<ul>
+<li><code>min_file_size</code>: Minimum file size to process (default: "0B")</li>
+<li><code>max_file_size</code>: Maximum file size to process (default: "" - no limit)</li>
+<li><code>default_recursive</code>: Process subdirectories by default (default: true)</li>
+<li><code>ignore_hidden_files</code>: Skip hidden files (default: true)</li>
+<li><code>ignore_system_files</code>: Skip system files (default: true)</li>
+<li><code>excluded_directories</code>: List of directories to exclude (default: [".git", "<strong>pycache</strong>", "node_modules"])</li>
+<li><code>excluded_extensions</code>: List of file extensions to exclude (default: [""])</li>
+</ul>
+<h2 id="email-settings"><strong>Email Settings</strong></h2>
+<p>Configure email notification settings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">[hashreport.email_defaults]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">587</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">use_tls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">default_subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HashReport Results&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">retry_attempts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 </code></pre></div>
-<h4 id="options_3"><strong>Options</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>OLD_REPORT</code></td>
-<td>-</td>
-<td>First report file</td>
-</tr>
-<tr>
-<td><code>NEW_REPORT</code></td>
-<td>-</td>
-<td>Second report file</td>
-</tr>
-<tr>
-<td><code>-o, --output</code></td>
-<td>-</td>
-<td>Output directory</td>
-</tr>
-</tbody>
-</table>
-<h3 id="config"><strong>config</strong></h3>
-<p>Manage configuration settings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND
+<h3 id="email-settings_1"><strong>Email Settings</strong></h3>
+<ul>
+<li><code>port</code>: SMTP server port (default: 587)</li>
+<li><code>use_tls</code>: Use TLS for SMTP connection (default: true)</li>
+<li><code>host</code>: SMTP server hostname (default: "localhost")</li>
+<li><code>timeout</code>: SMTP connection timeout in seconds (default: 30)</li>
+<li><code>default_subject</code>: Default email subject (default: "HashReport Results")</li>
+<li><code>retry_attempts</code>: Number of email sending retry attempts (default: 3)</li>
+</ul>
+<h2 id="logging-settings"><strong>Logging Settings</strong></h2>
+<p>Configure logging behavior:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">[hashreport.logging]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">file_logging</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">log_directory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;logs&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">max_log_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10MB&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">backup_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 </code></pre></div>
-<h4 id="commands_1"><strong>Commands</strong></h4>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>show</code></td>
-<td>Display current configuration</td>
-</tr>
-<tr>
-<td><code>edit</code></td>
-<td>Edit configuration file</td>
-</tr>
-</tbody>
-</table>
-<h3 id="algorithms"><strong>algorithms</strong></h3>
-<p>List available hash algorithms.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hashreport<span class="w"> </span>algorithms
+<h3 id="logging-settings_1"><strong>Logging Settings</strong></h3>
+<ul>
+<li><code>level</code>: Logging level (default: "INFO")</li>
+<li><code>file_logging</code>: Enable file logging (default: false)</li>
+<li><code>log_directory</code>: Directory for log files (default: "logs")</li>
+<li><code>max_log_size</code>: Maximum size of log files (default: "10MB")</li>
+<li><code>backup_count</code>: Number of log file backups to keep (default: 5)</li>
+</ul>
+<h2 id="progress-display"><strong>Progress Display</strong></h2>
+<p>Configure progress bar behavior:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">[hashreport.progress]</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">refresh_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">show_eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">show_file_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">show_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </code></pre></div>
-<h2 id="examples"><strong>Examples</strong></h2>
-<h3 id="basic-usage"><strong>Basic Usage</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Scan directory with default settings</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Scan with specific algorithm</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--algorithm<span class="w"> </span>sha512<span class="w"> </span>/path/to/directory
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Generate multiple formats</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
+<h3 id="progress-settings"><strong>Progress Settings</strong></h3>
+<ul>
+<li><code>refresh_rate</code>: Progress bar refresh rate in seconds (default: 0.1)</li>
+<li><code>show_eta</code>: Show estimated time remaining (default: true)</li>
+<li><code>show_file_names</code>: Show current file being processed (default: true)</li>
+<li><code>show_speed</code>: Show processing speed (default: true)</li>
+</ul>
+<h2 id="report-settings"><strong>Report Settings</strong></h2>
+<p>Configure report generation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">[hashreport.reports]</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">include_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">include_timing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">max_concurrent_writes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 </code></pre></div>
-<h3 id="advanced-usage"><strong>Advanced Usage</strong></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Scan with filters</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--exclude<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--min-size<span class="w"> </span>1MB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--max-size<span class="w"> </span>1GB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>/path/to/directory
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Use regex patterns</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--regex<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{8}.*&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>/path/to/directory
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Email report</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>--email<span class="w"> </span>user@example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span>/path/to/directory
+<h3 id="report-settings_1"><strong>Report Settings</strong></h3>
+<ul>
+<li><code>include_metadata</code>: Include file metadata in reports (default: true)</li>
+<li><code>include_timing</code>: Include timing information in reports (default: true)</li>
+<li><code>max_concurrent_writes</code>: Maximum number of concurrent report writes (default: 4)</li>
+<li><code>compression</code>: Enable report compression (default: false)</li>
+</ul>
+<h2 id="environment-variables"><strong>Environment Variables</strong></h2>
+<p>For sensitive settings, use environment variables:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Email settings</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_HOST</span><span class="o">=</span>smtp.example.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_USER</span><span class="o">=</span>username
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_PASSWORD</span><span class="o">=</span>password
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Resource limits</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_MAX_MEMORY</span><span class="o">=</span><span class="m">2048</span>
 </code></pre></div>
-<p>For more information, see:
-- <a href="../basic/">Basic Usage</a>
-- <a href="../advanced/">Advanced Usage</a>
-- <a href="../configuration/">Configuration Guide</a>
-- <a href="../troubleshooting/">Troubleshooting</a></p>
+<h2 id="managing-configuration"><strong>Managing Configuration</strong></h2>
+<h3 id="view-current-settings"><strong>View Current Settings</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span>show
+</code></pre></div>
+<h3 id="edit-settings"><strong>Edit Settings</strong></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span>edit
+</code></pre></div>
+<p>The editor used is determined by:
+1. $VISUAL environment variable
+2. $EDITOR environment variable
+3. Platform default (vi/vim on Unix, notepad on Windows)</p>
+<p>Settings are automatically validated when saved.</p>
 
 
 
@@ -1393,7 +1300,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../advanced/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Advanced Usage">
+          <a href="../commands/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Command Reference">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1403,20 +1310,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Advanced Usage
+                Command Reference
               </div>
             </div>
           </a>
         
         
           
-          <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
+          <a href="../troubleshooting/" class="md-footer__link md-footer__link--next" aria-label="Next: Troubleshooting">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration
+                Troubleshooting
               </div>
             </div>
             <div class="md-footer__button md-icon">

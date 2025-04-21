@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -82,6 +82,10 @@
     <div data-md-component="announce">
       
     </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
     
     
       
@@ -158,11 +162,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -181,6 +187,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -194,6 +202,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -266,8 +275,9 @@
       <a href=".." class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
-    Home
+    Overview
     
   </span>
   
@@ -286,6 +296,7 @@
     <li class="md-nav__item">
       <a href="../install/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Installation
@@ -306,6 +317,63 @@
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -316,6 +384,7 @@
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
+  
   
   <span class="md-ellipsis">
     Basic Usage
@@ -328,6 +397,7 @@
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
+  
   
   <span class="md-ellipsis">
     Basic Usage
@@ -351,6 +421,57 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-basic-directory-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Basic Directory Scan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-scan-with-specific-hash-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Scan with Specific Hash Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-filter-by-file-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Filter by File Type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-generate-multiple-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Generate Multiple Formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#command-structure" class="md-nav__link">
@@ -492,15 +613,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#initialize-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initialize Settings
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#view-settings" class="md-nav__link">
     <span class="md-ellipsis">
       View Settings
@@ -532,6 +644,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Topics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Related Topics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -539,9 +684,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -549,6 +695,7 @@
     <li class="md-nav__item">
       <a href="../advanced/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Advanced Usage
@@ -560,9 +707,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -571,6 +719,7 @@
       <a href="../commands/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Command Reference
     
@@ -578,6 +727,60 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -593,18 +796,29 @@
       
         
       
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
+  
   
   <span class="md-ellipsis">
     Development
@@ -615,8 +829,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -629,8 +843,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../development/scripts/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scripts/" class="md-nav__link">
+        
+  
   
   <span class="md-ellipsis">
     Project Scripts
@@ -678,6 +916,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-basic-directory-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Basic Directory Scan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-scan-with-specific-hash-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Scan with Specific Hash Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-filter-by-file-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Filter by File Type
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-generate-multiple-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Generate Multiple Formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#command-structure" class="md-nav__link">
     <span class="md-ellipsis">
       Command Structure
@@ -817,15 +1106,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#initialize-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initialize Settings
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#view-settings" class="md-nav__link">
     <span class="md-ellipsis">
       View Settings
@@ -857,6 +1137,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Topics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Related Topics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advanced-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -877,87 +1190,105 @@
 
 
 <h1 id="basic-usage"><strong>Basic Usage</strong></h1>
+<h2 id="quick-start"><strong>Quick Start</strong></h2>
+<p>Here are some common use cases to get you started quickly:</p>
+<h3 id="1-basic-directory-scan"><strong>1. Basic Directory Scan</strong></h3>
+<p>Generate a hash report for all files in a directory:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
+</code></pre></div>
+<h3 id="2-scan-with-specific-hash-algorithm"><strong>2. Scan with Specific Hash Algorithm</strong></h3>
+<p>Use SHA-256 for better security:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--algorithm<span class="w"> </span>sha256<span class="w"> </span>/path/to/directory
+</code></pre></div>
+<h3 id="3-filter-by-file-type"><strong>3. Filter by File Type</strong></h3>
+<p>Scan only PDF files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>/path/to/directory
+</code></pre></div>
+<h3 id="4-generate-multiple-formats"><strong>4. Generate Multiple Formats</strong></h3>
+<p>Create both CSV and JSON reports:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
+</code></pre></div>
 <h2 id="command-structure"><strong>Command Structure</strong></h2>
 <p>The basic command structure is:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>DIRECTORY
 </code></pre></div>
 <h2 id="core-commands"><strong>Core Commands</strong></h2>
 <h3 id="scanning-a-directory">Scanning a Directory</h3>
 <p>To scan a directory and generate a hash report:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h3 id="choosing-hash-algorithm">Choosing Hash Algorithm</h3>
 <p>You can specify which hash algorithm to use:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>--algorithm<span class="w"> </span>sha256<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--algorithm<span class="w"> </span>sha256<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <p>To see available hash algorithms:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>algorithms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hashreport<span class="w"> </span>algorithms
 </code></pre></div>
 <h3 id="output-formats">Output Formats</h3>
 <p>hashreport supports CSV (default) and JSON output formats:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate CSV report (default)</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>/path/to/directory
-
-<span class="c1"># Generate JSON report</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
-
-<span class="c1"># Generate both formats</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate CSV report (default)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>/path/to/directory
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Generate JSON report</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Generate both formats</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h3 id="specifying-output-location">Specifying Output Location</h3>
 <p>Control where reports are saved:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
 </code></pre></div>
 <h2 id="filtering-options"><strong>Filtering Options</strong></h2>
 <h3 id="size-filters"><strong>Size Filters</strong></h3>
 <p>Filter files by size:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Files larger than 1MB</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--min-size<span class="w"> </span>1MB<span class="w"> </span>/path/to/directory
-
-<span class="c1"># Files smaller than 1GB</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--max-size<span class="w"> </span>1GB<span class="w"> </span>/path/to/directory
-
-<span class="c1"># Files between 1MB and 1GB</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--min-size<span class="w"> </span>1MB<span class="w"> </span>--max-size<span class="w"> </span>1GB<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Files larger than 1MB</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--min-size<span class="w"> </span>1MB<span class="w"> </span>/path/to/directory
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Files smaller than 1GB</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--max-size<span class="w"> </span>1GB<span class="w"> </span>/path/to/directory
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Files between 1MB and 1GB</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--min-size<span class="w"> </span>1MB<span class="w"> </span>--max-size<span class="w"> </span>1GB<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h3 id="pattern-matching"><strong>Pattern Matching</strong></h3>
 <p>Include or exclude files by pattern:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Include only .txt files</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.txt&quot;</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Exclude .tmp files</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Use regex patterns</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*\.txt</span>$<span class="s2">&quot;</span><span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Include only .txt files</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.txt&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Exclude .tmp files</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Use regex patterns</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*\.txt</span>$<span class="s2">&quot;</span><span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h3 id="processing-control"><strong>Processing Control</strong></h3>
 <p>Control how files are processed:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Limit number of files</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--limit<span class="w"> </span><span class="m">100</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Disable recursive scanning</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--no-recursive<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Limit number of files</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--limit<span class="w"> </span><span class="m">100</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Disable recursive scanning</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--no-recursive<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h2 id="file-listing"><strong>File Listing</strong></h2>
 <p>Generate a list of files without calculating hashes:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>filelist<span class="w"> </span>/path/to/directory
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>hashreport<span class="w"> </span>filelist<span class="w"> </span>/path/to/directory
 </code></pre></div>
 <h2 id="viewing-reports"><strong>Viewing Reports</strong></h2>
 <p>View report contents in a paginated format:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># View entire report</span>
-hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv
-
-<span class="c1"># Filter report entries</span>
-hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;mydoc&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View entire report</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Filter report entries</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>hashreport<span class="w"> </span>view<span class="w"> </span>hashreport_&lt;timestamp&gt;.csv<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;mydoc&quot;</span>
 </code></pre></div>
 <h2 id="comparing-reports"><strong>Comparing Reports</strong></h2>
 <p>Compare two reports to identify changes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># View differences between reports</span>
-hashreport<span class="w"> </span>compare<span class="w"> </span>hashreport_&lt;old&gt;.csv<span class="w"> </span>hashreport_&lt;new&gt;.csv
-
-<span class="c1"># Save comparison results</span>
-hashreport<span class="w"> </span>compare<span class="w"> </span>hashreport_&lt;old&gt;.csv<span class="w"> </span>hashreport_&lt;new&gt;.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View differences between reports</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Save comparison results</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
 </code></pre></div>
 <p>The comparison will show:</p>
 <ul>
@@ -968,21 +1299,13 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>hashreport_&lt;
 </ul>
 <h2 id="configuration-management"><strong>Configuration Management</strong></h2>
 <p>hashreport settings can be managed using the <code>config</code> command:</p>
-<h3 id="initialize-settings">Initialize Settings</h3>
-<p>Create a default settings file:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create in default location (~/.config/hashreport/settings.toml)</span>
-hashreport<span class="w"> </span>config<span class="w"> </span>init
-
-<span class="c1"># Create in custom location</span>
-hashreport<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>./my-settings.toml
-</code></pre></div>
 <h3 id="view-settings">View Settings</h3>
 <p>Display current configuration:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <h3 id="edit-settings">Edit Settings</h3>
 <p>Open settings in your default text editor:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>config<span class="w"> </span>edit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>hashreport<span class="w"> </span>config<span class="w"> </span>edit
 </code></pre></div>
 <p>The editor used is determined by:
 1. $VISUAL environment variable
@@ -991,9 +1314,24 @@ hashreport<span class="w"> </span>config<span class="w"> </span>init<span class=
 <p>Settings are automatically validated when saved.</p>
 <h2 id="getting-help"><strong>Getting Help</strong></h2>
 <p>For detailed information about available options:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>--help
-hashreport<span class="w"> </span>scan<span class="w"> </span>--help
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>hashreport<span class="w"> </span>--help
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
+<h2 id="related-topics"><strong>Related Topics</strong></h2>
+<h3 id="advanced-features"><strong>Advanced Features</strong></h3>
+<ul>
+<li><a href="../advanced/#resource-management">Resource Management</a> - Optimize memory and thread usage</li>
+<li><a href="../advanced/#email-notifications">Email Notifications</a> - Send reports via email</li>
+<li><a href="../advanced/#pattern-matching">Pattern Matching</a> - Advanced file filtering options</li>
+<li><a href="../advanced/#report-generation">Report Generation</a> - Customize report formats and behavior</li>
+<li><a href="../advanced/#report-comparison">Report Comparison</a> - Advanced comparison features</li>
+</ul>
+<h3 id="additional-resources"><strong>Additional Resources</strong></h3>
+<ul>
+<li><a href="../commands/">Command Reference</a> - Detailed command documentation</li>
+<li><a href="../configuration/">Configuration Guide</a> - Customize hashreport settings</li>
+<li><a href="../troubleshooting/">Troubleshooting</a> - Common issues and solutions</li>
+</ul>
 
 
 
@@ -1013,6 +1351,12 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--help
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1074,6 +1418,32 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--help
   
 </div>
       
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/madebyjake/hashreport" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/hashreport/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+    </a>
+  
+</div>
+      
     </div>
   </div>
 </footer>
@@ -1092,12 +1462,6 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--help
 
 
   
-    
-  
-
-
-
-  
 
 
 <h4>Cookie consent</h4>
@@ -1106,18 +1470,27 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--help
 <div class="md-consent__settings">
   <ul class="task-list">
     
+    
       
+    
+    
       
         
-        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
       
-      <li class="task-list-item">
-        <label class="task-list-control">
-          <input type="checkbox" name="github" checked>
-          <span class="task-list-indicator"></span>
-          GitHub
-        </label>
-      </li>
+    
     
   </ul>
 </div>
@@ -1141,7 +1514,9 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>--help
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.indexes"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.indexes", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>

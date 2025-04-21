@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -82,6 +82,10 @@
     <div data-md-component="announce">
       
     </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
     
     
       
@@ -158,11 +162,13 @@
     
     
     
-      <label class="md-header__button md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-      </label>
-      <div class="md-search" data-md-component="search" role="dialog">
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
@@ -181,6 +187,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -194,6 +202,7 @@
     </div>
   </div>
 </div>
+      
     
     
       <div class="md-header__source">
@@ -266,8 +275,9 @@
       <a href=".." class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
-    Home
+    Overview
     
   </span>
   
@@ -287,6 +297,7 @@
       <a href="../install/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Installation
     
@@ -302,11 +313,69 @@
       
   
   
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Usage
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Usage
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
       <a href="../basic/" class="md-nav__link">
         
+  
   
   <span class="md-ellipsis">
     Basic Usage
@@ -318,9 +387,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
     
@@ -338,6 +408,7 @@
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
+  
   <span class="md-ellipsis">
     Advanced Usage
     
@@ -349,6 +420,7 @@
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
+  
   
   <span class="md-ellipsis">
     Advanced Usage
@@ -374,28 +446,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#regular-expressions" class="md-nav__link">
+  <a href="#basic-concepts" class="md-nav__link">
     <span class="md-ellipsis">
-      Regular Expressions
+      Basic Concepts
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Regular Expressions">
+    <nav class="md-nav" aria-label="Basic Concepts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pattern-examples" class="md-nav__link">
+  <a href="#memory-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Pattern Examples
+      Memory Management
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#filelist-with-patterns" class="md-nav__link">
+  <a href="#thread-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Filelist with Patterns
+      Thread Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Tuning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-validation-and-sanitization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Validation and Sanitization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Validation and Sanitization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Path Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Size Validation
     </span>
   </a>
   
@@ -426,6 +549,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#testing-email-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Testing Email Configuration
@@ -443,43 +575,43 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      Environment Variables
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-tuning" class="md-nav__link">
+  <a href="#pattern-matching" class="md-nav__link">
     <span class="md-ellipsis">
-      Performance Tuning
+      Pattern Matching
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Performance Tuning">
+    <nav class="md-nav" aria-label="Pattern Matching">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#worker-threads" class="md-nav__link">
+  <a href="#glob-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      Worker Threads
+      Glob Patterns
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#chunk-size" class="md-nav__link">
+  <a href="#regular-expressions" class="md-nav__link">
     <span class="md-ellipsis">
-      Chunk Size
+      Regular Expressions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filelist-with-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filelist with Patterns
     </span>
   </a>
   
@@ -491,28 +623,37 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#report-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Generation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#report-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#custom-report-names" class="md-nav__link">
     <span class="md-ellipsis">
       Custom Report Names
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Custom Report Names">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#timestamp-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Timestamp Format
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output Examples
     </span>
   </a>
   
@@ -581,9 +722,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -592,6 +734,7 @@
       <a href="../commands/" class="md-nav__link">
         
   
+  
   <span class="md-ellipsis">
     Command Reference
     
@@ -599,6 +742,60 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -614,18 +811,29 @@
       
         
       
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
+  
   
   <span class="md-ellipsis">
     Development
@@ -636,8 +844,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Development
           </label>
@@ -650,8 +858,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../development/scripts/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scripts/" class="md-nav__link">
+        
+  
   
   <span class="md-ellipsis">
     Project Scripts
@@ -699,28 +931,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#regular-expressions" class="md-nav__link">
+  <a href="#basic-concepts" class="md-nav__link">
     <span class="md-ellipsis">
-      Regular Expressions
+      Basic Concepts
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Regular Expressions">
+    <nav class="md-nav" aria-label="Basic Concepts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pattern-examples" class="md-nav__link">
+  <a href="#memory-management" class="md-nav__link">
     <span class="md-ellipsis">
-      Pattern Examples
+      Memory Management
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#filelist-with-patterns" class="md-nav__link">
+  <a href="#thread-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Filelist with Patterns
+      Thread Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Tuning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-validation-and-sanitization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Validation and Sanitization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Validation and Sanitization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#path-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Path Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Size Validation
     </span>
   </a>
   
@@ -751,6 +1034,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#testing-email-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Testing Email Configuration
@@ -768,43 +1060,43 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#environment-variables" class="md-nav__link">
-    <span class="md-ellipsis">
-      Environment Variables
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-tuning" class="md-nav__link">
+  <a href="#pattern-matching" class="md-nav__link">
     <span class="md-ellipsis">
-      Performance Tuning
+      Pattern Matching
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Performance Tuning">
+    <nav class="md-nav" aria-label="Pattern Matching">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#worker-threads" class="md-nav__link">
+  <a href="#glob-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      Worker Threads
+      Glob Patterns
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#chunk-size" class="md-nav__link">
+  <a href="#regular-expressions" class="md-nav__link">
     <span class="md-ellipsis">
-      Chunk Size
+      Regular Expressions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filelist-with-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filelist with Patterns
     </span>
   </a>
   
@@ -816,28 +1108,37 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#report-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Generation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Report Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#report-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#custom-report-names" class="md-nav__link">
     <span class="md-ellipsis">
       Custom Report Names
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Custom Report Names">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#timestamp-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      Timestamp Format
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Output Examples
     </span>
   </a>
   
@@ -919,96 +1220,195 @@
 
 
 <h1 id="advanced-usage"><strong>Advanced Usage</strong></h1>
-<h2 id="regular-expressions"><strong>Regular Expressions</strong></h2>
-<p>While the basic glob patterns work for simple cases, regex provides more powerful pattern matching capabilities.</p>
-<h3 id="pattern-examples"><strong>Pattern Examples</strong></h3>
-<p>Use the <code>--regex</code> flag with <code>--include</code> or <code>--exclude</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Match files ending in numbers</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*[0-9]</span>$<span class="s2">&quot;</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Match specific date formats in filenames</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{4}-\d{2}-\d{2}.*&quot;</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Exclude files with specific patterns</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;^(backup|temp).*&quot;</span><span class="w"> </span>/path/to/directory
-
-<span class="c1"># Multiple patterns</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;.*\.(jpg|png)</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--exclude<span class="w"> </span><span class="s2">&quot;thumb.*\.jpg</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>/path/to/directory
+<h2 id="basic-concepts"><strong>Basic Concepts</strong></h2>
+<p>Before diving into advanced features, make sure you're familiar with the basic functionality:</p>
+<ul>
+<li><a href="../basic/#basic-directory-scan">Basic Directory Scanning</a> - Simple directory scanning</li>
+<li><a href="../basic/#scan-with-specific-hash-algorithm">Hash Algorithm Selection</a> - Choosing hash algorithms</li>
+<li><a href="../basic/#filter-by-file-type">File Type Filtering</a> - Basic file filtering</li>
+<li><a href="../basic/#generate-multiple-formats">Output Format Selection</a> - Basic report formats</li>
+<li><a href="../basic/#file-listing">File Listing</a> - Basic file listing functionality</li>
+<li><a href="../basic/#viewing-reports">Report Viewing</a> - Basic report viewing</li>
+<li><a href="../basic/#comparing-reports">Basic Report Comparison</a> - Simple report comparison</li>
+</ul>
+<h3 id="memory-management"><strong>Memory Management</strong></h3>
+<p>Control memory usage through various settings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># settings.toml</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">[hashreport]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Resource monitoring settings</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">memory_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.85</span><span class="w">  </span><span class="c1"># % of total memory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">mmap_threshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10485760</span><span class="w">  </span><span class="c1"># 10MB - Use mmap for files larger than this</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">chunk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4096</span><span class="w">  </span><span class="c1"># bytes</span>
 </code></pre></div>
-<h3 id="filelist-with-patterns"><strong>Filelist with Patterns</strong></h3>
-<p>The filelist command supports the same pattern matching:</p>
+<h3 id="thread-configuration"><strong>Thread Configuration</strong></h3>
+<p>Optimize thread usage for your system:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># settings.toml</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">[hashreport]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Thread pool settings</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">min_workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">batch_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">max_retries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">retry_delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">resource_check_interval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w">  </span><span class="c1"># seconds</span>
+</code></pre></div>
+<h3 id="performance-tuning"><strong>Performance Tuning</strong></h3>
+<p>Fine-tune performance settings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># settings.toml</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">[hashreport.progress]</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">refresh_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">show_eta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">show_file_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">show_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</code></pre></div>
+<h2 id="input-validation-and-sanitization"><strong>Input Validation and Sanitization</strong></h2>
+<p>hashreport implements robust input validation and sanitization to ensure safe operation.</p>
+<h3 id="path-validation"><strong>Path Validation</strong></h3>
+<ul>
+<li>Absolute and relative paths are supported</li>
+<li>Path traversal attempts are blocked</li>
+<li>Special characters are properly escaped</li>
+<li>Unicode paths are handled correctly</li>
+</ul>
+<h3 id="pattern-validation"><strong>Pattern Validation</strong></h3>
+<ul>
+<li>Glob patterns are validated for syntax</li>
+<li>Regular expressions are checked for validity</li>
+<li>Pattern length is limited to prevent DoS</li>
+<li>Special characters are properly escaped</li>
+</ul>
+<h3 id="size-validation"><strong>Size Validation</strong></h3>
+<ul>
+<li>File size limits are enforced</li>
+<li>Memory limits are respected</li>
+<li>Buffer sizes are validated</li>
+<li>Chunk sizes are checked</li>
+</ul>
 <h2 id="email-notifications"><strong>Email Notifications</strong></h2>
 <p>hashreport can email reports upon completion using SMTP.</p>
 <h3 id="basic-email-setup"><strong>Basic Email Setup</strong></h3>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-password<span class="w"> </span>password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password
 </code></pre></div>
+<h3 id="security-best-practices"><strong>Security Best Practices</strong></h3>
+<ol>
+<li>
+<p><strong>Use Environment Variables</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_HOST</span><span class="o">=</span>smtp.example.com
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_USER</span><span class="o">=</span>username
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_PASSWORD</span><span class="o">=</span>password
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Use App Passwords</strong></p>
+</li>
+<li>For Gmail, use App Passwords instead of account passwords</li>
+<li>
+<p>Generate at: Google Account → Security → 2-Step Verification → App passwords</p>
+</li>
+<li>
+<p><strong>Use TLS/SSL</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--smtp-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--smtp-tls
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Secure Configuration File</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># settings.toml</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">[hashreport.email_defaults]</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">587</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">use_tls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;smtp.example.com&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">30</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">default_subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HashReport Results&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">retry_attempts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+</code></pre></div></p>
+</li>
+</ol>
 <h3 id="testing-email-configuration"><strong>Testing Email Configuration</strong></h3>
 <p>Test your email settings without processing files:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-password<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--test-email
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--test-email
 </code></pre></div>
 <h3 id="gmail-example"><strong>Gmail Example</strong></h3>
 <p>Using Gmail's SMTP server:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--email<span class="w"> </span>recipient@gmail.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-host<span class="w"> </span>smtp.gmail.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-user<span class="w"> </span>your.email@gmail.com<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--smtp-password<span class="w"> </span><span class="s2">&quot;your-app-password&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@gmail.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.gmail.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--smtp-port<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--smtp-user<span class="w"> </span>your.email@gmail.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--smtp-password<span class="w"> </span><span class="s2">&quot;your-app-password&quot;</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For Gmail, you'll need to use an App Password if you have 2-factor authentication enabled.
-Generate one at: Google Account → Security → 2-Step Verification → App passwords</p>
-</div>
-<h3 id="environment-variables"><strong>Environment Variables</strong></h3>
-<p>You can store SMTP credentials in environment variables:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_HOST</span><span class="o">=</span>smtp.example.com
-<span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_USER</span><span class="o">=</span>username
-<span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_PASSWORD</span><span class="o">=</span>password
-
-<span class="c1"># Now run without exposing credentials in command</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span>--email<span class="w"> </span>recipient@example.com
+<h2 id="pattern-matching"><strong>Pattern Matching</strong></h2>
+<h3 id="glob-patterns"><strong>Glob Patterns</strong></h3>
+<p>Use glob patterns to match files:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Match all PDF files</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Match specific file types</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.{jpg,png,gif}&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Exclude temporary files</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span>/path/to/directory
 </code></pre></div>
-<h2 id="performance-tuning"><strong>Performance Tuning</strong></h2>
-<h3 id="worker-threads"><strong>Worker Threads</strong></h3>
-<p>hashreport automatically uses multiple threads based on your CPU cores. You can override this in the configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml</span>
-<span class="k">[tool.hashreport]</span>
-<span class="n">max_workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w">  </span><span class="c1"># Set specific number of worker threads</span>
+<h3 id="regular-expressions"><strong>Regular Expressions</strong></h3>
+<p>Use regular expressions for more complex patterns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Match files with date in name</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{8}.*&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Match specific file extensions</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>--regex<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--include<span class="w"> </span><span class="s2">&quot;.*\.(jpg|png)</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--exclude<span class="w"> </span><span class="s2">&quot;thumb.*\.jpg</span>$<span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>/path/to/directory
 </code></pre></div>
-<h3 id="chunk-size"><strong>Chunk Size</strong></h3>
-<p>For large files, you can adjust the chunk size used when calculating hashes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml</span>
-<span class="k">[tool.hashreport]</span>
-<span class="n">chunk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8192</span><span class="w">  </span><span class="c1"># Default is 4096</span>
+<h3 id="filelist-with-patterns"><strong>Filelist with Patterns</strong></h3>
+<p>The filelist command supports the same pattern matching:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List all PDF files</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>hashreport<span class="w"> </span>filelist<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;*.pdf&quot;</span><span class="w"> </span>/path/to/directory
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># List files with regex</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>hashreport<span class="w"> </span>filelist<span class="w"> </span>--regex<span class="w"> </span>--include<span class="w"> </span><span class="s2">&quot;.*\d{8}.*&quot;</span><span class="w"> </span>/path/to/directory
 </code></pre></div>
-<h2 id="custom-report-names"><strong>Custom Report Names</strong></h2>
-<h3 id="timestamp-format"><strong>Timestamp Format</strong></h3>
-<p>Customize the timestamp format used in report filenames:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml</span>
-<span class="k">[tool.hashreport]</span>
-<span class="n">timestamp_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;%Y%m%d_%H%M%S&quot;</span><span class="w">  </span><span class="c1"># Default is &quot;%y%m%d-%H%M&quot;</span>
+<h2 id="report-generation"><strong>Report Generation</strong></h2>
+<h3 id="report-formats"><strong>Report Formats</strong></h3>
+<p>hashreport supports multiple report formats:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Generate CSV report (default)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>/path/to/directory
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Generate JSON report</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Generate both formats</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span>/path/to/directory
 </code></pre></div>
-<h3 id="output-examples"><strong>Output Examples</strong></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Custom named reports</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span>-o<span class="w"> </span>custom_report.csv
-
-<span class="c1"># Multiple formats with custom names</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span>report.csv<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json
+<h3 id="report-configuration"><strong>Report Configuration</strong></h3>
+<p>Configure report generation behavior:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># settings.toml</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">[hashreport.reports]</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">include_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">include_timing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">max_concurrent_writes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+</code></pre></div>
+<h3 id="custom-report-names"><strong>Custom Report Names</strong></h3>
+<p>Control report filenames:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Custom named reports</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span>-o<span class="w"> </span>custom_report.csv
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Multiple formats with custom names</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-o<span class="w"> </span>report.csv<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-f<span class="w"> </span>csv<span class="w"> </span>-f<span class="w"> </span>json
 </code></pre></div>
 <h2 id="report-comparison"><strong>Report Comparison</strong></h2>
 <h3 id="understanding-changes"><strong>Understanding Changes</strong></h3>
@@ -1019,6 +1419,20 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
 <li><strong>Added</strong>: File exists only in the newer report</li>
 <li><strong>Removed</strong>: File exists only in the older report</li>
 </ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>graph LR
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    A[Old Report] --&gt; D[Comparison Engine]
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    B[New Report] --&gt; D
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    D --&gt; E{Change Detection}
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    E --&gt;|Modified| F[Hash Changed]
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    E --&gt;|Moved| G[Location Changed]
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    E --&gt;|Added| H[New File]
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    E --&gt;|Removed| I[Deleted File]
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    F --&gt; J[Generate Report]
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    G --&gt; J
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    H --&gt; J
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    I --&gt; J
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    J --&gt; K[Output CSV]
+</code></pre></div>
 <h3 id="output-format"><strong>Output Format</strong></h3>
 <p>Changes are displayed with bold text for better visibility:</p>
 <ul>
@@ -1029,21 +1443,30 @@ hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory
 </ul>
 <h3 id="saving-comparisons"><strong>Saving Comparisons</strong></h3>
 <p>Comparison results can be saved to CSV format:</p>
-<div class="highlight"><pre><span></span><code>hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>hashreport<span class="w"> </span>compare<span class="w"> </span>old_report.csv<span class="w"> </span>new_report.csv<span class="w"> </span>-o<span class="w"> </span>/path/to/output/
 </code></pre></div>
 <p>The output filename will be generated automatically using the format:
 <code>compare_&lt;old_report&gt;_&lt;new_report&gt;.csv</code></p>
 <h3 id="using-with-version-control"><strong>Using with Version Control</strong></h3>
 <p>Example workflow for tracking file changes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate baseline report</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>/project/dir<span class="w"> </span>-o<span class="w"> </span>baseline.csv
-
-<span class="c1"># Later, generate new report</span>
-hashreport<span class="w"> </span>scan<span class="w"> </span>/project/dir<span class="w"> </span>-o<span class="w"> </span>current.csv
-
-<span class="c1"># Compare changes</span>
-hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<span class="w"> </span>current.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Generate initial report</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/project<span class="w"> </span>-o<span class="w"> </span>initial_report.csv
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Make changes to files</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>git<span class="w"> </span>add<span class="w"> </span>.
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update project files&quot;</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># Generate new report</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/project<span class="w"> </span>-o<span class="w"> </span>new_report.csv
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># Compare reports</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>hashreport<span class="w"> </span>compare<span class="w"> </span>initial_report.csv<span class="w"> </span>new_report.csv
 </code></pre></div>
+<p>For more information, see:
+- <a href="../basic/">Basic Usage</a>
+- <a href="../commands/">Command Reference</a>
+- <a href="../configuration/">Configuration Guide</a>
+- <a href="../troubleshooting/">Troubleshooting</a></p>
 
 
 
@@ -1063,6 +1486,12 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<sp
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -1124,6 +1553,32 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<sp
   
 </div>
       
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/madebyjake/hashreport" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/hashreport/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3"/></svg>
+    </a>
+  
+</div>
+      
     </div>
   </div>
 </footer>
@@ -1142,12 +1597,6 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<sp
 
 
   
-    
-  
-
-
-
-  
 
 
 <h4>Cookie consent</h4>
@@ -1156,18 +1605,27 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<sp
 <div class="md-consent__settings">
   <ul class="task-list">
     
+    
       
+    
+    
       
         
-        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
       
-      <li class="task-list-item">
-        <label class="task-list-control">
-          <input type="checkbox" name="github" checked>
-          <span class="task-list-indicator"></span>
-          GitHub
-        </label>
-      </li>
+    
     
   </ul>
 </div>
@@ -1191,7 +1649,9 @@ hashreport<span class="w"> </span>compare<span class="w"> </span>baseline.csv<sp
       </div>
       <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.indexes"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.indexes", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
