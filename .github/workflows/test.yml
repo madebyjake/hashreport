@@ -56,6 +56,11 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
+      - name: Explicitly install pytest for Python 3.13
+        if: matrix.python-version == '3.13'
+        run: |
+          pip install pytest pytest-cov
+
       - name: Verify pytest installation
         run: poetry run pip list | grep pytest
 
