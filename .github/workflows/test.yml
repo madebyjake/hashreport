@@ -56,10 +56,13 @@ jobs:
       - name: Install dependencies
         run: poetry install --with dev
 
+      - name: Verify pytest installation
+        run: poetry run pip list | grep pytest
+
       - name: Run tests
         run: poetry run pytest --cov=. --cov-report=xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage.xml
+          files: ./coverage.xml
