@@ -27,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.13"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -37,6 +37,17 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
+
+      - name: Show version
+        run: poetry version
+
+      - name: Fail if version is 0.0.0
+        run: |
+          VERSION=$(poetry version -s)
+          if [ "$VERSION" = "0.0.0" ]; then
+            echo "ERROR: Version is 0.0.0, aborting publish."
+            exit 1
+          fi
 
       - name: Build package
         run: poetry build
