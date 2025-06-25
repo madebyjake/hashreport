@@ -1,3 +1,20 @@
+## v0.9.0 (2025-06-24)
+
+### Feat
+
+- **utils**: add progress bar show file names
+
+### Fix
+
+- **utils**: improve filtering logic
+- **utils**: restore email and validation exception
+
+### Refactor
+
+- enhance report validation and streaming
+- **cli**: improve config and report commands
+- **reports**: simplify filelist name gen
+
 ## v0.8.1 (2025-03-06)
 
 ### Fix
