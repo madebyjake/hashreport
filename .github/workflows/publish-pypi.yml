@@ -38,6 +38,18 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
+      - name: Ensure poetry-dynamic-versioning is installed
+        run: poetry self add poetry-dynamic-versioning[plugin]
+
+      - name: Debug Git information
+        run: |
+          echo "Current commit: $(git rev-parse HEAD)"
+          echo "Current branch: $(git branch --show-current)"
+          echo "Git tags: $(git tag --list)"
+          echo "Git describe: $(git describe --tags --always)"
+          echo "Git status:"
+          git status --porcelain
+
       - name: Show version
         run: poetry version
 
