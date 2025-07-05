@@ -120,23 +120,18 @@ class TestValidationFunctions:
     """Test validation utility functions."""
 
     def test_validate_file_path_valid(self):
-        """Test validate_file_path with valid inputs."""
-        # String path
-        result = validate_file_path("test.txt")
-        assert result == "test.txt"
-
-        # Path object
-        path_obj = Path("test.txt")
-        result = validate_file_path(path_obj)
-        assert result == path_obj
+        """Test validate_file_path with valid paths."""
+        valid_paths = ["/path/to/file", Path("/path/to/file"), "relative/path"]
+        for path in valid_paths:
+            result = validate_file_path(path)
+            assert result == path
 
     def test_validate_file_path_invalid(self):
-        """Test validate_file_path with invalid inputs."""
-        with pytest.raises(ValueError, match="Invalid file path type"):
-            validate_file_path(123)
-
-        with pytest.raises(ValueError, match="Invalid file path type"):
-            validate_file_path(None)
+        """Test validate_file_path with invalid paths."""
+        invalid_paths = [123, None, [], {}, ("tuple", "not", "path")]
+        for path in invalid_paths:
+            with pytest.raises(ValueError, match="Invalid file path type"):
+                validate_file_path(path)
 
     def test_validate_hash_algorithm_valid(self):
         """Test validate_hash_algorithm with valid algorithms."""
@@ -156,6 +151,13 @@ class TestValidationFunctions:
             with pytest.raises(ValueError, match="Unsupported hash algorithm"):
                 validate_hash_algorithm(algo)
 
+    def test_validate_hash_algorithm_case_insensitive(self):
+        """Test validate_hash_algorithm with different cases."""
+        algorithms = ["MD5", "Sha1", "SHA256", "sha512", "BLAKE2B"]
+        for algorithm in algorithms:
+            result = validate_hash_algorithm(algorithm)
+            assert result == algorithm.lower()
+
     def test_validate_report_format_valid(self):
         """Test validate_report_format with valid formats."""
         valid_formats = ["csv", "json"]
@@ -173,6 +175,13 @@ class TestValidationFunctions:
         for fmt in invalid_formats:
             with pytest.raises(ValueError, match="Unsupported report format"):
                 validate_report_format(fmt)
+
+    def test_validate_report_format_case_insensitive(self):
+        """Test validate_report_format with different cases."""
+        formats = ["CSV", "Json", "JSON"]
+        for format_str in formats:
+            result = validate_report_format(format_str)
+            assert result == format_str.lower()
 
     def test_validate_email_address_valid(self):
         """Test validate_email_address with valid emails."""
@@ -336,6 +345,40 @@ class TestUtilityFunctions:
         result = safe_cast("abc", int)
         assert result is None
 
+    def test_safe_cast_with_complex_types(self):
+        """Test safe_cast with more complex type conversions."""
+        # List to tuple
+        result = safe_cast([1, 2, 3], tuple)
+        assert result == (1, 2, 3)
+
+        # String to list (if supported)
+        result = safe_cast("abc", list)
+        assert result == ["a", "b", "c"]
+
+    def test_safe_cast_with_none_and_default(self):
+        """Test safe_cast with None and default values."""
+        # None with default
+        result = safe_cast(None, int, default=42)
+        assert result == 42
+
+        # None without default
+        result = safe_cast(None, str)
+        assert result == "None"
+
+    def test_safe_cast_with_custom_objects(self):
+        """Test safe_cast with custom objects."""
+
+        class CustomInt:
+            def __init__(self, value):
+                self.value = value
+
+            def __int__(self):
+                return self.value
+
+        obj = CustomInt(123)
+        result = safe_cast(obj, int)
+        assert result == 123
+
     def test_ensure_list_single_item(self):
         """Test ensure_list with single item."""
         result = ensure_list("test")
@@ -376,3 +419,26 @@ class TestUtilityFunctions:
         for value in invalid_values:
             with pytest.raises(ValueError, match="Cannot convert"):
                 ensure_dict(value)
+
+    def test_ensure_dict_with_namedtuple(self):
+        """Test ensure_dict with namedtuple."""
+        from collections import namedtuple
+
+        TestTuple = namedtuple("TestTuple", ["a", "b"])
+        obj = TestTuple(1, 2)
+        with pytest.raises(ValueError, match="Cannot convert"):
+            ensure_dict(obj)
+
+    def test_ensure_dict_with_slots(self):
+        """Test ensure_dict with object using __slots__."""
+
+        class SlottedObject:
+            __slots__ = ["attr1", "attr2"]
+
+            def __init__(self):
+                self.attr1 = "value1"
+                self.attr2 = "value2"
+
+        obj = SlottedObject()
+        with pytest.raises(ValueError, match="Cannot convert"):
+            ensure_dict(obj)
