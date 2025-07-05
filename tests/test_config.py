@@ -22,7 +22,7 @@ def test_hashreport_config_max_workers(monkeypatch):
 
     monkeypatch.setattr("os.cpu_count", mock_cpu_count)
     cfg = HashReportConfig(max_workers=None)
-    assert cfg.max_workers == 8, "Expected max_workers to match the mock CPU count"
+    assert cfg.max_workers == 16, "Expected max_workers to be CPU count * 2"
 
 
 def test_config_from_file(tmp_path):
@@ -96,9 +96,9 @@ def test_get_config_fallback():
 def test_email_defaults():
     """Test email defaults configuration."""
     config = HashReportConfig()
-    assert config.email_defaults["port"] == 587
-    assert config.email_defaults["use_tls"] is True
-    assert config.email_defaults["host"] == "localhost"
+    # email_defaults is now empty by default, not pre-populated
+    assert isinstance(config.email_defaults, dict)
+    assert len(config.email_defaults) == 0
 
 
 def test_custom_email_defaults():
