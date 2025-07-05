@@ -190,7 +190,11 @@ def validate_hostname(hostname: str) -> Hostname:
     """
     import re
 
-    pattern = r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    # More strict pattern that requires at least one dot and proper TLD
+    pattern = (
+        r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?"
+        r"(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$"
+    )
     if re.match(pattern, hostname):
         return Hostname(hostname)
     raise ValueError(f"Invalid hostname format: {hostname}")
