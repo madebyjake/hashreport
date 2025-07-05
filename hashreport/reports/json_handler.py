@@ -10,10 +10,11 @@ Example:
 """  # noqa: E501
 
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from hashreport.reports.base import BaseReportHandler
 from hashreport.utils.exceptions import ReportError
+from hashreport.utils.types import ReportData, ReportEntry, validate_report_data
 
 
 class JSONReportError(ReportError):
@@ -32,7 +33,7 @@ class JSONReportHandler(BaseReportHandler):
         filepath: Path to the JSON report file
     """  # noqa: E501
 
-    def _validate_data(self, data: Any) -> List[Dict[str, Any]]:
+    def _validate_data(self, data: Any) -> ReportData:
         """Validate report data structure.
 
         Args:
@@ -76,9 +77,9 @@ class JSONReportHandler(BaseReportHandler):
             if "Size" in entry:
                 entry["size"] = entry.pop("Size")
 
-        return data
+        return validate_report_data(data)
 
-    def read(self) -> List[Dict[str, Any]]:
+    def read(self) -> ReportData:
         """Read data from the JSON report file.
 
         Returns:
@@ -101,7 +102,7 @@ class JSONReportHandler(BaseReportHandler):
         except Exception as e:
             raise JSONReportError(f"Error processing report data: {e}")
 
-    def write(self, data: List[Dict[str, Any]], **kwargs: Any) -> None:
+    def write(self, data: ReportData, **kwargs: Any) -> None:
         """Write data to the JSON report file.
 
         Args:
@@ -121,7 +122,7 @@ class JSONReportHandler(BaseReportHandler):
         except Exception as e:
             raise JSONReportError(f"Error processing report data: {e}")
 
-    def append(self, entry: Dict[str, Any]) -> None:
+    def append(self, entry: ReportEntry) -> None:
         """Append a single entry to the JSON report.
 
         This method reads the existing report, appends the new entry, and writes back
@@ -144,7 +145,7 @@ class JSONReportHandler(BaseReportHandler):
         except Exception as e:
             raise JSONReportError(f"Error appending to JSON report: {e}")
 
-    def append_streaming(self, entry: Dict[str, Any]) -> None:
+    def append_streaming(self, entry: ReportEntry) -> None:
         """Append a single entry to the JSON report using streaming.
 
         This method is optimized for large files by using streaming to append entries
