@@ -248,7 +248,11 @@ class HashReportConfig:
         settings = self.get_user_settings()
         for section in ["email_defaults", "logging", "progress", "reports"]:
             if section not in settings:
-                settings[section] = getattr(self, section, {})
+                if section == "email_defaults":
+                    # Use default email config if email_defaults is empty
+                    settings[section] = self.email_defaults or self.DEFAULT_EMAIL_CONFIG
+                else:
+                    settings[section] = getattr(self, section, {})
         return settings
 
     def to_dict(self) -> ConfigDict:
