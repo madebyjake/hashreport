@@ -9,6 +9,7 @@ Example:
     $ hashreport config show
 """  # noqa: E501
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -22,12 +23,15 @@ from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
 )
+from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
 from hashreport.utils.viewer import ReportViewer
 from hashreport.version import __version__
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 100}
+
+logger = logging.getLogger("hashreport.cli")
 
 
 def validate_size(
@@ -98,15 +102,25 @@ def validate_size(
 
 
 def handle_error(e: Exception, exit_code: int = 1) -> None:
-    """Handle errors for CLI commands.
+    """Handle errors for CLI commands with user-friendly output and logging.
 
     Args:
         e: The exception that occurred
         exit_code: The exit code to use (default: 1)
-
-    This function prints the error message to stderr and exits with the specified code.
     """
-    click.echo(f"Error: {str(e)}", err=True)
+    import traceback
+
+    if isinstance(e, (HashReportError, click.BadParameter)):
+        click.echo(f"[Error] {e}", err=True)
+        logger.warning(f"User error: {e}")
+    else:
+        click.echo(
+            "[Internal Error] An unexpected error occurred. "
+            "Please report this issue if it persists.",
+            err=True,
+        )
+        logger.error(f"Internal error: {e}")
+        logger.error(traceback.format_exc())
     sys.exit(exit_code)
 
 
@@ -268,8 +282,10 @@ def scan(
             limit=limit,
             recursive=recursive,
         )
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 @cli.command()
@@ -314,8 +330,10 @@ def filelist(
             output_file,
             recursive=recursive,
         )
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 @cli.command()
@@ -338,8 +356,10 @@ def view(report: str, filter_text: Optional[str]) -> None:
     try:
         viewer = ReportViewer()
         viewer.view_report(report, filter_text)
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 @cli.command()
@@ -366,8 +386,10 @@ def compare(report1: str, report2: str, output: Optional[str]) -> None:
     try:
         viewer = ReportViewer()
         viewer.compare_reports(report1, report2, output)
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 @cli.command()
@@ -410,13 +432,13 @@ def edit():
     try:
         settings_path = get_config().get_settings_path()
         if not settings_path.exists():
-            # Create parent directories if they don't exist
             settings_path.parent.mkdir(parents=True, exist_ok=True)
-            # Create empty config file
             settings_path.touch()
         click.edit(filename=str(settings_path))
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 @config.command()
@@ -434,8 +456,10 @@ def show():
         config_data = get_config().get_all_settings()
         console.print("\n[bold]Current Configuration[/bold]\n")
         print_section(console, config_data)
+    except (HashReportError, click.BadParameter) as e:
+        handle_error(e, exit_code=2)
     except Exception as e:
-        handle_error(e)
+        handle_error(e, exit_code=1)
 
 
 def print_section(console: Console, data: Dict[str, Any], indent: int = 0) -> None:
