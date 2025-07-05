@@ -33,7 +33,6 @@ class HashReportConfig:
     supported_formats: List[str] = field(default_factory=lambda: ["csv", "json"])
     chunk_size: int = 4096
     mmap_threshold: int = 10485760  # 10MB default threshold for mmap usage
-    max_workers: Optional[int] = None
     timestamp_format: str = "%y%m%d-%H%M"
     show_progress: bool = True
     max_errors_shown: int = 10
@@ -62,25 +61,76 @@ class HashReportConfig:
     )
 
     def __post_init__(self) -> None:
-        """Initialize computed values."""
+        """Initialize computed values and validate configuration."""
+        self._initialize_defaults()
+        self._validate_configuration()
+
+    def _initialize_defaults(self) -> None:
+        """Initialize default values for computed fields."""
+        # Initialize email defaults if not provided
         if not self.email_defaults:
             self.email_defaults = self.DEFAULT_EMAIL_CONFIG.copy()
+
+        # Set max_workers based on CPU count if not specified
         if self.max_workers is None:
             self.max_workers = os.cpu_count() or 4
 
-        if not self.memory_limit:
+        # Calculate memory limit if not specified
+        if self.memory_limit is None:
             import psutil
 
             total_memory = psutil.virtual_memory().total
-            self.memory_limit = int(
-                total_memory * 0.75 / (1024 * 1024)
-            )  # 75% of total RAM
-
-        if self.max_workers is None:
-            self.max_workers = os.cpu_count() or 4
+            # 75% of total RAM
+            self.memory_limit = int(total_memory * 0.75 / (1024 * 1024))
 
         # Ensure min_workers doesn't exceed max_workers
         self.min_workers = min(self.min_workers, self.max_workers)
+
+    def _validate_configuration(self) -> None:
+        """Validate configuration values and raise errors for invalid settings."""
+        errors = []
+
+        # Validate algorithm
+        if not self.default_algorithm:
+            errors.append("default_algorithm cannot be empty")
+
+        # Validate format
+        if not self.default_format:
+            errors.append("default_format cannot be empty")
+        elif self.default_format not in self.supported_formats:
+            errors.append(
+                f"default_format '{self.default_format}' not in "
+                f"supported_formats: {self.supported_formats}"
+            )
+
+        # Validate numeric values
+        if self.chunk_size <= 0:
+            errors.append("chunk_size must be positive")
+        if self.mmap_threshold < 0:
+            errors.append("mmap_threshold cannot be negative")
+        if self.batch_size <= 0:
+            errors.append("batch_size must be positive")
+        if self.max_retries < 0:
+            errors.append("max_retries cannot be negative")
+        if self.retry_delay < 0:
+            errors.append("retry_delay cannot be negative")
+        if self.min_workers <= 0:
+            errors.append("min_workers must be positive")
+        if self.max_workers and self.max_workers <= 0:
+            errors.append("max_workers must be positive")
+        if self.memory_threshold <= 0 or self.memory_threshold > 1:
+            errors.append("memory_threshold must be between 0 and 1")
+
+        # Validate email configuration
+        if self.email_defaults:
+            port = self.email_defaults.get("port")
+            if port is not None and (
+                not isinstance(port, int) or port <= 0 or port > 65535
+            ):
+                errors.append("email port must be a valid port number (1-65535)")
+
+        if errors:
+            raise ValueError(f"Configuration validation failed: {'; '.join(errors)}")
 
     @classmethod
     def _find_valid_config(cls, path: Path) -> Optional[Dict[str, Any]]:
@@ -102,7 +152,17 @@ class HashReportConfig:
 
     @classmethod
     def from_file(cls, config_path: Optional[Path] = None) -> "HashReportConfig":
-        """Load configuration from a TOML file."""
+        """Load configuration from a TOML file.
+
+        Args:
+            config_path: Optional path to config file, defaults to pyproject.toml
+
+        Returns:
+            HashReportConfig instance with loaded settings
+
+        Raises:
+            ValueError: If configuration validation fails
+        """
         path = config_path or cls.PROJECT_CONFIG_PATH
 
         # Find valid config data
@@ -112,7 +172,12 @@ class HashReportConfig:
 
         tool_section = data.get("tool", {})
         app_config = tool_section.get(cls.APP_CONFIG_KEY, {})
-        return cls(**app_config)
+
+        try:
+            return cls(**app_config)
+        except Exception as e:
+            logger.warning(f"Failed to load config from {path}, using defaults: {e}")
+            return cls()
 
     @classmethod
     def _load_toml(cls, config_path: Path) -> Dict[str, Any]:
@@ -145,7 +210,11 @@ class HashReportConfig:
 
     @classmethod
     def load_settings(cls) -> Dict[str, Any]:
-        """Load user settings from settings file."""
+        """Load user settings from settings file.
+
+        Returns:
+            Dictionary containing user settings or empty dict if file doesn't exist
+        """
         settings_path = cls.get_settings_path()
         if not settings_path.exists():
             return {}
@@ -169,13 +238,50 @@ class HashReportConfig:
                 settings[section] = getattr(self, section, {})
         return settings
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert configuration to dictionary representation.
+
+        Returns:
+            Dictionary containing all configuration values
+        """
+        return {
+            "default_algorithm": self.default_algorithm,
+            "default_format": self.default_format,
+            "supported_formats": self.supported_formats,
+            "chunk_size": self.chunk_size,
+            "mmap_threshold": self.mmap_threshold,
+            "timestamp_format": self.timestamp_format,
+            "show_progress": self.show_progress,
+            "max_errors_shown": self.max_errors_shown,
+            "email_defaults": self.email_defaults,
+            "batch_size": self.batch_size,
+            "max_retries": self.max_retries,
+            "retry_delay": self.retry_delay,
+            "memory_limit": self.memory_limit,
+            "min_workers": self.min_workers,
+            "max_workers": self.max_workers,
+            "worker_adjust_interval": self.worker_adjust_interval,
+            "progress_update_interval": self.progress_update_interval,
+            "resource_check_interval": self.resource_check_interval,
+            "memory_threshold": self.memory_threshold,
+            "progress": self.progress,
+        }
+
 
 # Lazy-loaded configuration instance
 loaded_config = None
 
 
 def get_config() -> HashReportConfig:
-    """Get the loaded configuration instance."""
+    """Get the loaded configuration instance.
+
+    Returns:
+        HashReportConfig instance with current settings
+
+    Note:
+        This function implements lazy loading - the configuration is only
+        loaded once and cached for subsequent calls.
+    """
     global loaded_config
     if loaded_config is None:
         try:
