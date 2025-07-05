@@ -12,7 +12,7 @@ import psutil
 
 from hashreport.config import get_config
 from hashreport.utils.progress_bar import ProgressBar
-from hashreport.utils.types import PerformanceSummary
+from hashreport.utils.type_defs import PerformanceSummary
 
 logger = logging.getLogger(__name__)
 config = get_config()

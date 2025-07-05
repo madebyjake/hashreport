@@ -4,7 +4,12 @@ from pathlib import Path
 from typing import Any, ClassVar
 
 from hashreport.utils.exceptions import ReportError
-from hashreport.utils.types import FilePath, ReportData, ReportEntry, validate_file_path
+from hashreport.utils.type_defs import (
+    FilePath,
+    ReportData,
+    ReportEntry,
+    validate_file_path,
+)
 
 
 class BaseReportHandler:

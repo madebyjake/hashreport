@@ -7,7 +7,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 import tomli
 
-from hashreport.utils.types import (
+from hashreport.utils.type_defs import (
     ConfigDict,
     EmailConfig,
     validate_hash_algorithm,

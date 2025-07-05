@@ -5,7 +5,7 @@ from typing import Any
 
 from hashreport.reports.base import BaseReportHandler
 from hashreport.utils.exceptions import ReportError
-from hashreport.utils.types import ReportData, ReportEntry, validate_report_data
+from hashreport.utils.type_defs import ReportData, ReportEntry, validate_report_data
 
 
 class CSVReportHandler(BaseReportHandler):
