@@ -212,7 +212,7 @@ def test_scan_error_handling(tmp_path):
         mock_walk.side_effect = Exception("Test error")
         result = runner.invoke(cli, ["scan", str(input_dir)])
         assert result.exit_code == 1
-        assert "Error: Test error" in result.output
+        assert "Internal Error" in result.output
 
 
 def test_scan_email_configuration(tmp_path):
@@ -331,7 +331,7 @@ def test_config_edit_error_handling(mock_edit, tmp_path):
     runner = CliRunner()
     result = runner.invoke(cli, ["config", "edit"])
     assert result.exit_code == 1
-    assert "Error: Test error" in result.output
+    assert "Internal Error" in result.output
 
 
 @patch("hashreport.cli.Console")
@@ -341,4 +341,4 @@ def test_config_show_error_handling(mock_console, tmp_path):
     runner = CliRunner()
     result = runner.invoke(cli, ["config", "show"])
     assert result.exit_code == 1
-    assert "Error: Test error" in result.output
+    assert "Internal Error" in result.output
