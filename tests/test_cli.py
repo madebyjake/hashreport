@@ -342,3 +342,127 @@ def test_config_show_error_handling(mock_console, tmp_path):
     result = runner.invoke(cli, ["config", "show"])
     assert result.exit_code == 1
     assert "Internal Error" in result.output
+
+
+def test_validate_size_invalid_formats():
+    """Test validate_size with invalid formats."""
+    from click import Context, Option
+
+    from hashreport.cli import validate_size
+
+    ctx = Context(click.Command("test"))
+    param = Option(["--test"], "test")
+
+    invalid_sizes = [
+        "abc",  # No number
+        "123",  # No unit
+        "123XYZ",  # Invalid unit
+        "abcKB",  # No number
+        "1.2.3KB",  # Invalid number
+        "0KB",  # Zero size
+        "-1KB",  # Negative size
+    ]
+
+    for size_str in invalid_sizes:
+        with pytest.raises(click.BadParameter, match="Invalid size format"):
+            validate_size(ctx, param, size_str)
+
+
+def test_validate_size_valid_formats():
+    """Test validate_size with valid formats."""
+    from click import Context, Option
+
+    from hashreport.cli import validate_size
+
+    ctx = Context(click.Command("test"))
+    param = Option(["--test"], "test")
+
+    valid_sizes = [
+        "1B",
+        "1KB",
+        "1MB",
+        "1GB",
+        "1.5KB",
+        "2.5MB",
+    ]
+
+    for size_str in valid_sizes:
+        result = validate_size(ctx, param, size_str)
+        assert result == size_str
+
+
+def test_validate_size_none():
+    """Test validate_size with None value."""
+    from click import Context, Option
+
+    from hashreport.cli import validate_size
+
+    ctx = Context(click.Command("test"))
+    param = Option(["--test"], "test")
+
+    result = validate_size(ctx, param, None)
+    assert result is None
+
+
+def test_handle_error_hashreport_error(caplog):
+    """Test handle_error with HashReportError."""
+    from hashreport.cli import handle_error
+    from hashreport.utils.exceptions import HashReportError
+
+    error = HashReportError("Test error")
+
+    with pytest.raises(SystemExit) as exc_info:
+        handle_error(error)
+
+    assert exc_info.value.code == 1
+    assert "Test error" in caplog.text
+
+
+def test_handle_error_click_bad_parameter(caplog):
+    """Test handle_error with click.BadParameter."""
+    from hashreport.cli import handle_error
+
+    error = click.BadParameter("Invalid parameter")
+
+    with pytest.raises(SystemExit) as exc_info:
+        handle_error(error)
+
+    assert exc_info.value.code == 1
+    assert "Invalid parameter" in caplog.text
+
+
+def test_handle_error_generic_exception(caplog):
+    """Test handle_error with generic exception."""
+    from hashreport.cli import handle_error
+
+    error = ValueError("Generic error")
+
+    with pytest.raises(SystemExit) as exc_info:
+        handle_error(error)
+
+    assert exc_info.value.code == 1
+    assert "Internal error" in caplog.text
+
+
+def test_validate_email_options_missing_email():
+    """Test validate_email_options with missing email."""
+    from hashreport.cli import validate_email_options
+
+    with pytest.raises(click.BadParameter, match="Email and SMTP host are required"):
+        validate_email_options(None, "smtp.example.com")
+
+
+def test_validate_email_options_missing_smtp_host():
+    """Test validate_email_options with missing SMTP host."""
+    from hashreport.cli import validate_email_options
+
+    with pytest.raises(click.BadParameter, match="Email and SMTP host are required"):
+        validate_email_options("test@example.com", None)
+
+
+def test_validate_email_options_valid():
+    """Test validate_email_options with valid parameters."""
+    from hashreport.cli import validate_email_options
+
+    # Should not raise any exception
+    validate_email_options("test@example.com", "smtp.example.com")
