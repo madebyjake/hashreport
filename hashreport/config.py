@@ -1,12 +1,18 @@
 """Configuration management for hashreport."""
 
 import logging
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional
 
 import tomli
+
+from hashreport.utils.types import (
+    ConfigDict,
+    EmailConfig,
+    validate_hash_algorithm,
+    validate_report_format,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +27,7 @@ class HashReportConfig:
         Path.home() / ".config" / "hashreport" / "settings.toml"
     )
     APP_CONFIG_KEY: ClassVar[str] = "hashreport"
-    DEFAULT_EMAIL_CONFIG: ClassVar[Dict[str, Union[int, bool, str]]] = {
+    DEFAULT_EMAIL_CONFIG: ClassVar[EmailConfig] = {
         "port": 587,
         "use_tls": True,
         "host": "localhost",
@@ -36,7 +42,7 @@ class HashReportConfig:
     timestamp_format: str = "%y%m%d-%H%M"
     show_progress: bool = True
     max_errors_shown: int = 10
-    email_defaults: Dict[str, Any] = field(default_factory=dict)
+    email_defaults: EmailConfig = field(default_factory=dict)
 
     # Settings for resource management
     batch_size: int = 1000
@@ -61,62 +67,69 @@ class HashReportConfig:
     )
 
     def __post_init__(self) -> None:
-        """Initialize computed values and validate configuration."""
+        """Validate configuration after initialization."""
         self._initialize_defaults()
         self._validate_configuration()
 
     def _initialize_defaults(self) -> None:
-        """Initialize default values for computed fields."""
-        # Initialize email defaults if not provided
-        if not self.email_defaults:
-            self.email_defaults = self.DEFAULT_EMAIL_CONFIG.copy()
-
-        # Set max_workers based on CPU count if not specified
-        if self.max_workers is None:
-            self.max_workers = os.cpu_count() or 4
-
-        # Calculate memory limit if not specified
+        """Initialize default values based on system resources."""
+        # Set memory limit if not specified
         if self.memory_limit is None:
-            import psutil
+            try:
+                import psutil
 
-            total_memory = psutil.virtual_memory().total
-            # 75% of total RAM
-            self.memory_limit = int(total_memory * 0.75 / (1024 * 1024))
+                total_memory = psutil.virtual_memory().total
+                # 75% of total RAM
+                self.memory_limit = int(total_memory * 0.75 / (1024 * 1024))
+            except ImportError:
+                self.memory_limit = 1024  # Default to 1GB
 
-        # Ensure min_workers doesn't exceed max_workers
-        self.min_workers = min(self.min_workers, self.max_workers)
+        # Set max_workers if not specified
+        if self.max_workers is None:
+            try:
+                import os
+
+                self.max_workers = min(32, (os.cpu_count() or 4) * 2)
+            except Exception:
+                self.max_workers = 8
 
     def _validate_configuration(self) -> None:
-        """Validate configuration values and raise errors for invalid settings."""
+        """Validate configuration settings."""
         errors = []
 
-        # Validate algorithm
-        if not self.default_algorithm:
-            errors.append("default_algorithm cannot be empty")
+        # Validate hash algorithm
+        try:
+            validate_hash_algorithm(self.default_algorithm)
+        except ValueError as e:
+            errors.append(str(e))
 
-        # Validate format
-        if not self.default_format:
-            errors.append("default_format cannot be empty")
-        elif self.default_format not in self.supported_formats:
-            errors.append(
-                f"default_format '{self.default_format}' not in "
-                f"supported_formats: {self.supported_formats}"
-            )
+        # Validate report format
+        try:
+            validate_report_format(self.default_format)
+        except ValueError as e:
+            errors.append(str(e))
 
-        # Validate numeric values
+        # Validate supported formats
+        for fmt in self.supported_formats:
+            try:
+                validate_report_format(fmt)
+            except ValueError as e:
+                errors.append(f"Unsupported format '{fmt}': {e}")
+
+        # Validate numeric ranges
         if self.chunk_size <= 0:
             errors.append("chunk_size must be positive")
-        if self.mmap_threshold < 0:
-            errors.append("mmap_threshold cannot be negative")
+        if self.mmap_threshold <= 0:
+            errors.append("mmap_threshold must be positive")
         if self.batch_size <= 0:
             errors.append("batch_size must be positive")
         if self.max_retries < 0:
-            errors.append("max_retries cannot be negative")
+            errors.append("max_retries must be non-negative")
         if self.retry_delay < 0:
-            errors.append("retry_delay cannot be negative")
+            errors.append("retry_delay must be non-negative")
         if self.min_workers <= 0:
             errors.append("min_workers must be positive")
-        if self.max_workers and self.max_workers <= 0:
+        if self.max_workers is not None and self.max_workers <= 0:
             errors.append("max_workers must be positive")
         if self.memory_threshold <= 0 or self.memory_threshold > 1:
             errors.append("memory_threshold must be between 0 and 1")
@@ -133,7 +146,7 @@ class HashReportConfig:
             raise ValueError(f"Configuration validation failed: {'; '.join(errors)}")
 
     @classmethod
-    def _find_valid_config(cls, path: Path) -> Optional[Dict[str, Any]]:
+    def _find_valid_config(cls, path: Path) -> Optional[ConfigDict]:
         """Search for a valid config file in this path or its parents."""
         current = path if path.is_absolute() else Path.cwd() / path
         while current != current.parent:
@@ -180,7 +193,7 @@ class HashReportConfig:
             return cls()
 
     @classmethod
-    def _load_toml(cls, config_path: Path) -> Dict[str, Any]:
+    def _load_toml(cls, config_path: Path) -> ConfigDict:
         """Load and parse TOML file with proper error handling.
 
         Args:
@@ -209,7 +222,7 @@ class HashReportConfig:
         return cls.SETTINGS_PATH
 
     @classmethod
-    def load_settings(cls) -> Dict[str, Any]:
+    def load_settings(cls) -> ConfigDict:
         """Load user settings from settings file.
 
         Returns:
@@ -226,11 +239,11 @@ class HashReportConfig:
             logger.warning(f"Error loading settings: {e}")
             return {}
 
-    def get_user_settings(self) -> Dict[str, Any]:
+    def get_user_settings(self) -> ConfigDict:
         """Get user-editable settings as a dictionary."""
         return self.load_settings()
 
-    def get_all_settings(self) -> Dict[str, Any]:
+    def get_all_settings(self) -> ConfigDict:
         """Get complete configuration settings."""
         settings = self.get_user_settings()
         for section in ["email_defaults", "logging", "progress", "reports"]:
@@ -238,7 +251,7 @@ class HashReportConfig:
                 settings[section] = getattr(self, section, {})
         return settings
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> ConfigDict:
         """Convert configuration to dictionary representation.
 
         Returns:
@@ -268,25 +281,23 @@ class HashReportConfig:
         }
 
 
-# Lazy-loaded configuration instance
-loaded_config = None
+# Global configuration instance
+_config_instance: Optional[HashReportConfig] = None
 
 
 def get_config() -> HashReportConfig:
-    """Get the loaded configuration instance.
+    """Get the global configuration instance.
 
     Returns:
-        HashReportConfig instance with current settings
-
-    Note:
-        This function implements lazy loading - the configuration is only
-        loaded once and cached for subsequent calls.
+        HashReportConfig instance
     """
-    global loaded_config
-    if loaded_config is None:
-        try:
-            loaded_config = HashReportConfig.from_file()
-        except Exception as e:
-            logger.error(f"Error loading config, falling back to defaults: {e}")
-            loaded_config = HashReportConfig()
-    return loaded_config
+    global _config_instance
+    if _config_instance is None:
+        _config_instance = HashReportConfig.from_file()
+    return _config_instance
+
+
+def reset_config() -> None:
+    """Reset the global configuration instance."""
+    global _config_instance
+    _config_instance = None
