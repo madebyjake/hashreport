@@ -287,3 +287,113 @@ def test_json_validate_data_mixed_legacy_and_new_fields(tmp_path):
     assert result[0]["file"] == "test1.txt"
     assert result[1]["file"] == "test2.txt"
     assert "File Path" not in result[1]  # Should be converted
+
+
+def test_json_handler_write_empty_data(tmp_path):
+    """Test JSON handler with empty data."""
+    handler = JSONReportHandler(tmp_path / "test.json")
+    handler.write([])
+
+    assert handler.filepath.exists()
+    with open(handler.filepath, "r") as f:
+        data = json.load(f)
+    assert data == []
+
+
+def test_json_handler_write_with_metadata(tmp_path):
+    """Test JSON handler with metadata."""
+    handler = JSONReportHandler(tmp_path / "test.json")
+    test_data = [{"file": "test.txt", "hash": "abc123"}]
+
+    # Test with valid JSON options
+    handler.write(test_data, sort_keys=True)
+
+    assert handler.filepath.exists()
+    with open(handler.filepath, "r") as f:
+        data = json.load(f)
+    assert data == test_data
+
+
+def test_json_handler_write_error_handling(tmp_path):
+    """Test JSON handler write error handling."""
+    handler = JSONReportHandler(tmp_path / "test.json")
+
+    # Create a non-serializable object
+    non_serializable_data = [{"file": "test.txt", "hash": lambda x: x}]
+
+    with pytest.raises(JSONReportError, match="Error processing report data"):
+        handler.write(non_serializable_data)
+
+
+def test_json_handler_read_with_metadata(tmp_path):
+    """Test JSON handler read with metadata."""
+    test_data = [{"file": "test.txt", "hash": "abc123"}]
+
+    with open(tmp_path / "test.json", "w") as f:
+        json.dump(test_data, f)
+
+    handler = JSONReportHandler(tmp_path / "test.json")
+    result = handler.read()
+
+    assert result == test_data
+
+
+def test_json_handler_read_empty_file(tmp_path):
+    """Test JSON handler read with empty file."""
+    with open(tmp_path / "test.json", "w") as f:
+        f.write("")
+
+    handler = JSONReportHandler(tmp_path / "test.json")
+
+    with pytest.raises(JSONReportError, match="Invalid JSON format"):
+        handler.read()
+
+
+def test_json_handler_read_invalid_json(tmp_path):
+    """Test JSON handler read with invalid JSON."""
+    with open(tmp_path / "test.json", "w") as f:
+        f.write("{ invalid json }")
+
+    handler = JSONReportHandler(tmp_path / "test.json")
+
+    with pytest.raises(JSONReportError, match="Invalid JSON format"):
+        handler.read()
+
+
+def test_json_handler_append_single_entry(tmp_path):
+    """Test JSON handler append functionality."""
+    handler = JSONReportHandler(tmp_path / "test.json")
+
+    # Append first entry
+    entry1 = {"file": "test1.txt", "hash": "abc123"}
+    handler.append(entry1)
+
+    # Append second entry
+    entry2 = {"file": "test2.txt", "hash": "def456"}
+    handler.append(entry2)
+
+    # Read and verify
+    result = handler.read()
+    assert len(result) == 2
+    assert result[0] == entry1
+    assert result[1] == entry2
+
+
+def test_json_handler_append_to_existing_file(tmp_path):
+    """Test JSON handler append to existing file."""
+    # Create existing file with data
+    existing_data = [{"file": "existing.txt", "hash": "existing123"}]
+    with open(tmp_path / "test.json", "w") as f:
+        json.dump(existing_data, f)
+
+    handler = JSONReportHandler(tmp_path / "test.json")
+
+    # Append new entry
+    new_entry = {"file": "new.txt", "hash": "new456"}
+    handler.append(new_entry)
+
+    # Read and verify
+    result = handler.read()
+    assert len(result) == 2
+    assert result[0] == existing_data[0]
+    assert result[1] == new_entry
