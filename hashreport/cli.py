@@ -140,7 +140,13 @@ def cli():
     pass
 
 
-@cli.command()
+def validate_email_options(email, smtp_host):
+    """Validate email-related CLI options."""
+    if not all([email, smtp_host]):
+        raise click.BadParameter("Email and SMTP host are required for email testing")
+
+
+@cli.command(name="scan", aliases=["hr-scan"])
 @click.argument("directory", type=click.Path(exists=True, file_okay=False))
 @click.option("-o", "--output", type=click.Path(), help="Output directory path")
 @click.option(
@@ -253,10 +259,7 @@ def scan(
 
         # Handle email test mode
         if test_email:
-            if not all([email, smtp_host]):
-                raise click.BadParameter(
-                    "Email and SMTP host are required for email testing"
-                )
+            validate_email_options(email, smtp_host)
             # Test email configuration without processing files
             return
 
