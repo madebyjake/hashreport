@@ -6,12 +6,13 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Optional
+from typing import Any, Callable, Iterable, List, Optional
 
 import psutil
 
 from hashreport.config import get_config
 from hashreport.utils.progress_bar import ProgressBar
+from hashreport.utils.types import PerformanceSummary
 
 logger = logging.getLogger(__name__)
 config = get_config()
@@ -33,17 +34,17 @@ class PerformanceMetrics:
     start_time: Optional[float] = None
     end_time: Optional[float] = None
 
-    def start_timing(self):
+    def start_timing(self) -> None:
         """Start performance timing."""
         self.start_time = time.time()
 
-    def end_timing(self):
+    def end_timing(self) -> None:
         """End performance timing."""
         self.end_time = time.time()
         if self.start_time:
             self.total_processing_time = self.end_time - self.start_time
 
-    def update_average_processing_time(self, item_time: float):
+    def update_average_processing_time(self, item_time: float) -> None:
         """Update average processing time."""
         if self.total_items_processed > 0:
             self.average_processing_time = (
@@ -53,7 +54,7 @@ class PerformanceMetrics:
         else:
             self.average_processing_time = item_time
 
-    def get_summary(self) -> Dict[str, Any]:
+    def get_summary(self) -> PerformanceSummary:
         """Get performance summary."""
         return {
             "total_items": self.total_items_processed,
@@ -101,16 +102,16 @@ class ResourceMonitor:
         self._consecutive_increases = 0
         self._max_consecutive_adjustments = 3
 
-    def start(self):
+    def start(self) -> None:
         """Start resource monitoring."""
         self._monitor_thread.start()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop resource monitoring."""
         self._stop_event.set()
         self._monitor_thread.join()
 
-    def _monitor_resources(self):
+    def _monitor_resources(self) -> None:
         """Monitor system resources and adjust thread count with adaptive logic."""
         while not self._stop_event.is_set():
             try:
@@ -219,7 +220,7 @@ class ThreadPoolManager:
         self.current_workers = self.initial_workers
         self.max_workers = config.max_workers
         self.min_workers = config.min_workers
-        self.executor = None
+        self.executor: Optional[ThreadPoolExecutor] = None
         self._shutdown_event = threading.Event()
         self.progress_bar = progress_bar
         self.resource_monitor = ResourceMonitor(self)
@@ -229,7 +230,7 @@ class ThreadPoolManager:
         self._queue_size = 0
         self._max_queue_size = 0
 
-    def __enter__(self):
+    def __enter__(self) -> "ThreadPoolManager":
         """Initialize thread pool on context entry."""
         self.executor = ThreadPoolExecutor(max_workers=self.initial_workers)
         self._shutdown_event.clear()
@@ -237,7 +238,7 @@ class ThreadPoolManager:
         self.metrics.start_timing()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Clean up resources on context exit."""
         self._shutdown_event.set()
         self.resource_monitor.stop()
@@ -248,7 +249,7 @@ class ThreadPoolManager:
             self.executor.shutdown(wait=True)
             self.executor = None
 
-    def adjust_workers(self, new_count: int):
+    def adjust_workers(self, new_count: int) -> None:
         """Adjust the number of worker threads."""
         with self._worker_lock:
             if self.min_workers <= new_count <= self.max_workers:
@@ -258,11 +259,11 @@ class ThreadPoolManager:
                     self.executor._max_workers = new_count
                 logger.debug(f"Adjusted workers from {old_count} to {new_count}")
 
-    def reduce_workers(self):
+    def reduce_workers(self) -> None:
         """Reduce the number of worker threads."""
         self.adjust_workers(max(self.min_workers, self.current_workers - 1))
 
-    def increase_workers(self):
+    def increase_workers(self) -> None:
         """Increase the number of worker threads."""
         self.adjust_workers(min(self.max_workers, self.current_workers + 1))
 
@@ -344,7 +345,7 @@ class ThreadPoolManager:
         self,
         items: Iterable[Any],
         process_func: Callable,
-        **kwargs,
+        **kwargs: Any,
     ) -> List[Any]:
         """Process items in batches with adaptive resource monitoring."""
         if self._shutdown_event.is_set() or not self.executor:
@@ -371,7 +372,7 @@ class ThreadPoolManager:
 
         return all_results
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> PerformanceSummary:
         """Get comprehensive performance summary."""
         summary = self.metrics.get_summary()
         summary.update(
