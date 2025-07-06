@@ -229,6 +229,7 @@ class ThreadPoolManager:
         self._backpressure_threshold = 0.8  # Queue utilization threshold
         self._queue_size = 0
         self._max_queue_size = 0
+        self._submitted_futures: List[Any] = []
 
     def __enter__(self) -> "ThreadPoolManager":
         """Initialize thread pool on context entry."""
@@ -248,6 +249,8 @@ class ThreadPoolManager:
         if self.executor:
             self.executor.shutdown(wait=True)
             self.executor = None
+        # Clear futures tracking
+        self._submitted_futures.clear()
 
     def adjust_workers(self, new_count: int) -> None:
         """Adjust the number of worker threads."""
@@ -255,8 +258,6 @@ class ThreadPoolManager:
             if self.min_workers <= new_count <= self.max_workers:
                 old_count = self.current_workers
                 self.current_workers = new_count
-                if self.executor:
-                    self.executor._max_workers = new_count
                 logger.debug(f"Adjusted workers from {old_count} to {new_count}")
 
     def reduce_workers(self) -> None:
@@ -272,15 +273,21 @@ class ThreadPoolManager:
         if not self.executor:
             return False
 
-        # Get current queue size
-        queue_size = self.executor._work_queue.qsize()
-        self._queue_size = queue_size
-        self._max_queue_size = max(self._max_queue_size, queue_size)
+        try:
+            # Count pending futures (submitted but not completed)
+            pending_futures = len([f for f in self._submitted_futures if not f.done()])
+            self._queue_size = pending_futures
+            self._max_queue_size = max(self._max_queue_size, pending_futures)
 
-        # Apply backpressure if queue is getting full
-        if queue_size > self.current_workers * self._backpressure_threshold:
-            logger.debug(f"Backpressure applied: queue size {queue_size}")
-            return True
+            # Apply backpressure if too many pending tasks
+            if pending_futures > self.current_workers * self._backpressure_threshold:
+                logger.debug(f"Backpressure applied: pending futures {pending_futures}")
+                return True
+        except Exception as e:
+            logger.debug(f"Could not check backpressure: {e}")
+            # Fallback: assume no backpressure needed
+            self._queue_size = 0
+
         return False
 
     def process_batch(
@@ -304,6 +311,7 @@ class ThreadPoolManager:
                 break
             future = self.executor.submit(process_func, item)
             futures.append((future, item))
+            self._submitted_futures.append(future)
 
         for future, item in futures:
             if self._shutdown_event.is_set():
@@ -328,6 +336,10 @@ class ThreadPoolManager:
                 self.metrics.failed_items += 1
                 if self.progress_bar:
                     self.progress_bar.update(1)
+            finally:
+                # Remove completed futures from tracking list
+                if future in self._submitted_futures:
+                    self._submitted_futures.remove(future)
 
         # Handle retries if needed
         if retry_items and retries < config.max_retries:
