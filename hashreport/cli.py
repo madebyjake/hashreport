@@ -456,7 +456,8 @@ def show():
     """
     try:
         console = Console()
-        config_data = get_config().get_all_settings()
+        config = get_config()
+        config_data = config.to_dict()
         console.print("\n[bold]Current Configuration[/bold]\n")
         print_section(console, config_data)
     except (HashReportError, click.BadParameter) as e:
