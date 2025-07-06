@@ -12,6 +12,8 @@
 
 **hashreport** is a command-line tool that generates comprehensive hash reports for files within a directory. The reports can be output in CSV or JSON formats and include detailed information such as the file name, path, size, hash algorithm, hash value, and last modified date. Designed for speed and efficiency, **hashreport** can handle large volumes of files and offers filtering options to include or exclude files based on size, type, or name patterns.
 
+> **Beta Release**: This project is currently in beta. While feature-complete and well-tested, please report any issues you encounter.
+
 ## Features
 
 ### Core Features

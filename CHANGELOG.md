@@ -1,3 +1,31 @@
+## v1.0.0 (2025-07-06)
+
+### Feat
+
+- enhance report viewing and comparison
+- add size string parsing utility
+- add type definitions and validation utilities
+- add performance metrics and adaptive scaling
+- add email options validation
+
+### Fix
+
+- update config retrieval in CLI
+- use default email config if empty
+- improve hostname validation regex
+- improve error handling and logging
+
+### Refactor
+
+- update imports for type definitions
+- improve type hints in thread pool
+- update JSON report type hints
+- enhance CSV report type hints
+- update type hints and validation
+- improve config type hints and validation
+- remove alias from scan command
+- enhance config validation and defaults
+
 ## v0.9.0 (2025-06-24)
 
 ### Feat

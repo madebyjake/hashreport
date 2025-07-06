@@ -13,6 +13,7 @@ from hashreport.reports.base import BaseReportHandler
 from hashreport.reports.csv_handler import CSVReportHandler
 from hashreport.reports.json_handler import JSONReportHandler
 from hashreport.utils.conversions import format_size
+from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.hasher import calculate_hash
 from hashreport.utils.progress_bar import ProgressBar
 from hashreport.utils.thread_pool import ThreadPoolManager
@@ -20,6 +21,54 @@ from hashreport.utils.thread_pool import ThreadPoolManager
 logger = logging.getLogger(__name__)
 
 config = get_config()
+
+
+def parse_size_string(size_str: str) -> int:
+    """Convert size string to bytes.
+
+    Args:
+        size_str: Size string with unit (e.g., "1MB", "500KB")
+
+    Returns:
+        Size in bytes
+
+    Raises:
+        ValueError: If size format is invalid
+    """
+    if not size_str:
+        return 0
+
+    units = {
+        "B": 1,
+        "KB": 1024,
+        "MB": 1024 * 1024,
+        "GB": 1024 * 1024 * 1024,
+    }
+
+    size = size_str.strip().upper()
+    # Sort units by length (longest first) to avoid partial matches
+    sorted_units = sorted(units.keys(), key=len, reverse=True)
+
+    # Find matching unit
+    matched_unit = None
+    for unit in sorted_units:
+        if size.endswith(unit):
+            matched_unit = unit
+            break
+
+    if not matched_unit:
+        raise ValueError(
+            f"Size must include unit. Valid units are: {', '.join(sorted_units)}"
+        )
+
+    # Extract numeric part by removing the unit
+    number_str = size[: -len(matched_unit)]
+    if not number_str:
+        raise ValueError("No numeric value provided")
+
+    # Convert to bytes
+    number = float(number_str)
+    return int(number * units[matched_unit])
 
 
 def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
@@ -33,11 +82,13 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
     """
     handlers = []
     for filename in filenames:
-        # Use strict JSON checking
-        if filename.lower().endswith(".json"):
-            handlers.append(JSONReportHandler(filename))
+        path = Path(filename)
+        if path.suffix.lower() == ".csv":
+            handlers.append(CSVReportHandler(path))
+        elif path.suffix.lower() == ".json":
+            handlers.append(JSONReportHandler(path))
         else:
-            handlers.append(CSVReportHandler(filename))
+            raise HashReportError(f"Unsupported file format: {path.suffix}")
     return handlers
 
 
@@ -86,10 +137,16 @@ def should_process_file(
     # Size checks
     try:
         size = os.path.getsize(file_path)
-        if min_size and size < min_size:
-            return False
-        if max_size and size > max_size:
-            return False
+
+        # Convert size strings to bytes for comparison
+        if min_size:
+            min_size_bytes = parse_size_string(min_size)
+            if size < min_size_bytes:
+                return False
+        if max_size:
+            max_size_bytes = parse_size_string(max_size)
+            if size > max_size_bytes:
+                return False
     except OSError:
         return False
 
