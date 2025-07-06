@@ -131,6 +131,8 @@ class HashReportConfig:
             errors.append("min_workers must be positive")
         if self.max_workers is not None and self.max_workers <= 0:
             errors.append("max_workers must be positive")
+        if self.max_workers is not None and self.min_workers > self.max_workers:
+            errors.append("min_workers cannot exceed max_workers")
         if self.memory_threshold <= 0 or self.memory_threshold > 1:
             errors.append("memory_threshold must be between 0 and 1")
 
