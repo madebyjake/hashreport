@@ -63,7 +63,35 @@ class ReportViewer:
 
         return table
 
-    def compare_reports(self, report1: str, report2: str) -> List[FileChange]:
+    def view_report(self, report: str, filter_text: Optional[str] = None) -> None:
+        """View report contents with optional filtering.
+
+        Args:
+            report: Path to the report file
+            filter_text: Optional filter pattern to apply
+        """
+        self.display_report(report, filter_text)
+
+    def compare_reports(
+        self, report1: str, report2: str, output: Optional[str] = None
+    ) -> None:
+        """Compare two reports and show differences.
+
+        Args:
+            report1: Path to the first report file
+            report2: Path to the second report file
+            output: Optional output directory for the comparison report
+        """
+        changes = self._compare_reports(report1, report2)
+
+        # Display the comparison
+        self.display_comparison(changes)
+
+        # Save comparison report if output directory is provided
+        if output:
+            self.save_comparison(changes, output, report1, report2)
+
+    def _compare_reports(self, report1: str, report2: str) -> List[FileChange]:
         """Compare two reports and identify differences."""
         old_data = self._get_handler(report1).read()
         new_data = self._get_handler(report2).read()

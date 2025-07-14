@@ -1,9 +1,15 @@
 """Base classes for report handlers."""
 
 from pathlib import Path
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar
 
 from hashreport.utils.exceptions import ReportError
+from hashreport.utils.type_defs import (
+    FilePath,
+    ReportData,
+    ReportEntry,
+    validate_file_path,
+)
 
 
 class BaseReportHandler:
@@ -11,13 +17,13 @@ class BaseReportHandler:
 
     REQUIRED_METHODS: ClassVar[set] = {"read", "write", "append"}
 
-    def __init__(self, filepath: Union[str, Path]):
+    def __init__(self, filepath: FilePath):
         """Initialize the report handler.
 
         Args:
             filepath: Path to the report file
         """
-        self.filepath = Path(filepath)
+        self.filepath = Path(validate_file_path(filepath))
         self._validate_interface()
 
     def _validate_interface(self) -> None:
@@ -36,7 +42,7 @@ class BaseReportHandler:
                 f"Handler missing required methods: {', '.join(missing)}"
             )
 
-    def read(self) -> List[Dict[str, Any]]:
+    def read(self) -> ReportData:
         """Read the report file.
 
         Returns:
@@ -47,7 +53,7 @@ class BaseReportHandler:
         """
         raise NotImplementedError("Subclasses must override 'read'.")
 
-    def write(self, data: List[Dict[str, Any]], **kwargs: Any) -> None:
+    def write(self, data: ReportData, **kwargs: Any) -> None:
         """Write data to the report file.
 
         Args:
@@ -59,7 +65,7 @@ class BaseReportHandler:
         """
         raise NotImplementedError("Subclasses must override 'write'.")
 
-    def append(self, entry: Dict[str, Any]) -> None:
+    def append(self, entry: ReportEntry) -> None:
         """Append a single entry to the report.
 
         Args:
