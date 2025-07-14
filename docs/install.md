@@ -12,6 +12,16 @@ You can install **hashreport** using `pip` from the Python Package Index ([PyPI]
 pip install hashreport
 ```
 
+You can upgrade **hashreport** using `pip` with the following commands:
+
+```bash
+# Upgrade to the latest version
+pip install --upgrade hashreport
+
+# Or upgrade to a specific version
+pip install --upgrade hashreport==0.9.0
+```
+
 ### **Install from Source**
 
 #### 1. **Download the Repository**
@@ -44,22 +54,6 @@ You can now run the application using Poetry:
 
 ```bash
 poetry run hashreport --version
-```
-
-## **Upgrading with Pip**
-
-### **Latest Version**
-
-```bash
-# Upgrade to latest version
-pip install --upgrade hashreport
-```
-
-### **Specific Version**
-
-```bash
-# Upgrade to specific version
-pip install --upgrade hashreport==1.0.0
 ```
 
 ## **Verification**

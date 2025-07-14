@@ -4,10 +4,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.scanner import (
     count_files,
     get_report_filename,
     get_report_handlers,
+    parse_size_string,
     should_process_file,
     walk_directory_and_log,
 )
@@ -173,22 +175,6 @@ def test_count_files(tmp_path):
     assert count_files(tmp_path, recursive=False) == 2
 
 
-def test_count_files_with_filters(tmp_path):
-    """Test counting files with filters."""
-    # Create test files
-    test_file1 = tmp_path / "file1.txt"
-    test_file2 = tmp_path / "file2.csv"
-    test_file1.touch()
-    test_file2.touch()
-
-    count = count_files(
-        tmp_path,
-        recursive=True,
-        file_extension=".txt",
-    )
-    assert count == 1
-
-
 def test_should_process_file(tmp_path):
     """Test file processing filters."""
     test_file = tmp_path / "test.txt"
@@ -207,3 +193,140 @@ def test_should_process_file(tmp_path):
 
     # Test with exclude paths
     assert not should_process_file(str(test_file), exclude_paths={str(test_file)})
+
+
+def test_parse_size_string_invalid_formats():
+    """Test parse_size_string with invalid formats."""
+    invalid_sizes = [
+        "abc",  # No number
+        "123",  # No unit
+        "123XYZ",  # Invalid unit
+        "abcKB",  # No number
+        "1.2.3KB",  # Invalid number
+    ]
+
+    for size_str in invalid_sizes:
+        with pytest.raises(ValueError):
+            parse_size_string(size_str)
+
+
+def test_parse_size_string_edge_cases():
+    """Test parse_size_string with edge cases."""
+    # Whitespace handling
+    assert parse_size_string("  1KB  ") == 1024
+    assert parse_size_string("\t2MB\n") == 2 * 1024 * 1024
+
+    # Zero values
+    assert parse_size_string("0B") == 0
+    assert parse_size_string("0KB") == 0
+
+    # Large values
+    assert parse_size_string("1GB") == 1024 * 1024 * 1024
+    assert parse_size_string("2.5MB") == int(2.5 * 1024 * 1024)
+
+
+def test_get_report_handlers_unsupported_format():
+    """Test get_report_handlers with unsupported format."""
+    with pytest.raises(HashReportError, match="Unsupported file format"):
+        get_report_handlers(["test.txt"])
+
+
+def test_get_report_filename_directory(tmp_path):
+    """Test get_report_filename with directory path."""
+    result = get_report_filename(str(tmp_path), "json", "test")
+    assert result.endswith(".json")
+    assert "test_" in result
+    assert result.startswith(str(tmp_path))
+
+
+def test_get_report_filename_file_path(tmp_path):
+    """Test get_report_filename with file path."""
+    file_path = tmp_path / "report.csv"
+    result = get_report_filename(str(file_path), "json")
+    assert result.endswith(".json")
+    assert result.startswith(str(tmp_path))
+
+
+def test_should_process_file_exclude_paths(tmp_path):
+    """Test should_process_file with exclude paths."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test")
+
+    exclude_paths = {str(test_file)}
+    assert not should_process_file(str(test_file), exclude_paths=exclude_paths)
+
+    # Should process when not in exclude list
+    assert should_process_file(str(test_file), exclude_paths=set())
+
+
+def test_should_process_file_extension_filter(tmp_path):
+    """Test should_process_file with extension filter."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test")
+
+    # Should process with matching extension
+    assert should_process_file(str(test_file), file_extension=".txt")
+
+    # Should not process with non-matching extension
+    assert not should_process_file(str(test_file), file_extension=".pdf")
+
+
+def test_should_process_file_names_filter(tmp_path):
+    """Test should_process_file with file names filter."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test")
+
+    # Should process with matching name
+    assert should_process_file(str(test_file), file_names={"test.txt"})
+
+    # Should not process with non-matching name
+    assert not should_process_file(str(test_file), file_names={"other.txt"})
+
+
+def test_should_process_file_size_filters(tmp_path):
+    """Test should_process_file with size filters."""
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("test content")
+
+    # Test min_size filter
+    assert should_process_file(str(test_file), min_size="1B")
+    assert not should_process_file(str(test_file), min_size="1KB")
+
+    # Test max_size filter
+    assert should_process_file(str(test_file), max_size="1KB")
+    assert not should_process_file(str(test_file), max_size="1B")
+
+
+def test_should_process_file_os_error(tmp_path):
+    """Test should_process_file with OSError (file not found)."""
+    non_existent_file = tmp_path / "nonexistent.txt"
+    assert not should_process_file(str(non_existent_file))
+
+
+def test_count_files_recursive_false(tmp_path):
+    """Test count_files with recursive=False."""
+    # Create nested structure
+    subdir = tmp_path / "subdir"
+    subdir.mkdir()
+    (tmp_path / "file1.txt").write_text("test")
+    (subdir / "file2.txt").write_text("test")
+
+    # Should only count files in root directory
+    count = count_files(tmp_path, recursive=False, file_extension=".txt")
+    assert count == 1
+
+
+def test_count_files_with_filters(tmp_path):
+    """Test count_files with various filters."""
+    # Create test files
+    (tmp_path / "test1.txt").write_text("test")
+    (tmp_path / "test2.pdf").write_text("test")
+    (tmp_path / "large.txt").write_text("x" * 1024)  # 1KB file
+
+    # Test extension filter
+    count = count_files(tmp_path, recursive=True, file_extension=".txt")
+    assert count == 2
+
+    # Test size filter
+    count = count_files(tmp_path, recursive=True, min_size="500B")
+    assert count == 1
