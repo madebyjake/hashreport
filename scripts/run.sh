@@ -19,6 +19,7 @@ show_help() {
     echo "  security          Check for security vulnerabilities"
     echo "  lint              Lint the code"
     echo "  format            Format the code"
+    echo "  mkdocs            Manage MkDocs documentation site"
     echo "  install           Run the install script"
     echo "  setup-hooks       Set up pre-commit hooks"
     echo "  pre-commit        Run pre-commit hooks"
@@ -37,6 +38,9 @@ run_script() {
             ;;
         format)
             ./scripts/actions/format.sh
+            ;;
+        mkdocs)
+            ./scripts/actions/mkdocs.sh "${@:2}"
             ;;
         install)
             ./scripts/install.sh
@@ -61,18 +65,20 @@ interactive_mode() {
     echo "2: security"
     echo "3: lint"
     echo "4: format"
-    echo "5: install"
-    echo "6: setup-hooks"
-    echo "7: pre-commit"
+    echo "5: mkdocs"
+    echo "6: install"
+    echo "7: setup-hooks"
+    echo "8: pre-commit"
     read -r -p "Enter the number of your choice: " choice
     case $choice in
          1) run_script test ;;
          2) run_script security ;;
          3) run_script lint ;;
          4) run_script format ;;
-         5) run_script install ;;
-         6) run_script setup-hooks ;;
-         7) run_script pre-commit ;;
+         5) run_script mkdocs ;;
+         6) run_script install ;;
+         7) run_script setup-hooks ;;
+         8) run_script pre-commit ;;
          *) echo "Invalid choice" ;;
     esac
 }
