@@ -75,7 +75,7 @@ interactive_mode() {
          2) run_script security ;;
          3) run_script lint ;;
          4) run_script format ;;
-         5) run_script mkdocs ;;
+         5) run_script mkdocs help ;;
          6) run_script install ;;
          7) run_script setup-hooks ;;
          8) run_script pre-commit ;;
