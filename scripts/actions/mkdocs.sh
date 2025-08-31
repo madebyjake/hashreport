@@ -5,11 +5,46 @@ set -euo pipefail
 # Change to the project's root directory
 cd "$(dirname "$0")/../.."
 
-# Source common functions
-source ./scripts/actions/common.sh
+# No need to source common.sh for this script
 
-# Check if mkdocs is installed
-check_dependency "mkdocs"
+# Check if mkdocs is available (either globally or through poetry)
+check_mkdocs() {
+    if command -v "mkdocs" >/dev/null 2>&1; then
+        MKDOCS_CMD="mkdocs"
+        return 0
+    elif command -v "poetry" >/dev/null 2>&1 && poetry show mkdocs >/dev/null 2>&1; then
+        MKDOCS_CMD="poetry run mkdocs"
+        return 0
+    else
+        echo "MkDocs is not available. Installing..."
+        echo "1. Install globally: pip install mkdocs mkdocs-material"
+        echo "2. Install via Poetry: poetry add mkdocs mkdocs-material"
+        echo "3. Run install script: ./scripts/install.sh"
+        echo
+        read -r -p "Choose option (1-3) or press Enter to exit: " choice
+        case $choice in
+            1)
+                pip install mkdocs mkdocs-material
+                MKDOCS_CMD="mkdocs"
+                ;;
+            2)
+                poetry add mkdocs mkdocs-material
+                MKDOCS_CMD="poetry run mkdocs"
+                ;;
+            3)
+                ./scripts/install.sh
+                MKDOCS_CMD="mkdocs"
+                ;;
+            *)
+                echo "Exiting..."
+                exit 1
+                ;;
+        esac
+    fi
+}
+
+# Check for mkdocs availability
+check_mkdocs
 
 show_help() {
     echo "Usage: $0 [command]"
@@ -34,16 +69,16 @@ run_mkdocs() {
             echo "Site will be available at: http://127.0.0.1:8000"
             echo "Press Ctrl+C to stop the server"
             echo
-            mkdocs serve
+            $MKDOCS_CMD serve
             ;;
         build)
             echo "Building static site..."
-            mkdocs build
+            $MKDOCS_CMD build
             echo "Site built successfully in 'site/' directory"
             ;;
         deploy)
             echo "Deploying to GitHub Pages..."
-            mkdocs gh-deploy
+            $MKDOCS_CMD gh-deploy
             echo "Deployment completed successfully"
             ;;
         clean)
