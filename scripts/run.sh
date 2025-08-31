@@ -96,5 +96,5 @@ fi
 case $1 in
     -h) show_help; exit 0 ;;
     -i) interactive_mode; exit 0 ;;
-    *) run_script $1; exit 0 ;;
+    *) run_script "$@"; exit 0 ;;
 esac
