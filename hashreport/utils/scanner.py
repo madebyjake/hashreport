@@ -14,6 +14,7 @@ from hashreport.reports.csv_handler import CSVReportHandler
 from hashreport.reports.json_handler import JSONReportHandler
 from hashreport.utils.conversions import format_size
 from hashreport.utils.exceptions import HashReportError
+from hashreport.utils.filters import should_process_file as filter_should_process_file
 from hashreport.utils.hasher import calculate_hash
 from hashreport.utils.progress_bar import ProgressBar
 from hashreport.utils.thread_pool import ThreadPoolManager
@@ -153,15 +154,71 @@ def should_process_file(
     return True
 
 
+def _convert_scanner_params_to_filter_params(
+    exclude_paths: Optional[Set[str]] = None,
+    file_extension: Optional[str] = None,
+    file_names: Optional[Set[str]] = None,
+    min_size: Optional[str] = None,
+    max_size: Optional[str] = None,
+    include: Optional[tuple] = None,
+    exclude: Optional[tuple] = None,
+    regex: bool = False,
+) -> dict:
+    """Convert scanner parameters to filter parameters."""
+    # Convert size strings to bytes
+    min_size_bytes = None
+    max_size_bytes = None
+    if min_size:
+        min_size_bytes = parse_size_string(min_size)
+    if max_size:
+        max_size_bytes = parse_size_string(max_size)
+
+    # Convert include/exclude tuples to lists
+    include_patterns = list(include) if include else None
+    exclude_patterns = list(exclude) if exclude else None
+
+    # Add file extension to include patterns if specified
+    if file_extension:
+        if include_patterns is None:
+            include_patterns = []
+        include_patterns.append(f"*{file_extension}")
+
+    # Add specific file names to include patterns if specified
+    if file_names:
+        if include_patterns is None:
+            include_patterns = []
+        include_patterns.extend(file_names)
+
+    # Handle exclude_paths by adding them to exclude_patterns
+    if exclude_paths:
+        if exclude_patterns is None:
+            exclude_patterns = []
+        # Convert full paths to filename patterns for exclusion
+        for path in exclude_paths:
+            filename = os.path.basename(path)
+            exclude_patterns.append(filename)
+
+    return {
+        "include_patterns": include_patterns,
+        "exclude_patterns": exclude_patterns,
+        "use_regex": regex,
+        "min_size": min_size_bytes,
+        "max_size": max_size_bytes,
+    }
+
+
 def count_files(directory: Path, recursive: bool, **filter_kwargs) -> int:
     """Count files matching filter criteria."""
+    # Convert old-style parameters to new filter parameters
+    converted_params = _convert_scanner_params_to_filter_params(**filter_kwargs)
+
     total = 0
     for root, dirs, files in os.walk(directory):
         if not recursive:
             dirs[:] = []
         for file_name in files:
             file_path = os.path.join(root, file_name)
-            if should_process_file(file_path, **filter_kwargs):
+            if filter_should_process_file(file_path, **converted_params):
                 total += 1
     return total
 
@@ -200,16 +257,27 @@ def walk_directory_and_log(
         )
         final_results: List[Dict[str, str]] = []
 
-        # Count only files that match filters
-        total_files = count_files(
-            directory,
-            recursive,
+        # Convert scanner parameters to filter parameters
+        filter_params = _convert_scanner_params_to_filter_params(
             exclude_paths=exclude_paths,
             file_extension=file_extension,
             file_names=file_names,
             min_size=min_size,
             max_size=max_size,
+            include=include,
+            exclude=exclude,
+            regex=regex,
         )
+
+        # Count only files that match filters using the converted parameters
+        total_files = 0
+        for root, dirs, files in os.walk(directory):
+            if not recursive:
+                dirs[:] = []
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                if filter_should_process_file(file_path, **filter_params):
+                    total_files += 1
         progress_bar = ProgressBar(
             total=total_files, show_file_names=config.progress["show_file_names"]
         )
@@ -223,14 +291,7 @@ def walk_directory_and_log(
                     files_to_process = [
                         f
                         for f in specific_files
-                        if should_process_file(
-                            f,
-                            exclude_paths=exclude_paths,
-                            file_extension=file_extension,
-                            file_names=file_names,
-                            min_size=min_size,
-                            max_size=max_size,
-                        )
+                        if filter_should_process_file(f, **filter_params)
                     ]
                 else:
                     files_to_process = [
@@ -238,13 +299,8 @@ def walk_directory_and_log(
                         for root, dirs, files in os.walk(directory)
                         if recursive or not dirs.clear()
                         for file_name in files
-                        if should_process_file(
-                            os.path.join(root, file_name),
-                            exclude_paths=exclude_paths,
-                            file_extension=file_extension,
-                            file_names=file_names,
-                            min_size=min_size,
-                            max_size=max_size,
+                        if filter_should_process_file(
+                            os.path.join(root, file_name), **filter_params
                         )
                     ][:limit]
 
