@@ -116,43 +116,6 @@ def get_report_filename(
     return str(path.with_suffix(ext))
 
 
-def should_process_file(
-    file_path: str,
-    exclude_paths: Optional[Set[str]] = None,
-    file_extension: Optional[str] = None,
-    file_names: Optional[Set[str]] = None,
-    min_size: Optional[str] = None,
-    max_size: Optional[str] = None,
-) -> bool:
-    """Check if a file should be processed based on filters."""
-    if exclude_paths and file_path in exclude_paths:
-        return False
-
-    file_name = os.path.basename(file_path)
-    if file_extension and not file_name.endswith(file_extension):
-        return False
-    if file_names and file_name not in file_names:
-        return False
-
-    # Size checks
-    try:
-        size = os.path.getsize(file_path)
-
-        # Convert size strings to bytes for comparison
-        if min_size:
-            min_size_bytes = parse_size_string(min_size)
-            if size < min_size_bytes:
-                return False
-        if max_size:
-            max_size_bytes = parse_size_string(max_size)
-            if size > max_size_bytes:
-                return False
-    except OSError:
-        return False
-
-    return True
-
-
 def _convert_scanner_params_to_filter_params(
     exclude_paths: Optional[Set[str]] = None,
     file_extension: Optional[str] = None,
