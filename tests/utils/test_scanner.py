@@ -80,7 +80,8 @@ def test_walk_directory_and_log(
 @patch("hashreport.utils.scanner.calculate_hash")
 def test_walk_directory_with_filters(mock_hash, tmp_path):
     """Test directory walking with filters."""
-    mock_hash.return_value = ("test.txt", "abc123", "2024-01-01 00:00:00")
+    test_file_path = str(tmp_path / "test.txt")
+    mock_hash.return_value = (test_file_path, "abc123", "2024-01-01 00:00:00")
 
     # Create test files
     (tmp_path / "test.txt").touch()
