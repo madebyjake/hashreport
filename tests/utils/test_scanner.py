@@ -10,7 +10,6 @@ from hashreport.utils.scanner import (
     get_report_filename,
     get_report_handlers,
     parse_size_string,
-    should_process_file,
     walk_directory_and_log,
 )
 
@@ -80,7 +79,8 @@ def test_walk_directory_and_log(
 @patch("hashreport.utils.scanner.calculate_hash")
 def test_walk_directory_with_filters(mock_hash, tmp_path):
     """Test directory walking with filters."""
-    mock_hash.return_value = ("test.txt", "abc123", "2024-01-01 00:00:00")
+    test_file_path = str(tmp_path / "test.txt")
+    mock_hash.return_value = (test_file_path, "abc123", "2024-01-01 00:00:00")
 
     # Create test files
     (tmp_path / "test.txt").touch()
@@ -175,26 +175,6 @@ def test_count_files(tmp_path):
     assert count_files(tmp_path, recursive=False) == 2
 
 
-def test_should_process_file(tmp_path):
-    """Test file processing filters."""
-    test_file = tmp_path / "test.txt"
-    test_file.touch()
-
-    # Test basic file
-    assert should_process_file(str(test_file))
-
-    # Test with extension filter
-    assert should_process_file(str(test_file), file_extension=".txt")
-    assert not should_process_file(str(test_file), file_extension=".csv")
-
-    # Test with name filter
-    assert should_process_file(str(test_file), file_names={"test.txt"})
-    assert not should_process_file(str(test_file), file_names={"other.txt"})
-
-    # Test with exclude paths
-    assert not should_process_file(str(test_file), exclude_paths={str(test_file)})
-
-
 def test_parse_size_string_invalid_formats():
     """Test parse_size_string with invalid formats."""
     invalid_sizes = [
@@ -245,62 +225,6 @@ def test_get_report_filename_file_path(tmp_path):
     result = get_report_filename(str(file_path), "json")
     assert result.endswith(".json")
     assert result.startswith(str(tmp_path))
-
-
-def test_should_process_file_exclude_paths(tmp_path):
-    """Test should_process_file with exclude paths."""
-    test_file = tmp_path / "test.txt"
-    test_file.write_text("test")
-
-    exclude_paths = {str(test_file)}
-    assert not should_process_file(str(test_file), exclude_paths=exclude_paths)
-
-    # Should process when not in exclude list
-    assert should_process_file(str(test_file), exclude_paths=set())
-
-
-def test_should_process_file_extension_filter(tmp_path):
-    """Test should_process_file with extension filter."""
-    test_file = tmp_path / "test.txt"
-    test_file.write_text("test")
-
-    # Should process with matching extension
-    assert should_process_file(str(test_file), file_extension=".txt")
-
-    # Should not process with non-matching extension
-    assert not should_process_file(str(test_file), file_extension=".pdf")
-
-
-def test_should_process_file_names_filter(tmp_path):
-    """Test should_process_file with file names filter."""
-    test_file = tmp_path / "test.txt"
-    test_file.write_text("test")
-
-    # Should process with matching name
-    assert should_process_file(str(test_file), file_names={"test.txt"})
-
-    # Should not process with non-matching name
-    assert not should_process_file(str(test_file), file_names={"other.txt"})
-
-
-def test_should_process_file_size_filters(tmp_path):
-    """Test should_process_file with size filters."""
-    test_file = tmp_path / "test.txt"
-    test_file.write_text("test content")
-
-    # Test min_size filter
-    assert should_process_file(str(test_file), min_size="1B")
-    assert not should_process_file(str(test_file), min_size="1KB")
-
-    # Test max_size filter
-    assert should_process_file(str(test_file), max_size="1KB")
-    assert not should_process_file(str(test_file), max_size="1B")
-
-
-def test_should_process_file_os_error(tmp_path):
-    """Test should_process_file with OSError (file not found)."""
-    non_existent_file = tmp_path / "nonexistent.txt"
-    assert not should_process_file(str(non_existent_file))
 
 
 def test_count_files_recursive_false(tmp_path):
