@@ -30,7 +30,7 @@ See the [Workflow Overview](workflow.md) for a complete guide to using hashrepor
 ## **Quick Links**
 
 - [Installation](install.md) - Get started with hashreport
-- [Upgrading](upgrading.md) - Update to the latest version
+- [Upgrading](upgrade.md) - Update to the latest version
 - [Basic Usage](basic.md) - Basic usage examples
 - [Advanced Usage](advanced.md) - Advanced features and options
 - [Command Reference](commands.md) - Detailed command documentation

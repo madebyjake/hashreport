@@ -97,6 +97,18 @@ class HashReportConfig:
         """Validate configuration settings."""
         errors = []
 
+        # Collect all validation errors
+        errors.extend(self._validate_formats())
+        errors.extend(self._validate_numeric_ranges())
+        errors.extend(self._validate_email_config())
+
+        if errors:
+            raise ValueError(f"Configuration validation failed: {'; '.join(errors)}")
+
+    def _validate_formats(self) -> list[str]:
+        """Validate format-related configuration settings."""
+        errors = []
+
         # Validate hash algorithm
         try:
             validate_hash_algorithm(self.default_algorithm)
@@ -116,36 +128,55 @@ class HashReportConfig:
             except ValueError as e:
                 errors.append(f"Unsupported format '{fmt}': {e}")
 
-        # Validate numeric ranges
+        return errors
+
+    def _validate_numeric_ranges(self) -> list[str]:
+        """Validate numeric configuration settings."""
+        errors = []
+
+        # Positive integer validations
         if self.chunk_size <= 0:
             errors.append("chunk_size must be positive")
         if self.mmap_threshold <= 0:
             errors.append("mmap_threshold must be positive")
         if self.batch_size <= 0:
             errors.append("batch_size must be positive")
+        if self.min_workers <= 0:
+            errors.append("min_workers must be positive")
+
+        # Non-negative integer validations
         if self.max_retries < 0:
             errors.append("max_retries must be non-negative")
         if self.retry_delay < 0:
             errors.append("retry_delay must be non-negative")
-        if self.min_workers <= 0:
-            errors.append("min_workers must be positive")
-        if self.max_workers is not None and self.max_workers <= 0:
-            errors.append("max_workers must be positive")
-        if self.max_workers is not None and self.min_workers > self.max_workers:
-            errors.append("min_workers cannot exceed max_workers")
+
+        # Optional max_workers validation
+        if self.max_workers is not None:
+            if self.max_workers <= 0:
+                errors.append("max_workers must be positive")
+            elif self.min_workers > self.max_workers:
+                errors.append("min_workers cannot exceed max_workers")
+
+        # Memory threshold validation
         if self.memory_threshold <= 0 or self.memory_threshold > 1:
             errors.append("memory_threshold must be between 0 and 1")
 
-        # Validate email configuration
-        if self.email_defaults:
-            port = self.email_defaults.get("port")
-            if port is not None and (
-                not isinstance(port, int) or port <= 0 or port > 65535
-            ):
-                errors.append("email port must be a valid port number (1-65535)")
+        return errors
 
-        if errors:
-            raise ValueError(f"Configuration validation failed: {'; '.join(errors)}")
+    def _validate_email_config(self) -> list[str]:
+        """Validate email configuration settings."""
+        errors = []
+
+        if not self.email_defaults:
+            return errors
+
+        port = self.email_defaults.get("port")
+        if port is not None and (
+            not isinstance(port, int) or port <= 0 or port > 65535
+        ):
+            errors.append("email port must be a valid port number (1-65535)")
+
+        return errors
 
     @classmethod
     def _find_valid_config(cls, path: Path) -> Optional[ConfigDict]:
