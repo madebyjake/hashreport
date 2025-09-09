@@ -39,7 +39,6 @@ hashreport scan [OPTIONS] DIRECTORY
 | `--smtp-port` | - | SMTP server port |
 | `--smtp-user` | - | SMTP username |
 | `--smtp-password` | - | SMTP password |
-| `--smtp-tls` | `False` | Use TLS for SMTP |
 | `--test-email` | `False` | Test email configuration |
 
 ### **filelist**
