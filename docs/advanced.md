@@ -110,8 +110,7 @@ hashreport scan /path/to/directory \
    hashreport scan /path/to/directory \
      --email recipient@example.com \
      --smtp-host smtp.example.com \
-     --smtp-port 587 \
-     --smtp-tls
+     --smtp-port 587
    ```
 
 4. **Secure Configuration File**

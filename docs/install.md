@@ -19,7 +19,7 @@ You can upgrade **hashreport** using `pip` with the following commands:
 pip install --upgrade hashreport
 
 # Or upgrade to a specific version
-pip install --upgrade hashreport==0.9.0
+pip install --upgrade hashreport==1.0.0
 ```
 
 ### **Install from Source**

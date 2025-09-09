@@ -1,3 +1,22 @@
+## v1.1.0 (2025-09-09)
+
+### Feat
+
+- **scanner**: rework scanning session handling
+- **scanner**: improve file filtering logic
+- **filters**: add pattern matching functions
+- **config**: enhance settings validation
+
+### Fix
+
+- **docs**: update link to upgrade doc
+
+### Refactor
+
+- move size validation to utils
+- **tests**: remove redundant file tests
+- **scanner**: remove unused file processing logic
+
 ## v1.0.0 (2025-07-06)
 
 ### Feat

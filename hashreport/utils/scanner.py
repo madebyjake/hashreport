@@ -12,7 +12,7 @@ from hashreport.config import get_config
 from hashreport.reports.base import BaseReportHandler
 from hashreport.reports.csv_handler import CSVReportHandler
 from hashreport.reports.json_handler import JSONReportHandler
-from hashreport.utils.conversions import format_size
+from hashreport.utils.conversions import format_size, parse_size_string
 from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.filters import should_process_file as filter_should_process_file
 from hashreport.utils.hasher import calculate_hash
@@ -23,52 +23,7 @@ logger = logging.getLogger(__name__)
 config = get_config()
 
 
-def parse_size_string(size_str: str) -> int:
-    """Convert size string to bytes.
-
-    Args:
-        size_str: Size string with unit (e.g., "1MB", "500KB")
-
-    Returns:
-        Size in bytes
-
-    Raises:
-        ValueError: If size format is invalid
-    """
-    if not size_str:
-        return 0
-
-    units = {
-        "B": 1,
-        "KB": 1024,
-        "MB": 1024 * 1024,
-        "GB": 1024 * 1024 * 1024,
-    }
-
-    size = size_str.strip().upper()
-    # Sort units by length (longest first) to avoid partial matches
-    sorted_units = sorted(units.keys(), key=len, reverse=True)
-
-    # Find matching unit
-    matched_unit = None
-    for unit in sorted_units:
-        if size.endswith(unit):
-            matched_unit = unit
-            break
-
-    if not matched_unit:
-        raise ValueError(
-            f"Size must include unit. Valid units are: {', '.join(sorted_units)}"
-        )
-
-    # Extract numeric part by removing the unit
-    number_str = size[: -len(matched_unit)]
-    if not number_str:
-        raise ValueError("No numeric value provided")
-
-    # Convert to bytes
-    number = float(number_str)
-    return int(number * units[matched_unit])
+# Note: parse_size_string is now imported from conversions module
 
 
 def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:

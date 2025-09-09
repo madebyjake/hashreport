@@ -23,6 +23,7 @@ from hashreport.reports.filelist_handler import (
     get_filelist_filename,
     list_files_in_directory,
 )
+from hashreport.utils.conversions import validate_size_string
 from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
@@ -56,48 +57,14 @@ def validate_size(
         >>> validate_size(None, None, "invalid")
         Traceback (most recent call last):
             ...
-            click.BadParameter: Invalid size format: Size must include unit...
+            click.BadParameter: Invalid size format: invalid
     """
     if not value:
         return None
 
-    units = {
-        "B": 1,
-        "KB": 1024,
-        "MB": 1024 * 1024,
-        "GB": 1024 * 1024 * 1024,
-    }
-
     try:
-        size = value.strip().upper()
-        # Sort units by length (longest first) to avoid partial matches
-        sorted_units = sorted(units.keys(), key=len, reverse=True)
-
-        # Find matching unit
-        matched_unit = None
-        for unit in sorted_units:
-            if size.endswith(unit):
-                matched_unit = unit
-                break
-
-        if not matched_unit:
-            raise ValueError(
-                f"Size must include unit. Valid units are: {', '.join(sorted_units)}"
-            )
-
-        # Extract numeric part by removing the unit
-        number_str = size[: -len(matched_unit)]
-        if not number_str:
-            raise ValueError("No numeric value provided")
-
-        # Validate number can be converted
-        number = float(number_str)
-        if number <= 0:
-            raise ValueError("Size must be greater than 0")
-
-        return value
-
-    except (ValueError, AttributeError) as e:
+        return validate_size_string(value)
+    except ValueError as e:
         raise click.BadParameter(f"Invalid size format: {e}")
 
 

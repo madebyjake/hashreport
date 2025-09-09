@@ -466,3 +466,211 @@ def test_validate_email_options_valid():
 
     # Should not raise any exception
     validate_email_options("test@example.com", "smtp.example.com")
+
+
+def test_scan_command_with_default_output(tmp_path):
+    """Test scan command with default output directory."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        with patch("hashreport.cli.os.getcwd", return_value=str(tmp_path)):
+            result = runner.invoke(cli, ["scan", str(input_dir)])
+            assert result.exit_code == 0
+            mock_walk.assert_called_once()
+
+
+def test_scan_command_test_email_mode(tmp_path):
+    """Test scan command in test email mode."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    command = [
+        "scan",
+        str(input_dir),
+        "--test-email",
+        "--email",
+        "test@example.com",
+        "--smtp-host",
+        "smtp.example.com",
+    ]
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, command)
+        assert result.exit_code == 0
+        mock_walk.assert_not_called()  # Should not process files in test mode
+
+
+def test_scan_command_test_email_missing_params(tmp_path):
+    """Test scan command test email mode with missing parameters."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    command = [
+        "scan",
+        str(input_dir),
+        "--test-email",
+        "--email",
+        "test@example.com",
+        # Missing --smtp-host
+    ]
+
+    result = runner.invoke(cli, command)
+    assert result.exit_code == 2  # Click error code
+    assert "Email and SMTP host are required" in result.output
+
+
+def test_filelist_command_with_default_output(tmp_path):
+    """Test filelist command with default output directory."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.list_files_in_directory") as mock_list:
+        with patch("hashreport.cli.os.getcwd", return_value=str(tmp_path)):
+            result = runner.invoke(cli, ["filelist", str(input_dir)])
+            assert result.exit_code == 0
+            mock_list.assert_called_once()
+
+
+def test_filelist_command_error_handling(tmp_path):
+    """Test filelist command error handling."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.list_files_in_directory") as mock_list:
+        mock_list.side_effect = Exception("Test error")
+        result = runner.invoke(cli, ["filelist", str(input_dir)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_view_command_error_handling(tmp_path):
+    """Test view command error handling."""
+    runner = CliRunner()
+    report_file = tmp_path / "report.json"
+    report_file.touch()
+
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.view_report.side_effect = Exception("Test error")
+        result = runner.invoke(cli, ["view", str(report_file)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_compare_command_error_handling(tmp_path):
+    """Test compare command error handling."""
+    runner = CliRunner()
+    report1 = tmp_path / "report1.json"
+    report2 = tmp_path / "report2.json"
+    report1.touch()
+    report2.touch()
+
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.compare_reports.side_effect = Exception("Test error")
+        result = runner.invoke(cli, ["compare", str(report1), str(report2)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_scan_command_hashreport_error(tmp_path):
+    """Test scan command with HashReportError."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_walk.side_effect = HashReportError("Test error")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 2
+        assert "Test error" in result.output
+
+
+def test_scan_command_click_bad_parameter(tmp_path):
+    """Test scan command with click.BadParameter."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.side_effect = click.BadParameter("Invalid parameter")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 2
+        assert "Invalid parameter" in result.output
+
+
+def test_validate_size_edge_cases():
+    """Test validate_size with edge cases."""
+    from click import Context, Option
+
+    from hashreport.cli import validate_size
+
+    ctx = Context(click.Command("test"))
+    param = Option(["--test"], "test")
+
+    # Test empty string (should return None)
+    result = validate_size(ctx, param, "")
+    assert result is None
+
+    # Test whitespace only
+    with pytest.raises(click.BadParameter, match="Size must include unit"):
+        validate_size(ctx, param, "   ")
+
+    # Test very large number
+    result = validate_size(ctx, param, "999999999GB")
+    assert result == "999999999GB"
+
+    # Test decimal with zero
+    result = validate_size(ctx, param, "0.5MB")
+    assert result == "0.5MB"
+
+    # Test zero size (should fail)
+    with pytest.raises(click.BadParameter, match="Size must be greater than 0"):
+        validate_size(ctx, param, "0MB")
+
+
+def test_handle_error_with_exit_code():
+    """Test handle_error with custom exit code."""
+    from hashreport.cli import handle_error
+    from hashreport.utils.exceptions import HashReportError
+
+    error = HashReportError("Test error")
+
+    with pytest.raises(SystemExit) as exc_info:
+        handle_error(error, exit_code=3)
+
+    assert exc_info.value.code == 3
+
+
+def test_print_section_recursive():
+    """Test print_section with nested data."""
+    from rich.console import Console
+
+    from hashreport.cli import print_section
+
+    console = Console()
+    data = {"level1": {"level2": {"level3": "value"}}, "simple": "value"}
+
+    # Should not raise any exception
+    print_section(console, data)
+
+
+def test_print_section_error_handling():
+    """Test print_section error handling."""
+    from rich.console import Console
+
+    from hashreport.cli import print_section
+
+    console = Console()
+    data = {"key": "value"}
+
+    # Mock console.print to raise an exception
+    with patch.object(console, "print", side_effect=Exception("Print error")):
+        with pytest.raises(Exception, match="Failed to print configuration"):
+            print_section(console, data)
