@@ -88,11 +88,6 @@ if [[ $# -eq 0 ]]; then
     exit 0
 fi
 
-if [[ $# -eq 0 ]]; then
-    show_help
-    exit 1
-fi
-
 case $1 in
     -h) show_help; exit 0 ;;
     -i) interactive_mode; exit 0 ;;
