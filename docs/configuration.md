@@ -31,6 +31,8 @@ max_errors_shown = 10
 - `timestamp_format`: Format for timestamps in report filenames (default: "%y%m%d-%H%M")
 - `show_progress`: Show progress bar during processing (default: true)
 - `max_errors_shown`: Maximum number of errors to display (default: 10)
+- `memory_limit`: Memory limit in MB (default: 0 - uses 75% of total RAM)
+- `max_workers`: Maximum number of worker threads (default: 0 - uses CPU count)
 
 ## **Resource Management**
 
