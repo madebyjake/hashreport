@@ -64,7 +64,7 @@ jinja2 = "^3.1.6"
 poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 pre-commit = "^4.1.0"
 pytest = "^8.3.5"
-pytest-cov = "^6.0.0"
+pytest-cov = ">=6,<8"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
