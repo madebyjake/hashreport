@@ -6,7 +6,7 @@ Thank you for your interest in contributing to hashreport! This document provide
 
 ### **Prerequisites**
 
-- Python 3.10 or higher
+- Python 3.10 or higher (up to 3.14)
 - Git
 - Poetry (Python package manager)
 - Pre-commit hooks
