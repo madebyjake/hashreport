@@ -674,3 +674,446 @@ def test_print_section_error_handling():
     with patch.object(console, "print", side_effect=Exception("Print error")):
         with pytest.raises(Exception, match="Failed to print configuration"):
             print_section(console, data)
+
+
+def test_scan_command_with_recursive_option(tmp_path):
+    """Test scan command with recursive option."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, ["scan", str(input_dir), "--no-recursive"])
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("recursive") is False
+
+
+def test_scan_command_with_regex_option(tmp_path):
+    """Test scan command with regex option."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, ["scan", str(input_dir), "--regex"])
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("regex") is True
+
+
+def test_scan_command_with_specific_files(tmp_path):
+    """Test scan command with specific files."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(
+            cli,
+            [
+                "scan",
+                str(input_dir),
+                "--include",
+                "file1.txt",
+                "--include",
+                "file2.txt",
+            ],
+        )
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("include") == ("file1.txt", "file2.txt")
+
+
+def test_scan_command_with_exclude_patterns(tmp_path):
+    """Test scan command with exclude patterns."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(
+            cli, ["scan", str(input_dir), "--exclude", "/tmp", "--exclude", "/var"]
+        )
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("exclude") == ("/tmp", "/var")
+
+
+def test_scan_command_with_limit(tmp_path):
+    """Test scan command with limit."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, ["scan", str(input_dir), "--limit", "100"])
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("limit") == 100
+
+
+def test_scan_command_with_include_exclude_patterns(tmp_path):
+    """Test scan command with include/exclude patterns."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(
+            cli,
+            [
+                "scan",
+                str(input_dir),
+                "--include",
+                "*.txt",
+                "--include",
+                "*.md",
+                "--exclude",
+                "*.tmp",
+                "--exclude",
+                "*.log",
+            ],
+        )
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("include") == ("*.txt", "*.md")
+        assert kwargs.get("exclude") == ("*.tmp", "*.log")
+
+
+def test_scan_command_with_size_filters(tmp_path):
+    """Test scan command with size filters."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(
+            cli, ["scan", str(input_dir), "--min-size", "1KB", "--max-size", "10MB"]
+        )
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("min_size") == "1KB"
+        assert kwargs.get("max_size") == "10MB"
+
+
+def test_scan_command_with_algorithm(tmp_path):
+    """Test scan command with specific algorithm."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, ["scan", str(input_dir), "--algorithm", "sha256"])
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert kwargs.get("algorithm") == "sha256"
+
+
+def test_scan_command_with_multiple_output_formats(tmp_path):
+    """Test scan command with multiple output formats."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(
+            cli, ["scan", str(input_dir), "--format", "csv", "--format", "json"]
+        )
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert len(args[1]) == 2  # Two output files
+        assert any(f.endswith(".csv") for f in args[1])
+        assert any(f.endswith(".json") for f in args[1])
+
+
+def test_scan_command_with_explicit_output_file(tmp_path):
+    """Test scan command with explicit output file."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    output_file = tmp_path / "custom_report.csv"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        result = runner.invoke(cli, ["scan", str(input_dir), "-o", str(output_file)])
+        assert result.exit_code == 0
+        mock_walk.assert_called_once()
+        args, kwargs = mock_walk.call_args
+        assert len(args[1]) == 1
+        assert args[1][0] == str(output_file)
+
+
+def test_scan_command_with_default_format(tmp_path):
+    """Test scan command with default format."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        with patch("hashreport.cli.get_config") as mock_config:
+            mock_config.return_value.default_format = "csv"
+            result = runner.invoke(cli, ["scan", str(input_dir)])
+            assert result.exit_code == 0
+            mock_walk.assert_called_once()
+            args, kwargs = mock_walk.call_args
+            assert len(args[1]) == 1
+            # The filename will be generated with timestamp, just check it contains csv
+            assert "csv" in args[1][0]
+
+
+def test_scan_command_with_default_algorithm(tmp_path):
+    """Test scan command with default algorithm."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    with patch("hashreport.cli.walk_directory_and_log"):
+        with patch("hashreport.cli.get_config") as mock_config:
+            mock_config.return_value.default_algorithm = "sha1"
+            # Also need to patch the default in the CLI option
+            with patch("hashreport.cli.scan") as mock_scan:
+                mock_scan.return_value = None
+                result = runner.invoke(cli, ["scan", str(input_dir)])
+                assert result.exit_code == 0
+
+
+def test_scan_command_error_handling_paths(tmp_path):
+    """Test scan command error handling for different error types."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    # Test HashReportError
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_walk.side_effect = HashReportError("HashReport error")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.side_effect = click.BadParameter("Bad parameter")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.side_effect = Exception("Generic error")
+        result = runner.invoke(cli, ["scan", str(input_dir)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_view_command_error_handling_paths(tmp_path):
+    """Test view command error handling for different error types."""
+    runner = CliRunner()
+    report_file = tmp_path / "report.json"
+    report_file.touch()
+
+    # Test HashReportError
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_viewer.return_value.view_report.side_effect = HashReportError(
+            "HashReport error"
+        )
+        result = runner.invoke(cli, ["view", str(report_file)])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.view_report.side_effect = click.BadParameter(
+            "Bad parameter"
+        )
+        result = runner.invoke(cli, ["view", str(report_file)])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.view_report.side_effect = Exception("Generic error")
+        result = runner.invoke(cli, ["view", str(report_file)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_compare_command_error_handling_paths(tmp_path):
+    """Test compare command error handling for different error types."""
+    runner = CliRunner()
+    report1 = tmp_path / "report1.json"
+    report2 = tmp_path / "report2.json"
+    report1.touch()
+    report2.touch()
+
+    # Test HashReportError
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_viewer.return_value.compare_reports.side_effect = HashReportError(
+            "HashReport error"
+        )
+        result = runner.invoke(cli, ["compare", str(report1), str(report2)])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.compare_reports.side_effect = click.BadParameter(
+            "Bad parameter"
+        )
+        result = runner.invoke(cli, ["compare", str(report1), str(report2)])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.ReportViewer") as mock_viewer:
+        mock_viewer.return_value.compare_reports.side_effect = Exception(
+            "Generic error"
+        )
+        result = runner.invoke(cli, ["compare", str(report1), str(report2)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_config_edit_error_handling_paths(tmp_path):
+    """Test config edit command error handling for different error types."""
+    # Test HashReportError
+    with patch("hashreport.cli.click.edit") as mock_edit:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_edit.side_effect = HashReportError("HashReport error")
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "edit"])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.click.edit") as mock_edit:
+        mock_edit.side_effect = click.BadParameter("Bad parameter")
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "edit"])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.click.edit") as mock_edit:
+        mock_edit.side_effect = Exception("Generic error")
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "edit"])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_config_show_error_handling_paths(tmp_path):
+    """Test config show command error handling for different error types."""
+    # Test HashReportError
+    with patch("hashreport.cli.Console") as mock_console:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_console.return_value.print.side_effect = HashReportError(
+            "HashReport error"
+        )
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "show"])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.Console") as mock_console:
+        mock_console.return_value.print.side_effect = click.BadParameter(
+            "Bad parameter"
+        )
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "show"])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.Console") as mock_console:
+        mock_console.return_value.print.side_effect = Exception("Generic error")
+        runner = CliRunner()
+        result = runner.invoke(cli, ["config", "show"])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_filelist_command_error_handling_paths(tmp_path):
+    """Test filelist command error handling for different error types."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    # Test HashReportError
+    with patch("hashreport.cli.list_files_in_directory") as mock_list:
+        from hashreport.utils.exceptions import HashReportError
+
+        mock_list.side_effect = HashReportError("HashReport error")
+        result = runner.invoke(cli, ["filelist", str(input_dir)])
+        assert result.exit_code == 2
+        assert "HashReport error" in result.output
+
+    # Test click.BadParameter
+    with patch("hashreport.cli.list_files_in_directory") as mock_list:
+        mock_list.side_effect = click.BadParameter("Bad parameter")
+        result = runner.invoke(cli, ["filelist", str(input_dir)])
+        assert result.exit_code == 2
+        assert "Bad parameter" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.list_files_in_directory") as mock_list:
+        mock_list.side_effect = Exception("Generic error")
+        result = runner.invoke(cli, ["filelist", str(input_dir)])
+        assert result.exit_code == 1
+        assert "Internal Error" in result.output
+
+
+def test_scan_command_with_test_email_error_handling(tmp_path):
+    """Test scan command test email mode error handling."""
+    runner = CliRunner()
+    input_dir = tmp_path / "input"
+    input_dir.mkdir()
+
+    command = [
+        "scan",
+        str(input_dir),
+        "--test-email",
+        "--email",
+        "test@example.com",
+        "--smtp-host",
+        "smtp.example.com",
+    ]
+
+    # Test HashReportError - in test email mode, walk_directory_and_log is not called
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        # Test email mode doesn't call walk_directory_and_log, so we test the validation
+        result = runner.invoke(cli, command)
+        assert result.exit_code == 0
+        mock_walk.assert_not_called()
+
+    # Test click.BadParameter - missing required email options
+    result = runner.invoke(
+        cli, ["scan", str(input_dir), "--test-email", "--email", "test@example.com"]
+    )
+    assert result.exit_code == 2
+    assert "Email and SMTP host are required" in result.output
+
+    # Test generic Exception
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.side_effect = Exception("Generic error")
+        result = runner.invoke(cli, command)
+        assert (
+            result.exit_code == 0
+        )  # Test email mode doesn't call walk_directory_and_log
