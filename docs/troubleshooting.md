@@ -7,20 +7,20 @@ This guide helps you resolve common issues with hashreport. If you're still expe
 ### **Python Version Compatibility**
 
 **Problem**: Error about Python version compatibility
-**Solution**: Ensure you're using Python 3.10 or higher
+**Solution**: Ensure you're using Python 3.10 or higher (up to 3.14)
 
 ```bash
 # Check Python version
 python3 --version
 
-# Install Python 3.10 or higher on macOS
-brew install python@3.10
+# Install Python 3.10 or higher (up to 3.14) on macOS
+brew install python@3.14
 
-# Install Python 3.10 or higher on Ubuntu/Debian
-sudo apt install python3.10
+# Install Python 3.10 or higher (up to 3.14) on Ubuntu/Debian
+sudo apt install python3.14
 
-# Install Python 3.10 or higher on Fedora/CentOS/RHEL
-sudo dnf install python3.10
+# Install Python 3.10 or higher (up to 3.14) on Fedora/CentOS/RHEL
+sudo dnf install python3.14
 ```
 
 ### **Poetry Installation**
