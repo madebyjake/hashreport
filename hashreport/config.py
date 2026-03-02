@@ -1,7 +1,7 @@
 """Configuration management for hashreport."""
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import MISSING, dataclass, field, fields
 from pathlib import Path
 from typing import Any, ClassVar, Dict, List, Optional
 
@@ -76,7 +76,7 @@ class HashReportConfig:
         # Set memory limit if not specified
         if self.memory_limit is None:
             try:
-                import psutil
+                import psutil  # type: ignore[import]
 
                 total_memory = psutil.virtual_memory().total
                 # 75% of total RAM
@@ -165,7 +165,7 @@ class HashReportConfig:
 
     def _validate_email_config(self) -> list[str]:
         """Validate email configuration settings."""
-        errors = []
+        errors: list[str] = []
 
         if not self.email_defaults:
             return errors
@@ -197,11 +197,49 @@ class HashReportConfig:
         return None
 
     @classmethod
+    def _defaults_dict(cls) -> ConfigDict:
+        """Build a dict of default values from the dataclass fields."""
+        result: ConfigDict = {}
+        for f in fields(cls):
+            if f.name.startswith("_"):
+                continue
+            if f.default is not MISSING:
+                result[f.name] = f.default
+            elif f.default_factory is not MISSING:
+                result[f.name] = f.default_factory()
+        return result
+
+    @classmethod
+    def _merge_config(cls, base: ConfigDict, overlay: ConfigDict) -> ConfigDict:
+        """Merge overlay into base.
+
+        Nested dicts (progress, email_defaults) are merged recursively.
+        """
+        valid = {f.name for f in fields(cls) if not f.name.startswith("_")}
+        out = dict(base)
+        for key, value in overlay.items():
+            if key not in valid:
+                continue
+            if key in ("progress", "email_defaults") and isinstance(value, dict):
+                existing = out.get(key)
+                if isinstance(existing, dict):
+                    out[key] = {**existing, **value}
+                else:
+                    out[key] = value
+            else:
+                out[key] = value
+        return out
+
+    @classmethod
     def from_file(cls, config_path: Optional[Path] = None) -> "HashReportConfig":
-        """Load configuration from a TOML file.
+        """Load configuration from user settings and optional project TOML.
+
+        Precedence (highest last):
+        defaults < user settings (~/.config/hashreport/settings.toml)
+        < project [tool.hashreport] in pyproject.toml.
 
         Args:
-            config_path: Optional path to config file, defaults to pyproject.toml
+            config_path: Optional path to project config, defaults to pyproject.toml
 
         Returns:
             HashReportConfig instance with loaded settings
@@ -210,19 +248,22 @@ class HashReportConfig:
             ValueError: If configuration validation fails
         """
         path = config_path or cls.PROJECT_CONFIG_PATH
-
-        # Find valid config data
+        merged = cls._defaults_dict()
+        user_settings = cls.load_settings()
+        if user_settings:
+            merged = cls._merge_config(merged, user_settings)
         data = cls._find_valid_config(path)
-        if not data:
-            return cls()
-
-        tool_section = data.get("tool", {})
-        app_config = tool_section.get(cls.APP_CONFIG_KEY, {})
-
+        if data:
+            tool_section = data.get("tool", {})
+            app_config = tool_section.get(cls.APP_CONFIG_KEY, {})
+            if app_config:
+                merged = cls._merge_config(merged, app_config)
         try:
-            return cls(**app_config)
+            return cls(**merged)
         except Exception as e:
-            logger.warning(f"Failed to load config from {path}, using defaults: {e}")
+            logger.warning(
+                "Failed to load config (user + project), using defaults: %s", e
+            )
             return cls()
 
     @classmethod
