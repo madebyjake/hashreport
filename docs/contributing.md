@@ -181,6 +181,23 @@ git push origin feature/your-feature-name
    poetry run mkdocs serve
    ```
 
+## **Releasing**
+
+Releases are published to [PyPI](https://pypi.org/project/hashreport/) via GitHub Actions. Version is derived from Git tags (e.g. `v1.2.0`) using poetry-dynamic-versioning.
+
+1. **Merge** release-ready work into `main`.
+2. **Bump version and update changelog** (on `main`):
+   ```bash
+   poetry run cz bump --increment PATCH   # or MINOR, MAJOR
+   ```
+   Commitizen updates `CHANGELOG.md` and creates a tag (e.g. `v1.2.0`).
+3. **Push** the new commit and tag:
+   ```bash
+   git push origin main && git push origin --tags
+   ```
+4. **Create a GitHub Release** for the new tag (Releases → Draft a new release → choose the tag, add notes, publish).
+5. The **Publish to PyPI** workflow runs automatically and publishes the package. The workflow uses the `pypi` environment (Trusted Publishing); ensure it is configured in the repository settings.
+
 ## **Getting Help**
 
 - Check the [GitHub Issues](https://github.com/madebyjake/hashreport/issues)
