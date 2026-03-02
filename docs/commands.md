@@ -24,7 +24,7 @@ hashreport scan [OPTIONS] DIRECTORY
 | Option | Default | Description |
 |--------|---------|-------------|
 | `DIRECTORY` | - | Directory to scan |
-| `-a, --algorithm` | `sha256` | Hash algorithm to use |
+| `-a, --algorithm` | `md5` | Hash algorithm to use |
 | `-f, --format` | `csv` | Output format (csv, json) |
 | `-o, --output` | - | Output directory |
 | `-r, --recursive` | `True` | Scan directories recursively |
@@ -35,6 +35,7 @@ hashreport scan [OPTIONS] DIRECTORY
 | `--max-size` | - | Maximum file size |
 | `--limit` | - | Limit number of files |
 | `--email` | - | Email address for report |
+| `--from` | - | Sender address (defaults to `--email` if not set) |
 | `--smtp-host` | - | SMTP server host |
 | `--smtp-port` | - | SMTP server port |
 | `--smtp-user` | - | SMTP username |
