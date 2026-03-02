@@ -12,7 +12,7 @@ Example:
 
 import logging
 import os
-import subprocess
+import subprocess  # nosec B404 - used for pip self-upgrade with fixed arguments
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -520,7 +520,12 @@ def upgrade(target_version: Optional[str]):
                 "--upgrade",
                 "hashreport",
             ]
-        result = subprocess.run(pip_args, capture_output=False)
+        result = subprocess.run(
+            pip_args,
+            capture_output=False,
+            # nosec B603 - arguments are fully controlled and not user shell input
+            shell=False,
+        )
         if result.returncode != 0:
             handle_error(
                 Exception(f"pip exited with code {result.returncode}"),
