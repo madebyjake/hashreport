@@ -45,7 +45,7 @@ def get_file_reader(file_path: str, use_mmap: bool = True):
 
 
 def calculate_hash(
-    filepath: str, algorithm: str = None
+    filepath: str, algorithm: Optional[str] = None
 ) -> Tuple[str, Optional[str], str]:
     """Calculate hash for a file."""
     algorithm = algorithm or config.default_algorithm
