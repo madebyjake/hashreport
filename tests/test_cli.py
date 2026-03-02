@@ -317,10 +317,19 @@ def test_filelist_command(mock_list, tmp_path):
     input_dir = tmp_path / "input"
     output_dir = tmp_path / "output"
     input_dir.mkdir()
+    # Dir exists so get_filelist_filename returns output_dir/filelist.txt
+    output_dir.mkdir()
 
     result = runner.invoke(cli, ["filelist", str(input_dir), "-o", str(output_dir)])
     assert result.exit_code == 0
-    mock_list.assert_called_once_with(str(input_dir), str(output_dir), recursive=True)
+    mock_list.assert_called_once()
+    call_kwargs = mock_list.call_args[1]
+    assert call_kwargs["recursive"] is True
+    assert call_kwargs["include"] is None
+    assert call_kwargs["exclude"] is None
+    assert call_kwargs["limit"] is None
+    assert mock_list.call_args[0][0] == str(input_dir)
+    assert mock_list.call_args[0][1] == str(output_dir / "filelist.txt")
 
 
 @patch("hashreport.cli.ReportViewer")
