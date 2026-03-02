@@ -261,7 +261,7 @@ def _process_file_batches(
     final_results = []
 
     # Process files in batches
-    batch_size = min(100, len(files_to_process))
+    batch_size = min(config.batch_size, len(files_to_process)) or 1
     for i in range(0, len(files_to_process), batch_size):
         batch = files_to_process[i : i + batch_size]
         batch_results = _process_single_batch(batch, algorithm, progress_bar)
@@ -309,8 +309,12 @@ def walk_directory_and_log(
     exclude: Optional[Tuple[str, ...]] = None,
     regex: bool = False,
     recursive: bool = True,
-) -> None:
-    """Walk through a directory, calculate hashes, and log to report."""
+) -> Optional[List[str]]:
+    """Walk through a directory, calculate hashes, and log to report.
+
+    Returns:
+        List of report file paths on success, None on failure.
+    """
     algorithm = algorithm or config.default_algorithm
     success = False
     reports: List[str] = []
@@ -360,11 +364,11 @@ def walk_directory_and_log(
 
     except AttributeError as e:
         click.echo(f"Error: Invalid handler interface - {e}", err=True)
-        return
+        return None
     except Exception as e:
         logger.exception("Error during scanning")
         click.echo(f"Error during scanning: {e}", err=True)
-        return
+        return None
     finally:
         if progress_bar is not None:
             progress_bar.finish()
@@ -375,3 +379,4 @@ def walk_directory_and_log(
                 click.echo("Reports saved to:")
                 for report in reports:
                     click.echo(f"  - {report}")
+    return reports if success else None
