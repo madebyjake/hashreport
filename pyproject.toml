@@ -102,6 +102,10 @@ addopts = "-ra -q"
 testpaths = [
     "tests",
 ]
+# Python 3.14 warns on 'return' in 'finally' (pluggy, coverage); suppress in deps only
+filterwarnings = [
+    "ignore:'return' in a 'finally' block:SyntaxWarning",
+]
 
 [tool.flake8]
 max-line-length = 88
