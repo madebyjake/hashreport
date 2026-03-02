@@ -61,9 +61,15 @@ jobs:
         run: poetry install --with dev
 
       - name: Run tests
-        run: poetry run python -m pytest --cov=hashreport --cov-report=xml
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.14" ]; then
+            poetry run python -m pytest
+          else
+            poetry run python -m pytest --cov=hashreport --cov-report=xml
+          fi
 
       - name: Upload coverage
+        if: matrix.python-version != '3.14'
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml
