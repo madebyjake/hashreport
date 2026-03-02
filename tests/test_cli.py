@@ -283,6 +283,7 @@ def test_scan_email_configuration(tmp_path):
     ]
 
     with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.return_value = []  # No reports to email
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_called_once()
@@ -304,10 +305,14 @@ def test_scan_test_email(tmp_path):
         "smtp.example.com",
     ]
 
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()
+        mock_sender_class.return_value.test_connection.assert_called_once()
 
 
 @patch("hashreport.cli.list_files_in_directory")
@@ -551,7 +556,10 @@ def test_scan_command_test_email_mode(tmp_path):
         "smtp.example.com",
     ]
 
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()  # Should not process files in test mode
@@ -1150,9 +1158,12 @@ def test_scan_command_with_test_email_error_handling(tmp_path):
         "smtp.example.com",
     ]
 
-    # Test HashReportError - in test email mode, walk_directory_and_log is not called
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
-        # Test email mode doesn't call walk_directory_and_log, so we test the validation
+    # Test success path - in test email mode,
+    # walk_directory_and_log is not called
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()
@@ -1164,8 +1175,12 @@ def test_scan_command_with_test_email_error_handling(tmp_path):
     assert result.exit_code == 2
     assert "Email and SMTP host are required" in result.output
 
-    # Test generic Exception
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    # Test email mode doesn't call walk_directory_and_log
+    # even when walk_directory_and_log is mocked to fail
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         mock_walk.side_effect = Exception("Generic error")
         result = runner.invoke(cli, command)
         assert (
