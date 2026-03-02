@@ -87,6 +87,7 @@ hashreport can email reports upon completion using SMTP.
 ```bash
 hashreport scan /path/to/directory \
   --email recipient@example.com \
+  --from sender@example.com \
   --smtp-host smtp.example.com \
   --smtp-user username \
   --smtp-password password
@@ -109,6 +110,7 @@ hashreport scan /path/to/directory \
    ```bash
    hashreport scan /path/to/directory \
      --email recipient@example.com \
+     --from sender@example.com \
      --smtp-host smtp.example.com \
      --smtp-port 587
    ```
@@ -137,6 +139,10 @@ hashreport scan /path/to/directory \
   --smtp-password password \
   --test-email
 ```
+
+On success this exits with status code `0`; if the SMTP connection or
+authentication fails it exits with a non-zero status code, making it
+safe to use in scripts and CI.
 
 ### **Gmail Example**
 
