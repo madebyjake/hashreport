@@ -12,14 +12,15 @@ You can install **hashreport** using `pip` from the Python Package Index ([PyPI]
 pip install hashreport
 ```
 
-You can upgrade **hashreport** using `pip` with the following commands:
+To upgrade **hashreport**, you can use the built-in command or pip:
 
 ```bash
-# Upgrade to the latest version
-pip install --upgrade hashreport
+# Recommended: use the upgrade command (same Python as hashreport)
+hashreport upgrade
+hashreport upgrade --version 1.1.1   # specific version
 
-# Or upgrade to a specific version
-pip install --upgrade hashreport==1.0.0
+# Or use pip directly
+pip install --upgrade hashreport
 ```
 
 ### **Install from Source**
