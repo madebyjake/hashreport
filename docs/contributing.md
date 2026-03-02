@@ -183,7 +183,7 @@ git push origin feature/your-feature-name
 
 ## **Releasing**
 
-Releases are published to [PyPI](https://pypi.org/project/hashreport/) via GitHub Actions. Version is derived from Git tags (e.g. `v1.2.0`) using poetry-dynamic-versioning.
+Releases are published to [PyPI](https://pypi.org/project/hashreport/) via GitHub Actions. Version is derived from Git tags (e.g. `v1.2.3`) using poetry-dynamic-versioning.
 
 **Note:** Direct commits to `main` are not allowed (branch protection). The version bump is done on `dev` and merged to `main` via a pull request.
 
@@ -193,7 +193,7 @@ Releases are published to [PyPI](https://pypi.org/project/hashreport/) via GitHu
    git checkout dev
    poetry run cz bump --increment PATCH   # or MINOR, MAJOR
    ```
-   Commitizen updates `CHANGELOG.md` and creates a tag (e.g. `v1.2.0`).
+   Commitizen updates `CHANGELOG.md` and creates a tag (e.g. `v1.2.3`).
 3. **Push `dev` and the tag**:
    ```bash
    git push origin dev && git push origin --tags

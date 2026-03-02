@@ -123,6 +123,51 @@ def test_algorithms_command(mock_show):
     mock_show.assert_called_once()
 
 
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command(mock_run):
+    """Test upgrade command invokes pip install --upgrade hashreport by default."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade"])
+    assert result.exit_code == 0
+    mock_run.assert_called_once()
+    call_args = mock_run.call_args[0][0]
+    assert call_args[-4:] == ["pip", "install", "--upgrade", "hashreport"]
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_specific_version(mock_run):
+    """Test upgrade command with --version installs that version."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade", "--version", "v1.2.3"])
+    assert result.exit_code == 0
+    mock_run.assert_called_once()
+    call_args = mock_run.call_args[0][0]
+    assert "hashreport==1.2.3" in call_args  # v-prefix stripped for pip
+    assert "--upgrade" not in call_args
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_specific_version_without_v_prefix(mock_run):
+    """Test upgrade command with --version without v-prefix."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade", "--version", "1.2.3"])
+    assert result.exit_code == 0
+    call_args = mock_run.call_args[0][0]
+    assert "hashreport==1.2.3" in call_args
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_pip_failure(mock_run):
+    """Test upgrade command exits with pip return code on failure."""
+    mock_run.return_value = type("Result", (), {"returncode": 1})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade"])
+    assert result.exit_code == 1
+
+
 def test_invalid_directory():
     """Test scan with nonexistent directory."""
     runner = CliRunner()
@@ -238,6 +283,7 @@ def test_scan_email_configuration(tmp_path):
     ]
 
     with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+        mock_walk.return_value = []  # No reports to email
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_called_once()
@@ -259,10 +305,14 @@ def test_scan_test_email(tmp_path):
         "smtp.example.com",
     ]
 
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()
+        mock_sender_class.return_value.test_connection.assert_called_once()
 
 
 @patch("hashreport.cli.list_files_in_directory")
@@ -272,10 +322,19 @@ def test_filelist_command(mock_list, tmp_path):
     input_dir = tmp_path / "input"
     output_dir = tmp_path / "output"
     input_dir.mkdir()
+    # Dir exists so get_filelist_filename returns output_dir/filelist.txt
+    output_dir.mkdir()
 
     result = runner.invoke(cli, ["filelist", str(input_dir), "-o", str(output_dir)])
     assert result.exit_code == 0
-    mock_list.assert_called_once_with(str(input_dir), str(output_dir), recursive=True)
+    mock_list.assert_called_once()
+    call_kwargs = mock_list.call_args[1]
+    assert call_kwargs["recursive"] is True
+    assert call_kwargs["include"] is None
+    assert call_kwargs["exclude"] is None
+    assert call_kwargs["limit"] is None
+    assert mock_list.call_args[0][0] == str(input_dir)
+    assert mock_list.call_args[0][1] == str(output_dir / "filelist.txt")
 
 
 @patch("hashreport.cli.ReportViewer")
@@ -497,7 +556,10 @@ def test_scan_command_test_email_mode(tmp_path):
         "smtp.example.com",
     ]
 
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()  # Should not process files in test mode
@@ -1096,9 +1158,12 @@ def test_scan_command_with_test_email_error_handling(tmp_path):
         "smtp.example.com",
     ]
 
-    # Test HashReportError - in test email mode, walk_directory_and_log is not called
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
-        # Test email mode doesn't call walk_directory_and_log, so we test the validation
+    # Test success path - in test email mode,
+    # walk_directory_and_log is not called
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         result = runner.invoke(cli, command)
         assert result.exit_code == 0
         mock_walk.assert_not_called()
@@ -1110,8 +1175,12 @@ def test_scan_command_with_test_email_error_handling(tmp_path):
     assert result.exit_code == 2
     assert "Email and SMTP host are required" in result.output
 
-    # Test generic Exception
-    with patch("hashreport.cli.walk_directory_and_log") as mock_walk:
+    # Test email mode doesn't call walk_directory_and_log
+    # even when walk_directory_and_log is mocked to fail
+    with patch("hashreport.cli.walk_directory_and_log") as mock_walk, patch(
+        "hashreport.cli.EmailSender"
+    ) as mock_sender_class:
+        mock_sender_class.return_value.test_connection.return_value = True
         mock_walk.side_effect = Exception("Generic error")
         result = runner.invoke(cli, command)
         assert (

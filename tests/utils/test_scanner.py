@@ -4,12 +4,12 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from hashreport.utils.conversions import parse_size_string
 from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.scanner import (
     count_files,
     get_report_filename,
     get_report_handlers,
-    parse_size_string,
     walk_directory_and_log,
 )
 

@@ -7,10 +7,12 @@ Example:
     $ hashreport scan /path/to/dir -o output.json
     $ hashreport view report.json --filter "*.txt"
     $ hashreport config show
+    $ hashreport upgrade
 """  # noqa: E501
 
 import logging
 import os
+import subprocess  # nosec B404 - used for pip self-upgrade with fixed arguments
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -24,6 +26,7 @@ from hashreport.reports.filelist_handler import (
     list_files_in_directory,
 )
 from hashreport.utils.conversions import validate_size_string
+from hashreport.utils.email_sender import EmailSender
 from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
@@ -103,14 +106,33 @@ def cli():
         $ hashreport scan /path/to/dir -o output.json
         $ hashreport view report.json --filter "*.txt"
         $ hashreport config show
+        $ hashreport upgrade
     """
     pass
 
 
-def validate_email_options(email, smtp_host):
+def validate_email_options(email: Optional[str], smtp_host: Optional[str]) -> None:
     """Validate email-related CLI options."""
     if not all([email, smtp_host]):
         raise click.BadParameter("Email and SMTP host are required for email testing")
+
+
+def _make_email_sender(
+    smtp_host: Optional[str],
+    smtp_port: Optional[int],
+    smtp_user: Optional[str],
+    smtp_password: Optional[str],
+) -> EmailSender:
+    """Build EmailSender from CLI args and config defaults."""
+    cfg = get_config()
+    defaults = cfg.email_defaults or {}
+    return EmailSender(
+        host=smtp_host or defaults.get("host"),
+        port=smtp_port if smtp_port is not None else defaults.get("port"),
+        username=smtp_user or defaults.get("username"),
+        password=smtp_password or defaults.get("password"),
+        use_tls=defaults.get("use_tls", True),
+    )
 
 
 @cli.command(name="scan")
@@ -158,8 +180,13 @@ def validate_email_options(email, smtp_host):
 )
 @click.option("--limit", type=int, help="Limit the number of files to process")
 @click.option("--email", help="Email address to send report to")
+@click.option(
+    "--from",
+    "from_addr",
+    help="Sender email address (defaults to --email if not set)",
+)
 @click.option("--smtp-host", help="SMTP server host")
-@click.option("--smtp-port", type=int, default=587, help="SMTP server port")
+@click.option("--smtp-port", type=int, default=None, help="SMTP server port")
 @click.option("--smtp-user", help="SMTP username")
 @click.option("--smtp-password", help="SMTP password")
 @click.option(
@@ -183,11 +210,12 @@ def scan(
     exclude: tuple,
     regex: bool,
     limit: int,
-    email: str,
-    smtp_host: str,
-    smtp_port: int,
-    smtp_user: str,
-    smtp_password: str,
+    email: Optional[str],
+    from_addr: Optional[str],
+    smtp_host: Optional[str],
+    smtp_port: Optional[int],
+    smtp_user: Optional[str],
+    smtp_password: Optional[str],
     test_email: bool,
     recursive: bool,
 ):
@@ -227,7 +255,12 @@ def scan(
         # Handle email test mode
         if test_email:
             validate_email_options(email, smtp_host)
-            # Test email configuration without processing files
+            sender = _make_email_sender(smtp_host, smtp_port, smtp_user, smtp_password)
+            if sender.test_connection():
+                click.echo("Email configuration test succeeded.")
+            else:
+                click.echo("Email configuration test failed.", err=True)
+                sys.exit(1)
             return
 
         # Create output files with explicit formats
@@ -240,7 +273,7 @@ def scan(
             for fmt in output_formats
         ]
 
-        walk_directory_and_log(
+        reports = walk_directory_and_log(
             directory,
             output_files,
             algorithm=algorithm,
@@ -252,6 +285,33 @@ def scan(
             limit=limit,
             recursive=recursive,
         )
+
+        # Send reports by email if requested
+        if reports and email and smtp_host:
+            sender = _make_email_sender(smtp_host, smtp_port, smtp_user, smtp_password)
+            from_address = from_addr or email
+            subject = "HashReport Results"
+            body = "Hash report(s) attached."
+            all_ok = True
+            for report_path in reports:
+                ext = Path(report_path).suffix.lower()
+                mime = "application/json" if ext == ".json" else "text/csv"
+                if sender.send_report(
+                    from_address,
+                    email,
+                    subject,
+                    body,
+                    report_path,
+                    mime,
+                ):
+                    click.echo(f"Report sent by email: {Path(report_path).name}")
+                else:
+                    click.echo(
+                        f"Failed to send report by email: {report_path}", err=True
+                    )
+                    all_ok = False
+            if not all_ok:
+                sys.exit(1)
     except (HashReportError, click.BadParameter) as e:
         handle_error(e, exit_code=2)
     except Exception as e:
@@ -266,25 +326,63 @@ def scan(
     default=True,
     help="Recursively process subdirectories (recursive by default)",
 )
+@click.option(
+    "--include",
+    multiple=True,
+    help="Include files matching pattern (can be used multiple times)",
+)
+@click.option(
+    "--exclude",
+    multiple=True,
+    help="Exclude files matching pattern (can be used multiple times)",
+)
+@click.option(
+    "--regex", is_flag=True, help="Use regex for pattern matching instead of glob"
+)
+@click.option(
+    "--min-size",
+    "min_size",
+    callback=validate_size,
+    help="Minimum file size (e.g. 1MB)",
+)
+@click.option(
+    "--max-size",
+    "max_size",
+    callback=validate_size,
+    help="Maximum file size (e.g. 1GB)",
+)
+@click.option("--limit", type=int, help="Limit the number of files to list")
 def filelist(
     directory: str,
     output: str,
     recursive: bool,
+    include: tuple,
+    exclude: tuple,
+    regex: bool,
+    min_size: Optional[str],
+    max_size: Optional[str],
+    limit: Optional[int],
 ):
     """List files in the directory without generating hashes.
 
     This command generates a list of files in the specified directory without
-    calculating their hashes. This is useful for quick directory analysis or
-    when you only need a file listing.
+    calculating their hashes. Supports the same include/exclude and size
+    filters as scan. Useful for quick directory analysis or file lists.
 
     Args:
         directory: Path to scan for files
         output: Output file path (default: current directory)
         recursive: Whether to process subdirectories
+        include: Patterns to include (glob or regex)
+        exclude: Patterns to exclude (glob or regex)
+        regex: Whether patterns are regex
+        min_size: Minimum file size
+        max_size: Maximum file size
+        limit: Maximum number of files to list
 
     Example:
         $ hashreport filelist /path/to/dir -o files.txt
-        $ hashreport filelist /path/to/dir --no-recursive
+        $ hashreport filelist /path/to/dir --include "*.txt" --max-size 1MB
     """
     try:
         # Set default output path if none provided
@@ -299,6 +397,12 @@ def filelist(
             directory,
             output_file,
             recursive=recursive,
+            include=include if include else None,
+            exclude=exclude if exclude else None,
+            regex=regex,
+            min_size=min_size,
+            max_size=max_size,
+            limit=limit,
         )
     except (HashReportError, click.BadParameter) as e:
         handle_error(e, exit_code=2)
@@ -373,6 +477,67 @@ def algorithms():
         $ hashreport algorithms
     """
     show_available_options()
+
+
+@cli.command()
+@click.option(
+    "-V",
+    "--version",
+    "target_version",
+    default=None,
+    help="Install a specific version (e.g. v1.2.3). Default is latest.",
+)
+def upgrade(target_version: Optional[str]):
+    """Upgrade hashreport from PyPI.
+
+    By default installs the latest version. Use --version to install a specific
+    version. Runs pip using the same Python interpreter as this command.
+
+    Example:
+        $ hashreport upgrade
+        $ hashreport upgrade --version 1.2.3
+    """
+    try:
+        console = Console()
+        if target_version:
+            # Pip expects version without leading 'v' (e.g. 1.2.3)
+            version_spec = target_version.lstrip("v")
+            console.print(f"Installing hashreport {target_version} from PyPI...")
+            pip_args = [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                f"hashreport=={version_spec}",
+            ]
+        else:
+            console.print("Upgrading hashreport to latest from PyPI...")
+            pip_args = [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "--upgrade",
+                "hashreport",
+            ]
+        result = subprocess.run(
+            pip_args,
+            capture_output=False,
+            # nosec B603 - arguments are fully controlled and not user shell input
+            shell=False,
+        )
+        if result.returncode != 0:
+            handle_error(
+                Exception(f"pip exited with code {result.returncode}"),
+                exit_code=result.returncode,
+            )
+    except FileNotFoundError:
+        handle_error(
+            Exception("Could not find pip. Ensure pip is installed and on PATH."),
+            exit_code=1,
+        )
+    except Exception as e:
+        handle_error(e, exit_code=1)
 
 
 @cli.group()

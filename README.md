@@ -47,7 +47,7 @@ You can install **hashreport** using `pip` from the Python Package Index ([PyPI]
 pip install hashreport
 ```
 
-Use `pip install --upgrade hashreport` to upgrade. Prefer installing in a [virtual environment](https://docs.python.org/3/library/venv.html).
+To upgrade, run `hashreport upgrade` (or `pip install --upgrade hashreport`). Prefer installing in a [virtual environment](https://docs.python.org/3/library/venv.html).
 
 ### Install from Source
 

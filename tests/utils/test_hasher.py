@@ -7,7 +7,6 @@ import pytest
 
 from hashreport.utils.hasher import (
     calculate_hash,
-    format_size,
     get_file_reader,
     is_file_eligible,
     show_available_options,
@@ -70,14 +69,6 @@ def test_calculate_hash_with_algorithm(tmp_path):
         pytest.fail("Expected valid SHA-256 hash")
     if len(hash_value) != 64:  # SHA-256 produces 64 character hashes
         pytest.fail("Invalid SHA-256 hash length")
-
-
-def test_format_size_edge_cases():
-    """Test size formatting edge cases."""
-    if format_size(None) is not None:
-        pytest.fail("Expected None for None input")
-    if format_size(0) != "0.00 MB":
-        pytest.fail("Expected '0.00 MB' for zero bytes")
 
 
 @patch("builtins.print")
