@@ -53,9 +53,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.cache/pypoetry
-          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            poetry-${{ runner.os }}-
+            poetry-${{ runner.os }}-${{ matrix.python-version }}-
 
       - name: Install dependencies
         run: poetry install --with dev
