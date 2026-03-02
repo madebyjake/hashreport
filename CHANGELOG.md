@@ -1,3 +1,27 @@
+## v1.2.0 (2026-03-02)
+
+### Feat
+
+- enhance config management
+- add email reporting functionality to CLI
+- enhance filelist command with filtering options
+- add upgrade command to CLI
+
+### Fix
+
+- enhance security in upgrade function
+- improve type hint for algorithm parameter in calculate_hash function
+
+### Refactor
+
+- remove unused function
+- remove unused format_size function
+- improve batch processing and return type
+- improve email error handling with logging
+- streamline file listing logic and enhance functionality
+- remove unused import from test_scanner.py
+- improve type hints and file collection logic
+
 ## v1.1.1 (2025-03-02)
 
 ### Docs
