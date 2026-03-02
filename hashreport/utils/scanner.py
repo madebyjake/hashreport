@@ -4,7 +4,7 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union, cast
 
 import click
 
@@ -17,13 +17,11 @@ from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.filters import should_process_file as filter_should_process_file
 from hashreport.utils.hasher import calculate_hash
 from hashreport.utils.progress_bar import ProgressBar
+from hashreport.utils.type_defs import ReportData
 
 logger = logging.getLogger(__name__)
 
 config = get_config()
-
-
-# Note: parse_size_string is now imported from conversions module
 
 
 def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
@@ -35,20 +33,24 @@ def get_report_handlers(filenames: List[str]) -> List[BaseReportHandler]:
     Returns:
         List of appropriate report handlers
     """
-    handlers = []
+    handlers: List[BaseReportHandler] = []
     for filename in filenames:
         path = Path(filename)
+        handler: BaseReportHandler
         if path.suffix.lower() == ".csv":
-            handlers.append(CSVReportHandler(path))
+            handler = CSVReportHandler(path)
         elif path.suffix.lower() == ".json":
-            handlers.append(JSONReportHandler(path))
+            handler = JSONReportHandler(path)
         else:
             raise HashReportError(f"Unsupported file format: {path.suffix}")
-    return handlers
+        handlers.append(handler)
+    return cast(List[BaseReportHandler], handlers)
 
 
 def get_report_filename(
-    output_path: str, output_format: str = None, prefix: str = "hashreport"
+    output_path: str,
+    output_format: Optional[str] = None,
+    prefix: str = "hashreport",
 ) -> str:
     """Generate report filename with timestamp.
 
@@ -77,14 +79,14 @@ def _convert_scanner_params_to_filter_params(
     file_names: Optional[Set[str]] = None,
     min_size: Optional[str] = None,
     max_size: Optional[str] = None,
-    include: Optional[tuple] = None,
-    exclude: Optional[tuple] = None,
+    include: Optional[Tuple[str, ...]] = None,
+    exclude: Optional[Tuple[str, ...]] = None,
     regex: bool = False,
-) -> dict:
+) -> Dict[str, Any]:
     """Convert scanner parameters to filter parameters."""
     # Convert size strings to bytes
-    min_size_bytes = None
-    max_size_bytes = None
+    min_size_bytes: Optional[int] = None
+    max_size_bytes: Optional[int] = None
     if min_size:
         min_size_bytes = parse_size_string(min_size)
     if max_size:
@@ -140,62 +142,51 @@ def count_files(directory: Path, recursive: bool, **filter_kwargs) -> int:
     return total
 
 
-def _prepare_scanning_session(
+def collect_files_to_list(
     directory: str,
-    output_files: Union[str, List[str]],
-    algorithm: str,
-    exclude_paths: Optional[Set[str]] = None,
-    file_extension: Optional[str] = None,
-    file_names: Optional[Set[str]] = None,
+    recursive: bool = True,
+    limit: Optional[int] = None,
+    include: Optional[Tuple[str, ...]] = None,
+    exclude: Optional[Tuple[str, ...]] = None,
+    regex: bool = False,
     min_size: Optional[str] = None,
     max_size: Optional[str] = None,
-    include: Optional[tuple] = None,
-    exclude: Optional[tuple] = None,
-    regex: bool = False,
-    recursive: bool = True,
-) -> tuple:
-    """Prepare scanning session with handlers, parameters, and progress tracking."""
-    # Handle both string and list inputs for output_files
-    if isinstance(output_files, str):
-        output_files = [output_files]
+) -> List[str]:
+    """Collect file paths matching filter criteria (for filelist and similar use).
 
-    handlers = get_report_handlers(output_files)
-    logger.debug(f"Using handlers: {[type(handler).__name__ for handler in handlers]}")
+    Args:
+        directory: Directory to walk
+        recursive: Whether to recurse into subdirectories
+        limit: Maximum number of files to return (None = no limit)
+        include: Tuple of include patterns (glob or regex)
+        exclude: Tuple of exclude patterns (glob or regex)
+        regex: Whether include/exclude patterns are regex
+        min_size: Minimum file size string (e.g. 1MB)
+        max_size: Maximum file size string (e.g. 1GB)
 
-    # Convert scanner parameters to filter parameters
+    Returns:
+        List of file paths matching the filters
+    """
     filter_params = _convert_scanner_params_to_filter_params(
-        exclude_paths=exclude_paths,
-        file_extension=file_extension,
-        file_names=file_names,
-        min_size=min_size,
-        max_size=max_size,
         include=include,
         exclude=exclude,
         regex=regex,
+        min_size=min_size,
+        max_size=max_size,
     )
-
-    # Count files that match filters
-    total_files = 0
-    directory_path = Path(directory)
-    for root, dirs, files in os.walk(directory_path):
-        if not recursive:
-            dirs[:] = []
-        for file_name in files:
-            file_path = os.path.join(root, file_name)
-            if filter_should_process_file(file_path, **filter_params):
-                total_files += 1
-
-    progress_bar = ProgressBar(
-        total=total_files, show_file_names=config.progress["show_file_names"]
+    return _collect_files_to_process(
+        directory,
+        None,
+        filter_params,
+        limit=limit,
+        recursive=recursive,
     )
-
-    return handlers, filter_params, progress_bar, total_files
 
 
 def _collect_files_to_process(
     directory: str,
     specific_files: Optional[Set[str]],
-    filter_params: dict,
+    filter_params: Dict[str, Any],
     limit: Optional[int] = None,
     recursive: bool = True,
 ) -> List[str]:
@@ -204,21 +195,20 @@ def _collect_files_to_process(
         return [
             f for f in specific_files if filter_should_process_file(f, **filter_params)
         ]
-    else:
-        files_to_process = []
-        directory_path = Path(directory)
-        for root, dirs, files in os.walk(directory_path):
-            if not recursive:
-                dirs[:] = []
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                if filter_should_process_file(file_path, **filter_params):
-                    files_to_process.append(file_path)
-                    if limit and len(files_to_process) >= limit:
-                        break
-            if limit and len(files_to_process) >= limit:
-                break
-        return files_to_process
+    files_to_process: List[str] = []
+    directory_path = Path(directory)
+    for root, dirs, files in os.walk(directory_path):
+        if not recursive:
+            dirs[:] = []
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            if filter_should_process_file(file_path, **filter_params):
+                files_to_process.append(file_path)
+                if limit and len(files_to_process) >= limit:
+                    break
+        if limit and len(files_to_process) >= limit:
+            break
+    return files_to_process
 
 
 def _process_single_batch(
@@ -283,10 +273,14 @@ def _process_file_batches(
 def _write_scan_results(
     handlers: List[BaseReportHandler],
     final_results: List[Dict[str, str]],
-    output_files: List[str],
+    output_files: Union[str, List[str]],
 ) -> List[str]:
     """Write scan results to all handlers and return report paths."""
-    reports = []
+    output_list: List[str] = cast(
+        List[str],
+        [output_files] if isinstance(output_files, str) else output_files,
+    )
+    reports: List[str] = []
     for handler in handlers:
         if not hasattr(handler, "write"):
             click.echo(
@@ -294,8 +288,8 @@ def _write_scan_results(
                 err=True,
             )
             return []
-        logger.debug(f"Writing {len(final_results)} results to {output_files}")
-        handler.write(final_results)
+        logger.debug(f"Writing {len(final_results)} results to {output_list}")
+        handler.write(cast(ReportData, final_results))
         reports.append(str(handler.filepath))
     return reports
 
@@ -303,7 +297,7 @@ def _write_scan_results(
 def walk_directory_and_log(
     directory: str,
     output_files: Union[str, List[str]],
-    algorithm: str = None,
+    algorithm: Optional[str] = None,
     exclude_paths: Optional[Set[str]] = None,
     file_extension: Optional[str] = None,
     file_names: Optional[Set[str]] = None,
@@ -311,22 +305,25 @@ def walk_directory_and_log(
     specific_files: Optional[Set[str]] = None,
     min_size: Optional[str] = None,
     max_size: Optional[str] = None,
-    include: Optional[tuple] = None,
-    exclude: Optional[tuple] = None,
+    include: Optional[Tuple[str, ...]] = None,
+    exclude: Optional[Tuple[str, ...]] = None,
     regex: bool = False,
     recursive: bool = True,
 ) -> None:
     """Walk through a directory, calculate hashes, and log to report."""
     algorithm = algorithm or config.default_algorithm
     success = False
-    reports = []
+    reports: List[str] = []
+    progress_bar: Optional[ProgressBar] = None
 
     try:
-        # Prepare scanning session
-        handlers, filter_params, progress_bar, total_files = _prepare_scanning_session(
-            directory=directory,
-            output_files=output_files,
-            algorithm=algorithm,
+        output_list = (
+            [output_files] if isinstance(output_files, str) else list(output_files)
+        )
+        handlers = get_report_handlers(output_list)
+        logger.debug(f"Using handlers: {[type(h).__name__ for h in handlers]}")
+
+        filter_params = _convert_scanner_params_to_filter_params(
             exclude_paths=exclude_paths,
             file_extension=file_extension,
             file_names=file_names,
@@ -335,10 +332,8 @@ def walk_directory_and_log(
             include=include,
             exclude=exclude,
             regex=regex,
-            recursive=recursive,
         )
 
-        # Collect files to process
         files_to_process = _collect_files_to_process(
             directory=directory,
             specific_files=specific_files,
@@ -347,11 +342,19 @@ def walk_directory_and_log(
             recursive=recursive,
         )
 
-        # Process files in batches
-        final_results = _process_file_batches(files_to_process, algorithm, progress_bar)
+        pbar: ProgressBar = ProgressBar(
+            total=len(files_to_process),
+            show_file_names=config.progress["show_file_names"],
+        )
+        progress_bar = pbar
 
-        # Write results to all handlers
-        reports = _write_scan_results(handlers, final_results, output_files)
+        final_results = _process_file_batches(files_to_process, algorithm, pbar)
+
+        reports = _write_scan_results(
+            handlers,
+            final_results,
+            cast(Union[str, List[str]], output_files),
+        )
         success = True
         logger.debug("Successfully wrote results")
 
@@ -363,8 +366,9 @@ def walk_directory_and_log(
         click.echo(f"Error during scanning: {e}", err=True)
         return
     finally:
-        progress_bar.finish()
-        if success:  # Only show paths if everything succeeded
+        if progress_bar is not None:
+            progress_bar.finish()
+        if success:
             if len(reports) == 1:
                 click.echo(f"Report saved to: {reports[0]}")
             else:
