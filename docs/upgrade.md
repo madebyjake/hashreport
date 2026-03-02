@@ -15,8 +15,8 @@ If you installed **hashreport** using `pip`, you can upgrade it in either of the
 hashreport upgrade
 
 # Install a specific version
-hashreport upgrade --version 1.1.1
-hashreport upgrade -V 1.1.0
+hashreport upgrade --version v1.2.3
+hashreport upgrade -V v1.2.0
 
 # Check current version before or after
 hashreport --version
@@ -29,7 +29,7 @@ hashreport --version
 pip install --upgrade hashreport
 
 # Or install a specific version
-pip install hashreport==1.1.1
+pip install hashreport==1.2.3
 
 # Verify the upgrade was successful
 hashreport --version
@@ -172,7 +172,7 @@ If the new version has compatibility issues:
 
 ```bash
 # Downgrade to previous version
-pip install --upgrade hashreport==0.9.0
+pip install --upgrade hashreport==1.2.3
 
 # Or install a specific working version
 pip install hashreport==0.8.5

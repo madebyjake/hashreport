@@ -17,7 +17,7 @@ To upgrade **hashreport**, you can use the built-in command or pip:
 ```bash
 # Recommended: use the upgrade command (same Python as hashreport)
 hashreport upgrade
-hashreport upgrade --version 1.1.1   # specific version
+hashreport upgrade --version 1.2.3   # specific version
 
 # Or use pip directly
 pip install --upgrade hashreport

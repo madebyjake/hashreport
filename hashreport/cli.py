@@ -384,7 +384,7 @@ def algorithms():
     "--version",
     "target_version",
     default=None,
-    help="Install a specific version (e.g. 1.2.3). Default is latest.",
+    help="Install a specific version (e.g. v1.2.3). Default is latest.",
 )
 def upgrade(target_version: Optional[str]):
     """Upgrade hashreport from PyPI.
@@ -399,13 +399,15 @@ def upgrade(target_version: Optional[str]):
     try:
         console = Console()
         if target_version:
+            # Pip expects version without leading 'v' (e.g. 1.2.3)
+            version_spec = target_version.lstrip("v")
             console.print(f"Installing hashreport {target_version} from PyPI...")
             pip_args = [
                 sys.executable,
                 "-m",
                 "pip",
                 "install",
-                f"hashreport=={target_version}",
+                f"hashreport=={version_spec}",
             ]
         else:
             console.print("Upgrading hashreport to latest from PyPI...")

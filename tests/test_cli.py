@@ -140,12 +140,23 @@ def test_upgrade_command_specific_version(mock_run):
     """Test upgrade command with --version installs that version."""
     mock_run.return_value = type("Result", (), {"returncode": 0})()
     runner = CliRunner()
-    result = runner.invoke(cli, ["upgrade", "--version", "1.1.1"])
+    result = runner.invoke(cli, ["upgrade", "--version", "v1.2.3"])
     assert result.exit_code == 0
     mock_run.assert_called_once()
     call_args = mock_run.call_args[0][0]
-    assert "hashreport==1.1.1" in call_args
+    assert "hashreport==1.2.3" in call_args  # v-prefix stripped for pip
     assert "--upgrade" not in call_args
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_specific_version_without_v_prefix(mock_run):
+    """Test upgrade command with --version without v-prefix."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade", "--version", "1.2.3"])
+    assert result.exit_code == 0
+    call_args = mock_run.call_args[0][0]
+    assert "hashreport==1.2.3" in call_args
 
 
 @patch("hashreport.cli.subprocess.run")
