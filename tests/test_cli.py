@@ -123,6 +123,40 @@ def test_algorithms_command(mock_show):
     mock_show.assert_called_once()
 
 
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command(mock_run):
+    """Test upgrade command invokes pip install --upgrade hashreport by default."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade"])
+    assert result.exit_code == 0
+    mock_run.assert_called_once()
+    call_args = mock_run.call_args[0][0]
+    assert call_args[-4:] == ["pip", "install", "--upgrade", "hashreport"]
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_specific_version(mock_run):
+    """Test upgrade command with --version installs that version."""
+    mock_run.return_value = type("Result", (), {"returncode": 0})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade", "--version", "1.1.1"])
+    assert result.exit_code == 0
+    mock_run.assert_called_once()
+    call_args = mock_run.call_args[0][0]
+    assert "hashreport==1.1.1" in call_args
+    assert "--upgrade" not in call_args
+
+
+@patch("hashreport.cli.subprocess.run")
+def test_upgrade_command_pip_failure(mock_run):
+    """Test upgrade command exits with pip return code on failure."""
+    mock_run.return_value = type("Result", (), {"returncode": 1})()
+    runner = CliRunner()
+    result = runner.invoke(cli, ["upgrade"])
+    assert result.exit_code == 1
+
+
 def test_invalid_directory():
     """Test scan with nonexistent directory."""
     runner = CliRunner()
