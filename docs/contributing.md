@@ -185,18 +185,22 @@ git push origin feature/your-feature-name
 
 Releases are published to [PyPI](https://pypi.org/project/hashreport/) via GitHub Actions. Version is derived from Git tags (e.g. `v1.2.0`) using poetry-dynamic-versioning.
 
-1. **Merge** release-ready work into `main`.
-2. **Bump version and update changelog** (on `main`):
+**Note:** Direct commits to `main` are not allowed (branch protection). The version bump is done on `dev` and merged to `main` via a pull request.
+
+1. **On `dev`**: Ensure all release-ready work is merged.
+2. **Bump version and update changelog** (on `dev`):
    ```bash
+   git checkout dev
    poetry run cz bump --increment PATCH   # or MINOR, MAJOR
    ```
    Commitizen updates `CHANGELOG.md` and creates a tag (e.g. `v1.2.0`).
-3. **Push** the new commit and tag:
+3. **Push `dev` and the tag**:
    ```bash
-   git push origin main && git push origin --tags
+   git push origin dev && git push origin --tags
    ```
-4. **Create a GitHub Release** for the new tag (Releases → Draft a new release → choose the tag, add notes, publish).
-5. The **Publish to PyPI** workflow runs automatically and publishes the package. The workflow uses the `pypi` environment (Trusted Publishing); ensure it is configured in the repository settings.
+4. **Open a pull request** from `dev` into `main`. Merge the PR (after status checks pass).
+5. **Create a GitHub Release** for the new tag (Releases → Draft a new release → choose the tag, add notes, publish).
+6. The **Publish to PyPI** workflow runs automatically and publishes the package. The workflow uses the `pypi` environment (Trusted Publishing); ensure it is configured in the repository settings.
 
 ## **Getting Help**
 
