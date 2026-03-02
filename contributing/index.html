@@ -1457,7 +1457,7 @@
 </li>
 </ol>
 <h2 id="releasing"><strong>Releasing</strong></h2>
-<p>Releases are published to <a href="https://pypi.org/project/hashreport/">PyPI</a> via GitHub Actions. Version is derived from Git tags (e.g. <code>v1.2.0</code>) using poetry-dynamic-versioning.</p>
+<p>Releases are published to <a href="https://pypi.org/project/hashreport/">PyPI</a> via GitHub Actions. Version is derived from Git tags (e.g. <code>v1.2.3</code>) using poetry-dynamic-versioning.</p>
 <p><strong>Note:</strong> Direct commits to <code>main</code> are not allowed (branch protection). The version bump is done on <code>dev</code> and merged to <code>main</code> via a pull request.</p>
 <ol>
 <li><strong>On <code>dev</code></strong>: Ensure all release-ready work is merged.</li>
@@ -1465,7 +1465,7 @@
    <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>dev
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>poetry<span class="w"> </span>run<span class="w"> </span>cz<span class="w"> </span>bump<span class="w"> </span>--increment<span class="w"> </span>PATCH<span class="w">   </span><span class="c1"># or MINOR, MAJOR</span>
 </code></pre></div>
-   Commitizen updates <code>CHANGELOG.md</code> and creates a tag (e.g. <code>v1.2.0</code>).</li>
+   Commitizen updates <code>CHANGELOG.md</code> and creates a tag (e.g. <code>v1.2.3</code>).</li>
 <li><strong>Push <code>dev</code> and the tag</strong>:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>dev<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--tags
 </code></pre></div></li>

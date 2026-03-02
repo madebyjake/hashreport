@@ -1243,7 +1243,17 @@
 
 
 <h1 id="configuration-options"><strong>Configuration Options</strong></h1>
-<p>hashreport uses a TOML configuration file to store user settings. The default location is <code>~/.config/hashreport/settings.toml</code>.</p>
+<p>hashreport uses TOML configuration from two places:</p>
+<ul>
+<li>A per-user settings file at <code>~/.config/hashreport/settings.toml</code></li>
+<li>An optional project section <code>[tool.hashreport]</code> in <code>pyproject.toml</code></li>
+</ul>
+<p>If the same setting appears in multiple places, precedence (highest last) is:</p>
+<ol>
+<li>Built-in defaults</li>
+<li>User settings (<code>~/.config/hashreport/settings.toml</code>)</li>
+<li>Project config (<code>[tool.hashreport]</code> in <code>pyproject.toml</code>)</li>
+</ol>
 <h2 id="core-settings"><strong>Core Settings</strong></h2>
 <p>Basic application settings:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[hashreport]</span>
@@ -1390,13 +1400,11 @@
 </ul>
 <h2 id="environment-variables"><strong>Environment Variables</strong></h2>
 <p>For sensitive settings, use environment variables:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Email settings</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_HOST</span><span class="o">=</span>smtp.example.com
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_USER</span><span class="o">=</span>username
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_SMTP_PASSWORD</span><span class="o">=</span>password
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Resource limits</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HASHREPORT_MAX_MEMORY</span><span class="o">=</span><span class="m">2048</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Email settings (used when email_defaults are not set)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_HOST</span><span class="o">=</span>smtp.example.com
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_PORT</span><span class="o">=</span><span class="m">587</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_USERNAME</span><span class="o">=</span>username
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SMTP_PASSWORD</span><span class="o">=</span>password
 </code></pre></div>
 <h2 id="managing-configuration"><strong>Managing Configuration</strong></h2>
 <h3 id="view-current-settings"><strong>View Current Settings</strong></h3>

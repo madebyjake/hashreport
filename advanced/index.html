@@ -1463,9 +1463,10 @@
 <h3 id="basic-email-setup"><strong>Basic Email Setup</strong></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--from<span class="w"> </span>sender@example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--smtp-user<span class="w"> </span>username<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password
 </code></pre></div>
 <h3 id="security-best-practices"><strong>Security Best Practices</strong></h3>
 <ol>
@@ -1487,8 +1488,9 @@
 <p><strong>Use TLS/SSL</strong>
    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--email<span class="w"> </span>recipient@example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--smtp-port<span class="w"> </span><span class="m">587</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--from<span class="w"> </span>sender@example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--smtp-host<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--smtp-port<span class="w"> </span><span class="m">587</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -1513,6 +1515,9 @@
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--smtp-password<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--test-email
 </code></pre></div>
+<p>On success this exits with status code <code>0</code>; if the SMTP connection or
+authentication fails it exits with a non-zero status code, making it
+safe to use in scripts and CI.</p>
 <h3 id="gmail-example"><strong>Gmail Example</strong></h3>
 <p>Using Gmail's SMTP server:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>hashreport<span class="w"> </span>scan<span class="w"> </span>/path/to/directory<span class="w"> </span><span class="se">\</span>
