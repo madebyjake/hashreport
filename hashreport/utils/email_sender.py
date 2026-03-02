@@ -1,5 +1,6 @@
 """This module provides the EmailSender class for sending emails with attachments."""
 
+import logging
 import os
 import smtplib
 from email import encoders
@@ -7,6 +8,8 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 
 class EmailSender:
@@ -99,7 +102,7 @@ class EmailSender:
                 server.send_message(msg)
             return True
         except Exception as e:
-            print(f"Failed to send email: {str(e)}")
+            logger.error("Failed to send email: %s", e)
             return False
 
     def test_connection(self) -> bool:
@@ -117,5 +120,5 @@ class EmailSender:
                     server.login(self.username, self.password)
             return True
         except Exception as e:
-            print(f"SMTP test failed: {str(e)}")
+            logger.error("SMTP test failed: %s", e)
             return False
