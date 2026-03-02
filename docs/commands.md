@@ -43,7 +43,7 @@ hashreport scan [OPTIONS] DIRECTORY
 
 ### **filelist**
 
-Generate a list of files in a directory.
+Generate a list of files in a directory (paths only, no hashes). Supports the same include/exclude and size filters as **scan**.
 
 ```bash
 hashreport filelist [OPTIONS] DIRECTORY
@@ -54,13 +54,14 @@ hashreport filelist [OPTIONS] DIRECTORY
 | Option | Default | Description |
 |--------|---------|-------------|
 | `DIRECTORY` | - | Directory to scan |
+| `-o, --output` | - | Output file or directory (default: current directory, writes `filelist.txt`) |
 | `-r, --recursive` | `True` | Scan directories recursively |
-| `-i, --include` | - | Include files matching pattern |
-| `-e, --exclude` | - | Exclude files matching pattern |
-| `--regex` | `False` | Use regex patterns |
-| `--min-size` | - | Minimum file size |
-| `--max-size` | - | Maximum file size |
-| `--limit` | - | Limit number of files |
+| `--include` | - | Include files matching pattern (repeatable) |
+| `--exclude` | - | Exclude files matching pattern (repeatable) |
+| `--regex` | `False` | Use regex for include/exclude patterns |
+| `--min-size` | - | Minimum file size (e.g. 1MB) |
+| `--max-size` | - | Maximum file size (e.g. 1GB) |
+| `--limit` | - | Limit number of files listed |
 
 ### **view**
 
@@ -114,6 +115,31 @@ List available hash algorithms.
 
 ```bash
 hashreport algorithms
+```
+
+### **upgrade**
+
+Upgrade hashreport from PyPI using the same Python that runs the CLI. By default installs the latest version; use `--version` to install a specific version.
+
+```bash
+hashreport upgrade [OPTIONS]
+```
+
+#### **Options**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `-V, --version` | latest | Install a specific version (e.g. `1.2.3`) |
+
+#### **Examples**
+
+```bash
+# Upgrade to latest
+hashreport upgrade
+
+# Install a specific version
+hashreport upgrade --version 1.2.3
+hashreport upgrade -V 1.2.0
 ```
 
 ## **Examples**
