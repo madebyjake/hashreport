@@ -1,5 +1,6 @@
 # hashreport
 
+[![PyPI version](https://img.shields.io/pypi/v/hashreport)](https://pypi.org/project/hashreport/)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](https://www.python.org/)
 [![Poetry](https://img.shields.io/badge/Poetry-5037E9?logo=python&logoColor=fff)](https://python-poetry.org/)
 [![MkDocs](https://img.shields.io/badge/MkDocs-526CFE?logo=materialformkdocs&logoColor=fff)](https://www.mkdocs.org/)
@@ -36,7 +37,7 @@
 
 ## Installation
 
-There are a two ways to install **hashreport** on your system. Choose the option that works best for you:
+There are two ways to install **hashreport** on your system. Choose the option that works best for you:
 
 ### Install with Pip
 
@@ -45,6 +46,8 @@ You can install **hashreport** using `pip` from the Python Package Index ([PyPI]
 ```bash
 pip install hashreport
 ```
+
+Use `pip install --upgrade hashreport` to upgrade. Prefer installing in a [virtual environment](https://docs.python.org/3/library/venv.html).
 
 ### Install from Source
 
