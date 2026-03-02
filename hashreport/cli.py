@@ -7,10 +7,12 @@ Example:
     $ hashreport scan /path/to/dir -o output.json
     $ hashreport view report.json --filter "*.txt"
     $ hashreport config show
+    $ hashreport upgrade
 """  # noqa: E501
 
 import logging
 import os
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -103,6 +105,7 @@ def cli():
         $ hashreport scan /path/to/dir -o output.json
         $ hashreport view report.json --filter "*.txt"
         $ hashreport config show
+        $ hashreport upgrade
     """
     pass
 
@@ -373,6 +376,60 @@ def algorithms():
         $ hashreport algorithms
     """
     show_available_options()
+
+
+@cli.command()
+@click.option(
+    "-V",
+    "--version",
+    "target_version",
+    default=None,
+    help="Install a specific version (e.g. 1.2.3). Default is latest.",
+)
+def upgrade(target_version: Optional[str]):
+    """Upgrade hashreport from PyPI.
+
+    By default installs the latest version. Use --version to install a specific
+    version. Runs pip using the same Python interpreter as this command.
+
+    Example:
+        $ hashreport upgrade
+        $ hashreport upgrade --version 1.2.3
+    """
+    try:
+        console = Console()
+        if target_version:
+            console.print(f"Installing hashreport {target_version} from PyPI...")
+            pip_args = [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                f"hashreport=={target_version}",
+            ]
+        else:
+            console.print("Upgrading hashreport to latest from PyPI...")
+            pip_args = [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "--upgrade",
+                "hashreport",
+            ]
+        result = subprocess.run(pip_args, capture_output=False)
+        if result.returncode != 0:
+            handle_error(
+                Exception(f"pip exited with code {result.returncode}"),
+                exit_code=result.returncode,
+            )
+    except FileNotFoundError:
+        handle_error(
+            Exception("Could not find pip. Ensure pip is installed and on PATH."),
+            exit_code=1,
+        )
+    except Exception as e:
+        handle_error(e, exit_code=1)
 
 
 @cli.group()
