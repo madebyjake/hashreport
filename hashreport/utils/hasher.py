@@ -17,13 +17,6 @@ logger = logging.getLogger(__name__)
 config = get_config()
 
 
-def format_size(size_bytes: Optional[int]) -> Optional[str]:
-    """Convert bytes to MB with 2 decimal places."""
-    if size_bytes is None:
-        return None
-    return f"{size_bytes / (1024 * 1024):.2f} MB"
-
-
 @contextmanager
 def get_file_reader(file_path: str, use_mmap: bool = True):
     """Get optimal file reader based on file size and system resources."""
