@@ -1,6 +1,15 @@
 # **Configuration Options**
 
-hashreport uses a TOML configuration file to store user settings. The default location is `~/.config/hashreport/settings.toml`.
+hashreport uses TOML configuration from two places:
+
+- A per-user settings file at `~/.config/hashreport/settings.toml`
+- An optional project section `[tool.hashreport]` in `pyproject.toml`
+
+If the same setting appears in multiple places, precedence (highest last) is:
+
+1. Built-in defaults
+2. User settings (`~/.config/hashreport/settings.toml`)
+3. Project config (`[tool.hashreport]` in `pyproject.toml`)
 
 ## **Core Settings**
 
@@ -179,13 +188,11 @@ compression = false
 For sensitive settings, use environment variables:
 
 ```bash
-# Email settings
-export HASHREPORT_SMTP_HOST=smtp.example.com
-export HASHREPORT_SMTP_USER=username
-export HASHREPORT_SMTP_PASSWORD=password
-
-# Resource limits
-export HASHREPORT_MAX_MEMORY=2048
+# Email settings (used when email_defaults are not set)
+export SMTP_HOST=smtp.example.com
+export SMTP_PORT=587
+export SMTP_USERNAME=username
+export SMTP_PASSWORD=password
 ```
 
 ## **Managing Configuration**
