@@ -29,6 +29,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Security",
   "Topic :: Utilities"
 ]
@@ -44,7 +45,7 @@ hashreport = "hashreport.cli:cli"
 [tool.poetry.dependencies]
 click = "^8.1.8"
 psutil = "^7.0.0"
-python = ">=3.10,<3.14"
+python = ">=3.10,<3.15"
 rich = ">=13.9.4,<15.0.0"
 tomli = "^2.2.1"
 tqdm = "^4.67.1"
@@ -80,7 +81,7 @@ line-length = 88
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.1.0"
+version = "1.1.1"
 tag_format = "v$version"
 update_changelog_on_bump = true
 
@@ -100,6 +101,10 @@ multi_line_output = 3
 addopts = "-ra -q"
 testpaths = [
     "tests",
+]
+# Python 3.14 warns on 'return' in 'finally' (pluggy, coverage); suppress in deps only
+filterwarnings = [
+    "ignore:'return' in a 'finally' block:SyntaxWarning",
 ]
 
 [tool.flake8]

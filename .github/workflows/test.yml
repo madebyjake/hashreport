@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v6
         with:
@@ -53,17 +53,23 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.cache/pypoetry
-          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: poetry-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            poetry-${{ runner.os }}-
+            poetry-${{ runner.os }}-${{ matrix.python-version }}-
 
       - name: Install dependencies
         run: poetry install --with dev
 
       - name: Run tests
-        run: poetry run python -m pytest --cov=. --cov-report=xml
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.14" ]; then
+            poetry run python -m pytest
+          else
+            poetry run python -m pytest --cov=hashreport --cov-report=xml
+          fi
 
       - name: Upload coverage
+        if: matrix.python-version != '3.14'
         uses: codecov/codecov-action@v5
         with:
           files: ./coverage.xml

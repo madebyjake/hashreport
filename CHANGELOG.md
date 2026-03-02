@@ -1,3 +1,14 @@
+## v1.1.1 (2025-03-02)
+
+### Docs
+
+- add releasing section to contributing guide
+- fix README typo and add PyPI badge and pip/venv note
+
+### Chore
+
+- include lint workflow in path filters for self-trigger
+
 ## v1.1.0 (2025-09-09)
 
 ### Feat

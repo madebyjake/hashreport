@@ -91,18 +91,18 @@ If you see an error about Python version compatibility:
 # Check your Python version
 python3 --version
 
-# If needed, install Python 3.10 or higher
+# If needed, install Python 3.10 or higher (up to 3.14)
 
 ## On Ubuntu/Debian:
 sudo apt update && \
-sudo apt install python3.10
+sudo apt install python3.14
 
 ## On Fedora/CentOS/RHEL:
 sudo dnf update && \
-sudo dnf install python3.10
+sudo dnf install python3.14
 
 ## On macOS with Homebrew:
-brew install python@3.10
+brew install python@3.14
 ```
 
 #### **2. Permission Issues**
