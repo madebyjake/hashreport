@@ -269,25 +269,63 @@ def scan(
     default=True,
     help="Recursively process subdirectories (recursive by default)",
 )
+@click.option(
+    "--include",
+    multiple=True,
+    help="Include files matching pattern (can be used multiple times)",
+)
+@click.option(
+    "--exclude",
+    multiple=True,
+    help="Exclude files matching pattern (can be used multiple times)",
+)
+@click.option(
+    "--regex", is_flag=True, help="Use regex for pattern matching instead of glob"
+)
+@click.option(
+    "--min-size",
+    "min_size",
+    callback=validate_size,
+    help="Minimum file size (e.g. 1MB)",
+)
+@click.option(
+    "--max-size",
+    "max_size",
+    callback=validate_size,
+    help="Maximum file size (e.g. 1GB)",
+)
+@click.option("--limit", type=int, help="Limit the number of files to list")
 def filelist(
     directory: str,
     output: str,
     recursive: bool,
+    include: tuple,
+    exclude: tuple,
+    regex: bool,
+    min_size: Optional[str],
+    max_size: Optional[str],
+    limit: Optional[int],
 ):
     """List files in the directory without generating hashes.
 
     This command generates a list of files in the specified directory without
-    calculating their hashes. This is useful for quick directory analysis or
-    when you only need a file listing.
+    calculating their hashes. Supports the same include/exclude and size
+    filters as scan. Useful for quick directory analysis or file lists.
 
     Args:
         directory: Path to scan for files
         output: Output file path (default: current directory)
         recursive: Whether to process subdirectories
+        include: Patterns to include (glob or regex)
+        exclude: Patterns to exclude (glob or regex)
+        regex: Whether patterns are regex
+        min_size: Minimum file size
+        max_size: Maximum file size
+        limit: Maximum number of files to list
 
     Example:
         $ hashreport filelist /path/to/dir -o files.txt
-        $ hashreport filelist /path/to/dir --no-recursive
+        $ hashreport filelist /path/to/dir --include "*.txt" --max-size 1MB
     """
     try:
         # Set default output path if none provided
@@ -302,6 +340,12 @@ def filelist(
             directory,
             output_file,
             recursive=recursive,
+            include=include if include else None,
+            exclude=exclude if exclude else None,
+            regex=regex,
+            min_size=min_size,
+            max_size=max_size,
+            limit=limit,
         )
     except (HashReportError, click.BadParameter) as e:
         handle_error(e, exit_code=2)
