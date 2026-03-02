@@ -26,6 +26,7 @@ from hashreport.reports.filelist_handler import (
     list_files_in_directory,
 )
 from hashreport.utils.conversions import validate_size_string
+from hashreport.utils.email_sender import EmailSender
 from hashreport.utils.exceptions import HashReportError
 from hashreport.utils.hasher import show_available_options
 from hashreport.utils.scanner import get_report_filename, walk_directory_and_log
@@ -110,10 +111,28 @@ def cli():
     pass
 
 
-def validate_email_options(email, smtp_host):
+def validate_email_options(email: Optional[str], smtp_host: Optional[str]) -> None:
     """Validate email-related CLI options."""
     if not all([email, smtp_host]):
         raise click.BadParameter("Email and SMTP host are required for email testing")
+
+
+def _make_email_sender(
+    smtp_host: Optional[str],
+    smtp_port: Optional[int],
+    smtp_user: Optional[str],
+    smtp_password: Optional[str],
+) -> EmailSender:
+    """Build EmailSender from CLI args and config defaults."""
+    cfg = get_config()
+    defaults = cfg.email_defaults or {}
+    return EmailSender(
+        host=smtp_host or defaults.get("host"),
+        port=smtp_port if smtp_port is not None else defaults.get("port"),
+        username=smtp_user or defaults.get("username"),
+        password=smtp_password or defaults.get("password"),
+        use_tls=defaults.get("use_tls", True),
+    )
 
 
 @cli.command(name="scan")
@@ -161,8 +180,13 @@ def validate_email_options(email, smtp_host):
 )
 @click.option("--limit", type=int, help="Limit the number of files to process")
 @click.option("--email", help="Email address to send report to")
+@click.option(
+    "--from",
+    "from_addr",
+    help="Sender email address (defaults to --email if not set)",
+)
 @click.option("--smtp-host", help="SMTP server host")
-@click.option("--smtp-port", type=int, default=587, help="SMTP server port")
+@click.option("--smtp-port", type=int, default=None, help="SMTP server port")
 @click.option("--smtp-user", help="SMTP username")
 @click.option("--smtp-password", help="SMTP password")
 @click.option(
@@ -186,11 +210,12 @@ def scan(
     exclude: tuple,
     regex: bool,
     limit: int,
-    email: str,
-    smtp_host: str,
-    smtp_port: int,
-    smtp_user: str,
-    smtp_password: str,
+    email: Optional[str],
+    from_addr: Optional[str],
+    smtp_host: Optional[str],
+    smtp_port: Optional[int],
+    smtp_user: Optional[str],
+    smtp_password: Optional[str],
     test_email: bool,
     recursive: bool,
 ):
@@ -230,7 +255,12 @@ def scan(
         # Handle email test mode
         if test_email:
             validate_email_options(email, smtp_host)
-            # Test email configuration without processing files
+            sender = _make_email_sender(smtp_host, smtp_port, smtp_user, smtp_password)
+            if sender.test_connection():
+                click.echo("Email configuration test succeeded.")
+            else:
+                click.echo("Email configuration test failed.", err=True)
+                sys.exit(1)
             return
 
         # Create output files with explicit formats
@@ -243,7 +273,7 @@ def scan(
             for fmt in output_formats
         ]
 
-        walk_directory_and_log(
+        reports = walk_directory_and_log(
             directory,
             output_files,
             algorithm=algorithm,
@@ -255,6 +285,33 @@ def scan(
             limit=limit,
             recursive=recursive,
         )
+
+        # Send reports by email if requested
+        if reports and email and smtp_host:
+            sender = _make_email_sender(smtp_host, smtp_port, smtp_user, smtp_password)
+            from_address = from_addr or email
+            subject = "HashReport Results"
+            body = "Hash report(s) attached."
+            all_ok = True
+            for report_path in reports:
+                ext = Path(report_path).suffix.lower()
+                mime = "application/json" if ext == ".json" else "text/csv"
+                if sender.send_report(
+                    from_address,
+                    email,
+                    subject,
+                    body,
+                    report_path,
+                    mime,
+                ):
+                    click.echo(f"Report sent by email: {Path(report_path).name}")
+                else:
+                    click.echo(
+                        f"Failed to send report by email: {report_path}", err=True
+                    )
+                    all_ok = False
+            if not all_ok:
+                sys.exit(1)
     except (HashReportError, click.BadParameter) as e:
         handle_error(e, exit_code=2)
     except Exception as e:
